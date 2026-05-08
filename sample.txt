@@ -1,0 +1,39 @@
+# Misol ma'lumotlar - Kvadrat hisoblash uchun
+# Hashtag yoki // bilan boshlanuvchi qatorlar e'tiborga olinmaydi
+
+# === Asosiy formatlar ===
+137 150 15 2шт
+135 150 15 без каз
+287 179
+127 155 30
+145 170 30
+140 154 30
+
+# === Yorliqlar bilan ===
+гор 124 145 40
+шк 126 148 10 анкер
+вер 110 130 18 2шт
+низ 110 130 18 2шт
+боковой 130 18 50 4шт
+задний 110 50 18
+
+# === Turli ajratuvchilar ===
+135x150x15
+287х179
+145,5 170,5 30
+200*100*25 3шт
+
+# === Miqdor variantlari ===
+180 90 20
+200 100 25 3sht
+160 140 28 2pcs
+220 180 22 шт5
+75 60 x2
+500 300 50 (4)
+
+# === Maxsus holatlar ===
+1 2 3 4 5 extra numbers
+ошибка abc
+137
+90 80
+//yana komment - bu ham hisoblanmaydi
