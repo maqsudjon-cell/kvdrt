@@ -1,2780 +1,667 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#2563eb" />
-<meta name="description" content="Kvadrat metr hisoblash - katta o'lchamlardan kvadrat metrlarni avtomatik hisoblash" />
-<title>Kvadrat Hisoblash · Professional Batch Calculator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>KVADRAT — m² Hisoblash</title>
+<meta name="description" content="Payvand va montaj o'lchamlaridan kvadrat metr (m²) avtomatik hisoblash. Toza, tez, bepul.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Crect x='18' y='18' width='28' height='28' rx='3' fill='none' stroke='%23D71921' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23D71921'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ============================================================
-   1. CSS RESET & VARIABLES
+   KVADRAT · Nothing-inspired · black + red · m² calculator
    ============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
-body { line-height: 1.5; -webkit-font-smoothing: antialiased; }
-img, picture, svg { max-width: 100%; display: block; }
-input, button, textarea, select { font: inherit; color: inherit; }
-button { cursor: pointer; background: none; border: none; }
-table { border-collapse: collapse; width: 100%; }
-
-:root {
-  /* Colors - Light theme */
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #dbeafe;
-  --success: #16a34a;
-  --success-light: #dcfce7;
-  --warning: #eab308;
-  --warning-light: #fef9c3;
-  --error: #dc2626;
-  --error-light: #fee2e2;
-  --bg: #f8fafc;
-  --bg-2: #f1f5f9;
-  --card: #ffffff;
-  --card-hover: #f8fafc;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --text-dim: #94a3b8;
-  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
-  --shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
-
-  /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'SF Mono', Monaco, Menlo, Consolas, 'Courier New', monospace;
-
-  /* Layout */
-  --radius: 10px;
-  --radius-sm: 6px;
-  --radius-lg: 14px;
-  --gap: 14px;
-  --transition: 200ms cubic-bezier(.4,0,.2,1);
-}
-
-[data-theme="dark"] {
-  --primary: #3b82f6;
-  --primary-hover: #60a5fa;
-  --primary-light: #1e3a8a;
-  --success: #22c55e;
-  --success-light: #14532d;
-  --warning: #facc15;
-  --warning-light: #713f12;
-  --error: #ef4444;
-  --error-light: #7f1d1d;
-  --bg: #0f172a;
-  --bg-2: #1e293b;
-  --card: #1e293b;
-  --card-hover: #334155;
-  --border: #334155;
-  --border-strong: #475569;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.3);
-  --shadow: 0 1px 3px 0 rgba(0,0,0,0.4), 0 1px 2px -1px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
-    --primary-light: #1e3a8a;
-    --success: #22c55e;
-    --success-light: #14532d;
-    --warning: #facc15;
-    --warning-light: #713f12;
-    --error: #ef4444;
-    --error-light: #7f1d1d;
-    --bg: #0f172a;
-    --bg-2: #1e293b;
-    --card: #1e293b;
-    --card-hover: #334155;
-    --border: #334155;
-    --border-strong: #475569;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
-  }
-}
-
-/* ============================================================
-   2. BASE
-   ============================================================ */
-body {
-  font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  min-height: 100dvh;
-  transition: background-color var(--transition), color var(--transition);
-}
-
-.app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
-  padding-bottom: 120px;
-}
-
-@media (min-width: 768px) {
-  .app { padding: 24px; padding-bottom: 24px; }
-}
-
-/* ============================================================
-   3. HEADER
-   ============================================================ */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.logo {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--primary), #4f46e5);
-  display: grid;
-  place-items: center;
-  color: white;
-  font-weight: 800;
-  font-size: 18px;
-  font-family: var(--font-mono);
-  flex-shrink: 0;
-}
-
-.brand-text { min-width: 0; }
-.brand-title {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.brand-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  display: grid;
-  place-items: center;
-  color: var(--text-muted);
-  transition: all var(--transition);
-  border: 1px solid var(--border);
-  background: var(--card);
-  font-size: 16px;
-}
-
-.icon-btn:hover {
-  background: var(--card-hover);
-  color: var(--text);
-  border-color: var(--border-strong);
-}
-
-.icon-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.icon-btn[aria-pressed="true"] {
-  background: var(--primary-light);
-  color: var(--primary);
-  border-color: var(--primary);
-}
-
-/* ============================================================
-   4. LAYOUT
-   ============================================================ */
-.layout {
-  display: grid;
-  gap: 18px;
-}
-
-@media (min-width: 1024px) {
-  .layout {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: start;
-  }
-  .input-section { position: sticky; top: 16px; }
-}
-
-/* ============================================================
-   5. CARD
-   ============================================================ */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-}
-
-.card-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-body { padding: 14px 16px; }
-
-/* ============================================================
-   6. INPUT SECTION
-   ============================================================ */
-.input-tabs {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  background: var(--bg-2);
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
-  transition: all var(--transition);
-}
-
-.tab-btn[aria-selected="true"] {
-  background: var(--card);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-}
-
-.tab-panel { display: none; }
-.tab-panel[data-active="true"] { display: block; }
-
-.input-textarea {
-  width: 100%;
-  min-height: 300px;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-2);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.6;
-  resize: vertical;
-  transition: border-color var(--transition);
-}
-
-.input-textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.input-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.input-counter {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--success);
-}
-
-/* File drop zone */
-.dropzone {
-  border: 2px dashed var(--border-strong);
-  border-radius: var(--radius);
-  padding: 40px 20px;
-  text-align: center;
-  background: var(--bg-2);
-  transition: all var(--transition);
-  cursor: pointer;
-}
-
-.dropzone:hover, .dropzone.drag-over {
-  border-color: var(--primary);
-  background: var(--primary-light);
-}
-
-.dropzone-icon { font-size: 36px; margin-bottom: 8px; }
-.dropzone-title { font-weight: 600; margin-bottom: 4px; }
-.dropzone-sub { font-size: 12px; color: var(--text-muted); }
-
-/* Action bar */
-.action-bar {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  transition: all var(--transition);
-  white-space: nowrap;
-  user-select: none;
-}
-
-.btn:hover { background: var(--card-hover); border-color: var(--border-strong); }
-.btn:active { transform: scale(0.98); }
-.btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.btn-primary {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
-
-.btn-success {
-  background: var(--success);
-  color: white;
-  border-color: var(--success);
-}
-
-.btn-danger {
-  background: var(--error);
-  color: white;
-  border-color: var(--error);
-}
-
-.btn-ghost {
-  background: transparent;
-  border-color: transparent;
-  color: var(--text-muted);
-}
-.btn-ghost:hover { background: var(--card-hover); color: var(--text); }
-
-.btn-sm { padding: 6px 10px; font-size: 12px; }
-.btn-lg { padding: 12px 18px; font-size: 15px; }
-.btn-block { width: 100%; }
-
-.btn-group {
-  display: inline-flex;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.btn-group .btn {
-  border-radius: 0;
-  border: none;
-  border-right: 1px solid var(--border);
-}
-.btn-group .btn:last-child { border-right: none; }
-.btn-group .btn[aria-pressed="true"] {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-/* ============================================================
-   7. SUMMARY CARD
-   ============================================================ */
-.summary {
-  background: linear-gradient(135deg, var(--primary), #4f46e5);
-  color: white;
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-bottom: 14px;
-  position: relative;
-  overflow: hidden;
-}
-
-.summary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15), transparent 60%);
-  pointer-events: none;
-}
-
-.summary-label {
-  font-size: 12px;
-  font-weight: 500;
-  opacity: 0.85;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.summary-total {
-  font-size: 36px;
-  font-weight: 800;
-  font-family: var(--font-mono);
-  line-height: 1.1;
-  margin-bottom: 14px;
-  word-break: break-all;
-}
-
-.summary-unit { font-size: 18px; opacity: 0.85; font-weight: 600; }
-
-.summary-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 10px;
-  position: relative;
-}
-
-.summary-stat {
-  background: rgba(255,255,255,0.15);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  font-size: 12px;
-  backdrop-filter: blur(10px);
-}
-
-.summary-stat strong {
-  display: block;
-  font-size: 16px;
-  font-family: var(--font-mono);
-  margin-top: 2px;
-}
-
-/* ============================================================
-   8. FILTER & SEARCH
-   ============================================================ */
-.filter-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.search-box {
-  flex: 1;
-  min-width: 180px;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 8px 12px 8px 34px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--card);
-  color: var(--text);
-  font-size: 13px;
-  transition: all var(--transition);
-}
-.search-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 14px;
-  pointer-events: none;
-}
-
-/* ============================================================
-   9. RESULTS TABLE
-   ============================================================ */
-.results-card { padding: 0; }
-
-.table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: 70vh;
-  border-radius: var(--radius);
-}
-
-.results-table {
-  font-size: 13px;
-  min-width: 100%;
-}
-
-.results-table thead {
-  position: sticky;
-  top: 0;
-  background: var(--bg-2);
-  z-index: 1;
-}
-
-.results-table th {
-  text-align: left;
-  padding: 10px 12px;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-
-.results-table th.num, .results-table td.num {
-  text-align: right;
-  font-family: var(--font-mono);
-}
-
-.results-table tbody tr {
-  border-bottom: 1px solid var(--border);
-  border-left: 3px solid transparent;
-  transition: background var(--transition);
-}
-
-.results-table tbody tr:hover { background: var(--card-hover); }
-
-.results-table tbody tr.row-kvadrat { border-left-color: var(--success); }
-.results-table tbody tr.row-flat { border-left-color: var(--warning); }
-.results-table tbody tr.row-error { border-left-color: var(--error); background: var(--error-light); }
-
-.results-table td {
-  padding: 10px 12px;
-  vertical-align: top;
-}
-
-.row-input {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  word-break: break-all;
-  max-width: 280px;
-}
-
-.row-actions {
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-
-.results-table tr:hover .row-actions, .results-table tr:focus-within .row-actions {
-  opacity: 1;
-}
-
-@media (hover: none) {
-  .row-actions { opacity: 1; }
-}
-
-.row-action-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  display: grid;
-  place-items: center;
-  color: var(--text-muted);
-  font-size: 12px;
-  transition: all var(--transition);
-}
-.row-action-btn:hover { background: var(--card-hover); color: var(--text); }
-.row-action-btn.danger:hover { background: var(--error-light); color: var(--error); }
-
-.row-detail {
-  background: var(--bg-2);
-  padding: 12px 16px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  white-space: pre-wrap;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.tag-kvadrat { background: var(--success-light); color: var(--success); }
-.tag-flat { background: var(--warning-light); color: var(--warning); }
-.tag-error { background: var(--error-light); color: var(--error); }
-
-.qty-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: var(--primary-light);
-  color: var(--primary);
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--text-muted);
-}
-
-.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
-.empty-state h3 { font-size: 16px; margin-bottom: 6px; color: var(--text); }
-.empty-state p { font-size: 13px; }
-
-/* ============================================================
-   10. ERRORS PANEL
-   ============================================================ */
-.errors-panel {
-  border: 1px solid var(--error);
-  background: var(--error-light);
-  border-radius: var(--radius);
-  margin-bottom: 14px;
-  overflow: hidden;
-}
-
-.errors-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--error);
-  font-size: 14px;
-}
-
-.errors-header .chevron { transition: transform var(--transition); }
-.errors-panel[data-open="true"] .chevron { transform: rotate(180deg); }
-
-.errors-list {
-  display: none;
-  padding: 0 16px 12px;
-  max-height: 240px;
-  overflow-y: auto;
-}
-.errors-panel[data-open="true"] .errors-list { display: block; }
-
-.error-item {
-  font-size: 13px;
-  padding: 6px 0;
-  cursor: pointer;
-  color: var(--error);
-  font-family: var(--font-mono);
-  border-bottom: 1px dashed rgba(220, 38, 38, 0.2);
-}
-.error-item:last-child { border: none; }
-.error-item:hover { text-decoration: underline; }
-
-/* ============================================================
-   11. EXPORT BAR
-   ============================================================ */
-.export-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-top: 14px;
-}
-
-/* ============================================================
-   12. MODALS
-   ============================================================ */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-.modal-backdrop[data-open="true"] { display: flex; opacity: 1; }
-
-.modal {
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-lg);
-  transform: translateY(20px) scale(0.98);
-  transition: transform var(--transition);
-}
-
-.modal-backdrop[data-open="true"] .modal {
-  transform: translateY(0) scale(1);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.modal-title {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.modal-footer {
-  padding: 14px 20px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-/* ============================================================
-   13. SETTINGS
-   ============================================================ */
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.setting-row:last-child { border-bottom: none; }
-
-.setting-label {
-  font-size: 14px;
-  font-weight: 500;
-  flex: 1;
-  min-width: 0;
-}
-
-.setting-help {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  font-weight: normal;
-}
-
-.setting-control { flex-shrink: 0; }
-
-.range-input {
-  width: 120px;
-}
-
-.select-input, .text-input {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--card);
-  color: var(--text);
-  font-size: 13px;
-}
-
-/* ============================================================
-   14. SESSIONS
-   ============================================================ */
-.sessions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.session-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  background: var(--bg-2);
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all var(--transition);
-}
-
-.session-item:hover {
-  border-color: var(--primary);
-  background: var(--card);
-}
-
-.session-info { min-width: 0; flex: 1; }
-.session-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-.session-meta { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
-.session-actions { display: flex; gap: 4px; }
-
-/* ============================================================
-   15. HELP
-   ============================================================ */
-.help-section { margin-bottom: 18px; }
-.help-section h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--primary);
-}
-.help-section p { font-size: 13px; line-height: 1.6; margin-bottom: 6px; }
-.help-section code {
-  font-family: var(--font-mono);
-  background: var(--bg-2);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-.help-section pre {
-  font-family: var(--font-mono);
-  background: var(--bg-2);
-  padding: 10px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  overflow-x: auto;
-  margin: 8px 0;
-}
-.help-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px;
-  margin: 8px 0;
-}
-.help-tag {
-  background: var(--bg-2);
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-/* ============================================================
-   16. TOAST
-   ============================================================ */
-.toast-container {
-  position: fixed;
-  bottom: 80px;
-  right: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 2000;
-  pointer-events: none;
-}
-
-@media (min-width: 768px) {
-  .toast-container { bottom: 16px; }
-}
-
-.toast {
-  background: var(--text);
-  color: var(--card);
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
-  box-shadow: var(--shadow-lg);
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  animation: toast-in 200ms ease-out;
-  max-width: 320px;
-}
-
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.toast.removing { animation: toast-out 200ms ease-in forwards; }
-@keyframes toast-out {
-  to { opacity: 0; transform: translateY(20px); }
-}
-
-.toast-success { background: var(--success); color: white; }
-.toast-error { background: var(--error); color: white; }
-.toast-warn { background: var(--warning); color: var(--text); }
-
-/* ============================================================
-   17. MOBILE BOTTOM BAR
-   ============================================================ */
-.mobile-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 10px 12px;
-  padding-bottom: max(10px, env(safe-area-inset-bottom));
-  background: var(--card);
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-  z-index: 100;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
-}
-
-@media (min-width: 768px) {
-  .mobile-bar { display: none; }
-}
-
-.mobile-bar .btn { flex: 1; padding: 10px; }
-
-/* ============================================================
-   18. UTILITIES
-   ============================================================ */
-.hidden { display: none !important; }
-.text-mono { font-family: var(--font-mono); }
-.text-muted { color: var(--text-muted); }
-.text-error { color: var(--error); }
-.text-success { color: var(--success); }
-.flex { display: flex; }
-.gap-sm { gap: 6px; }
-.gap-md { gap: 12px; }
-.skeleton {
-  background: linear-gradient(90deg, var(--bg-2) 0%, var(--card-hover) 50%, var(--bg-2) 100%);
-  background-size: 200% 100%;
-  animation: skeleton 1.4s ease-in-out infinite;
-  border-radius: 4px;
-}
-@keyframes skeleton {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
-}
-
-/* Focus visibility */
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-
-/* Print styles */
-@media print {
-  body { background: white; }
-  .header, .input-section, .filter-bar, .export-bar, .row-actions,
-  .mobile-bar, .icon-btn, .modal-backdrop, .toast-container { display: none !important; }
-  .layout { display: block; }
-  .summary {
-    background: white !important;
-    color: black !important;
-    border: 2px solid black;
-    page-break-after: avoid;
-  }
-  .results-table { font-size: 11px; }
-  .table-wrap { max-height: none; overflow: visible; }
-  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#000;--bg-1:#070707;--bg-2:#0d0d0d;--bg-3:#141414;
+  --line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.18);--line-3:rgba(255,255,255,.28);
+  --text:#fff;--text-2:#b8b8b8;--text-3:#6e6e6e;--text-4:#444;
+  --red:#D71921;--red-glow:rgba(215,25,33,.5);--red-soft:rgba(215,25,33,.12);
+  --green:#27d07f;--amber:#f5b333;
+  --dot:rgba(255,255,255,.07);
+  --mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',system-ui,sans-serif;--r:4px;
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:24px 24px;mask-image:radial-gradient(circle at 50% 0%,#000,transparent 72%);-webkit-mask-image:radial-gradient(circle at 50% 0%,#000,transparent 72%)}
+::selection{background:var(--red);color:#fff}
+a{color:inherit;text-decoration:none}
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:300;width:0;box-shadow:0 0 10px var(--red-glow)}
+.shell{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 20px}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;margin:0 -20px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{width:26px;height:26px;flex:none;display:grid;place-items:center}
+.brand-mark svg{width:26px;height:26px;filter:drop-shadow(0 0 5px var(--red-glow))}
+.brand-name{font-family:var(--mono);font-weight:800;font-size:14px;letter-spacing:.18em}
+.tb-clock{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.08em}
+@media(max-width:560px){.tb-clock{display:none}}
+
+/* hero */
+.hero{padding:46px 0 28px;border-bottom:1px solid var(--line)}
+.hero-coords{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--text-3);text-transform:uppercase;margin-bottom:18px;display:flex;gap:16px;flex-wrap:wrap}
+.hero-coords .on{color:var(--red)}
+.hero h1{font-family:var(--mono);font-weight:800;font-size:clamp(34px,7vw,68px);line-height:.96;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:10px}
+.hero h1 .red{color:var(--red)}
+.hero h1 .unit{font-size:.42em;vertical-align:super;color:var(--red)}
+.hero-sub{font-size:15px;color:var(--text-2);max-width:520px;margin-top:12px}
+
+/* section heads */
+.sec-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 16px}
+.sec-num{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.1em}
+.sec-title{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+.sec-line{flex:1;height:1px;background:var(--line)}
+
+/* input panel */
+.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--bg-1);position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--line-3),transparent)}
+.panel-pad{padding:20px}
+textarea{width:100%;min-height:200px;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r);color:var(--text);font-family:var(--mono);font-size:15px;line-height:1.8;padding:16px;resize:vertical;transition:.18s;tab-size:2}
+textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
+textarea::placeholder{color:var(--text-4);font-size:13.5px;line-height:1.9}
+
+.input-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;flex-wrap:wrap}
+.input-stat{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.06em}
+.input-stat b{color:var(--text)}
+.input-hint{font-family:var(--mono);font-size:10.5px;color:var(--text-4);letter-spacing:.03em}
+
+/* buttons */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 22px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;transition:.18s}
+.btn-red{background:var(--red);color:#fff;border-color:var(--red);flex:1;min-width:160px}
+.btn-red:hover{box-shadow:0 0 22px -4px var(--red-glow);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text-2);border-color:var(--line-2)}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn .arr{transition:transform .2s}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* settings inline */
+.settings{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.set-group{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;background:var(--bg-1)}
+.set-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.seg{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r);padding:2px}
+.seg button{font-family:var(--mono);font-size:11px;font-weight:600;padding:5px 11px;border:none;background:transparent;color:var(--text-3);border-radius:3px;cursor:pointer;transition:.15s}
+.seg button.active{background:var(--red);color:#fff}
+
+/* ===== RESULTS ===== */
+.totals{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+@media(max-width:680px){.totals{grid-template-columns:repeat(2,1fr)}}
+.total-cell{background:var(--bg-1);padding:22px 14px;text-align:center}
+.total-cell.main{background:var(--red-soft);grid-column:span 1}
+@media(max-width:680px){.total-cell.main{grid-column:span 2}}
+.total-num{font-family:var(--mono);font-weight:800;font-size:clamp(24px,3.4vw,38px);line-height:1;letter-spacing:-.02em}
+.total-cell.main .total-num{color:var(--red);font-size:clamp(30px,4.5vw,46px)}
+.total-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:9px}
+.total-unit{font-size:.5em;color:var(--text-3);margin-left:3px}
+
+/* results table */
+.table-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg-1)}
+.rtable{width:100%;border-collapse:collapse;font-size:13.5px}
+.rtable th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line-2);background:var(--bg-2);white-space:nowrap}
+.rtable th.num,.rtable td.num{text-align:right;font-variant-numeric:tabular-nums}
+.rtable td{padding:12px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);color:var(--text-2)}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr.r-kvadrat td:first-child{box-shadow:inset 2px 0 var(--red)}
+.rtable tr.r-flat td:first-child{box-shadow:inset 2px 0 var(--text-3)}
+.rtable tr.r-error td{color:var(--amber)}
+.rtable tr.r-error td:first-child{box-shadow:inset 2px 0 var(--amber)}
+.rtable tr:hover td{background:var(--bg-2)}
+.rtable .total-col{color:var(--text);font-weight:600}
+.tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--line-2)}
+.tag.kvadrat{color:var(--red);border-color:var(--red-soft);background:var(--red-soft)}
+.tag.flat{color:var(--text-3)}
+.tag.error{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 35%,transparent)}
+.row-input{color:var(--text);font-weight:500}
+.row-err-msg{font-family:var(--mono);font-size:11px;color:var(--amber);margin-top:3px}
+
+/* export bar */
+.export-bar{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.export-bar .btn{flex:1;min-width:140px}
+
+.empty-state{text-align:center;padding:50px 20px;border:1px dashed var(--line-2);border-radius:var(--r);background:var(--bg-1)}
+.empty-state .ico{font-size:32px;opacity:.3;margin-bottom:14px}
+.empty-state .t{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--text-3);text-transform:uppercase}
+.empty-state .s{font-size:13px;color:var(--text-4);margin-top:8px}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(16px);z-index:700;background:var(--bg-1);border:1px solid var(--red);border-radius:var(--r);padding:13px 20px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--text);box-shadow:0 16px 50px -12px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:.28s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* help modal */
+.modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);display:none;place-items:center;padding:20px}
+.modal.show{display:grid}
+.modal-box{background:var(--bg-1);border:1px solid var(--line-2);border-radius:var(--r);max-width:540px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
+.modal-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
+.modal-pad{padding:24px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.modal-close{width:32px;height:32px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);border-radius:3px;cursor:pointer;font-size:15px;transition:.15s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.help-row{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.help-row:last-child{border:none;margin:0;padding:0}
+.help-row h4{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.help-row p{font-size:13.5px;color:var(--text-2);line-height:1.7}
+.help-row code{font-family:var(--mono);background:var(--bg-3);padding:2px 7px;border-radius:3px;color:var(--text);font-size:12.5px}
+.icon-btn{width:36px;height:36px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);border-radius:var(--r);cursor:pointer;display:grid;place-items:center;transition:.18s}
+.icon-btn:hover{border-color:var(--red);color:var(--red)}
+.icon-btn svg{width:16px;height:16px}
+
+/* footer */
+.foot{margin:54px -20px 0;border-top:1px solid var(--line);padding:32px 20px 46px;text-align:center}
+.foot-word{font-family:var(--mono);font-weight:800;font-size:clamp(38px,13vw,120px);letter-spacing:.04em;color:transparent;-webkit-text-stroke:1px var(--line-2);line-height:1;margin-bottom:16px;text-transform:uppercase}
+.foot-meta{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-4)}
+.foot-meta a{color:var(--text-3)}
+.foot-meta a:hover{color:var(--red)}
+
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line-2)}
+::-webkit-scrollbar-thumb:hover{background:var(--text-4)}
+@media(max-width:560px){.shell{padding:0 14px}.topbar{padding:12px 14px;margin:0 -14px}.panel-pad{padding:16px}.foot{margin:46px -14px 0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.05s!important}}
 </style>
 </head>
 <body>
+<canvas id="fx"></canvas>
+<div id="prog"></div>
 
-<div class="app">
+<div class="shell">
 
-  <!-- ====================================================
-       HEADER
-       ==================================================== -->
-  <header class="header">
+  <!-- topbar -->
+  <div class="topbar">
     <div class="brand">
-      <div class="logo" aria-hidden="true">m²</div>
-      <div class="brand-text">
-        <div class="brand-title">Kvadrat Hisoblash</div>
-        <div class="brand-sub" id="brandSub">Tayyor</div>
-      </div>
+      <div class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="18" y="18" width="28" height="28" rx="3" fill="none" stroke="var(--red)" stroke-width="4"/><circle cx="32" cy="32" r="4" fill="var(--red)"/></svg></div>
+      <div class="brand-name">KVADRAT</div>
     </div>
-    <div class="header-actions">
-      <button class="icon-btn" id="btnNew" title="Yangi sessiya (Ctrl+N)" aria-label="Yangi sessiya">📄</button>
-      <button class="icon-btn" id="btnSessions" title="Saqlangan sessiyalar" aria-label="Saqlangan sessiyalar">📚</button>
-      <button class="icon-btn" id="btnTheme" title="Mavzu" aria-label="Mavzu">🌓</button>
-      <button class="icon-btn" id="btnHelp" title="Yordam" aria-label="Yordam">?</button>
-      <button class="icon-btn" id="btnSettings" title="Sozlamalar" aria-label="Sozlamalar">⚙</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="tb-clock" id="clock">--:--:--</span>
+      <button class="icon-btn" id="helpBtn" aria-label="Yordam">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.3a2.7 2.7 0 0 1 5.2.9c0 1.8-2.7 2.4-2.7 2.4M12 17h.01"/></svg>
+      </button>
     </div>
-  </header>
-
-  <!-- ====================================================
-       MAIN LAYOUT
-       ==================================================== -->
-  <div class="layout">
-
-    <!-- INPUT SECTION -->
-    <section class="input-section" aria-label="Kirish">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📝 Kirish</div>
-          <div class="card-title text-muted" style="font-size: 12px; font-weight: 500;">
-            <span id="lineCount">0</span> qator
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="input-tabs" role="tablist">
-            <button class="tab-btn" role="tab" aria-selected="true" data-tab="manual">⌨️ Qo'lda</button>
-            <button class="tab-btn" role="tab" aria-selected="false" data-tab="file">📁 Fayl</button>
-            <button class="tab-btn" role="tab" aria-selected="false" data-tab="paste">📋 Buferdan</button>
-          </div>
-
-          <!-- Manual tab -->
-          <div class="tab-panel" data-active="true" data-tab-panel="manual">
-            <textarea
-              class="input-textarea"
-              id="inputArea"
-              placeholder="Har bir qatorga bitta o'lcham kiriting:&#10;&#10;137 150 15 2шт&#10;287 179&#10;гор 124 145 40&#10;# komment - hisoblanmaydi"
-              spellcheck="false"
-              aria-label="O'lchamlar matnli kiritish"></textarea>
-            <div class="input-meta">
-              <span class="input-counter"><span class="dot"></span><span id="lineCounterDetail">0 qator · 0 belgi</span></span>
-              <span class="text-muted">Komment: # yoki //</span>
-            </div>
-          </div>
-
-          <!-- File tab -->
-          <div class="tab-panel" data-tab-panel="file">
-            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Fayl tanlash yoki tashlab qo'yish">
-              <div class="dropzone-icon">📂</div>
-              <div class="dropzone-title">Fayl tashlab qo'ying yoki bosing</div>
-              <div class="dropzone-sub">.txt, .csv (maks. 5 MB)</div>
-            </div>
-            <input type="file" id="fileInput" accept=".txt,.csv,text/plain,text/csv" hidden />
-            <div id="filePreview" class="hidden" style="margin-top: 10px;">
-              <div class="text-muted" style="font-size: 12px; margin-bottom: 6px;">📄 <span id="fileName"></span> · <span id="fileSize"></span></div>
-              <button class="btn btn-sm" id="btnLoadFile">Faylni yuklash</button>
-              <button class="btn btn-sm btn-ghost" id="btnClearFile">Bekor qilish</button>
-            </div>
-          </div>
-
-          <!-- Paste tab -->
-          <div class="tab-panel" data-tab-panel="paste">
-            <button class="btn btn-primary btn-block btn-lg" id="btnPaste">
-              📋 Buferdan joylashtirish
-            </button>
-            <p class="text-muted" style="font-size: 12px; margin-top: 8px; text-align: center;">
-              Buferdagi matnni kirish maydoniga qo'shadi
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn btn-primary" id="btnCalculate" title="Ctrl/Cmd + Enter">
-          ⚡ Hisoblash
-        </button>
-        <button class="btn" id="btnClear" title="Tozalash">🗑 Tozalash</button>
-        <button class="btn btn-ghost" id="btnSample" title="Misol ma'lumotlar">📋 Misol</button>
-        <button class="btn btn-ghost" id="btnSave" title="Saqlash (Ctrl/Cmd + S)" style="margin-left: auto;">💾 Saqlash</button>
-      </div>
-    </section>
-
-    <!-- RESULTS SECTION -->
-    <section class="results-section" aria-label="Natijalar">
-
-      <!-- Summary -->
-      <div id="summaryWrap" class="hidden">
-        <div class="summary">
-          <div class="summary-label">Jami maydon</div>
-          <div class="summary-total">
-            <span id="grandTotal">0.0000</span>
-            <span class="summary-unit" id="unitLabel">m²</span>
-          </div>
-          <div class="summary-stats">
-            <div class="summary-stat">✓ Yaroqli<strong id="statValid">0</strong></div>
-            <div class="summary-stat">📦 Donalar<strong id="statPieces">0</strong></div>
-            <div class="summary-stat">📐 Kvadrat<strong id="statKvadrat">0</strong></div>
-            <div class="summary-stat">▭ Flat<strong id="statFlat">0</strong></div>
-            <div class="summary-stat" id="statErrorsWrap" style="display: none;">⚠ Xato<strong id="statErrors">0</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Errors panel -->
-      <div class="errors-panel hidden" id="errorsPanel" data-open="false">
-        <div class="errors-header" id="errorsHeader" role="button" tabindex="0">
-          <span>⚠ <span id="errorsCount">0</span> ta xatolik</span>
-          <span class="chevron">▾</span>
-        </div>
-        <div class="errors-list" id="errorsList"></div>
-      </div>
-
-      <!-- Filter bar -->
-      <div id="filterBarWrap" class="hidden">
-        <div class="filter-bar">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="search" class="search-input" id="searchInput" placeholder="Qatorlar bo'yicha qidirish..." aria-label="Qidirish" />
-          </div>
-          <div class="btn-group" role="group" aria-label="Filtr">
-            <button class="btn btn-sm" data-filter="all" aria-pressed="true">Hammasi</button>
-            <button class="btn btn-sm" data-filter="kvadrat" aria-pressed="false">Kvadrat</button>
-            <button class="btn btn-sm" data-filter="flat" aria-pressed="false">Flat</button>
-            <button class="btn btn-sm" data-filter="error" aria-pressed="false">Xato</button>
-          </div>
-          <select class="select-input" id="sortSelect" aria-label="Saralash">
-            <option value="order">Tartib</option>
-            <option value="value-desc">Qiymat ↓</option>
-            <option value="value-asc">Qiymat ↑</option>
-            <option value="qty-desc">Miqdor ↓</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Results table -->
-      <div class="card results-card">
-        <div class="table-wrap">
-          <table class="results-table" id="resultsTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Kirish</th>
-                <th>Tur</th>
-                <th class="num">Miqdor</th>
-                <th class="num">Birlik</th>
-                <th class="num">Jami</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="resultsBody">
-              <tr><td colspan="7"><div class="empty-state">
-                <div class="icon">📐</div>
-                <h3>Hali natija yo'q</h3>
-                <p>O'lchamlarni kiriting va "Hisoblash" tugmasini bosing</p>
-              </div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Export bar -->
-      <div id="exportBarWrap" class="hidden">
-        <div class="export-bar">
-          <button class="btn btn-success" id="btnExportTelegram">📋 Telegram uchun</button>
-          <button class="btn" id="btnExportCSV">📊 CSV</button>
-          <button class="btn" id="btnExportTXT">📄 TXT</button>
-          <button class="btn" id="btnExportJSON">{ } JSON</button>
-          <button class="btn" id="btnPrint">🖨 Chop etish</button>
-        </div>
-      </div>
-
-    </section>
   </div>
 
-  <!-- Mobile bottom bar -->
-  <div class="mobile-bar">
-    <button class="btn btn-primary" id="btnCalculateMobile">⚡ Hisoblash</button>
-    <button class="btn" id="btnSaveMobile">💾</button>
-    <button class="btn btn-success" id="btnExportMobile">📋</button>
+  <!-- hero -->
+  <section class="hero">
+    <div class="hero-coords">
+      <span><span class="on">●</span> READY</span>
+      <span>BATCH CALCULATOR</span>
+      <span>cm / mm → m²</span>
+    </div>
+    <h1>KVADRAT<br><span class="red">HISOBLASH</span> <span class="unit">m²</span></h1>
+    <p class="hero-sub">O'lchamlarni qatorlab kiriting — har bir qator bitta detal. Jami kvadrat metr darhol chiqadi va chiroyli PDF qilib saqlanadi.</p>
+  </section>
+
+  <!-- input -->
+  <div class="sec-head">
+    <span class="sec-num">// 001</span>
+    <span class="sec-title">O'LCHAMLAR</span>
+    <span class="sec-line"></span>
   </div>
 
+  <div class="panel"><div class="panel-pad">
+    <textarea id="input" placeholder="Har bir qatorga bitta o'lcham:&#10;&#10;137 150 15        →  kvadrat (3 o'lcham)&#10;287 179           →  flat (2 o'lcham)&#10;gor 124 145 40 2sht →  nomli, 2 dona&#10;145,5 170,5 30    →  vergul ham kasr&#10;# komment qatori hisoblanmaydi" spellcheck="false" autocomplete="off" autocapitalize="off" data-gramm="false"></textarea>
+    <div class="input-foot">
+      <span class="input-stat"><b id="lineCount">0</b> qator · <b id="charCount">0</b> belgi</span>
+      <span class="input-hint">Miqdor: <code style="font-family:var(--mono);font-size:10px">шт · sht · pcs · x2</code> · Komment: <code style="font-family:var(--mono);font-size:10px"># //</code></span>
+    </div>
+
+    <div class="settings">
+      <div class="set-group">
+        <span class="set-label">Birlik</span>
+        <div class="seg" id="unitSeg">
+          <button data-unit="cm" class="active">SM</button>
+          <button data-unit="mm">MM</button>
+        </div>
+      </div>
+      <div class="set-group">
+        <span class="set-label">Kasr xona</span>
+        <div class="seg" id="decSeg">
+          <button data-dec="2">2</button>
+          <button data-dec="3">3</button>
+          <button data-dec="4" class="active">4</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-red" id="calcBtn">⚡ HISOBLASH <span class="arr">→</span></button>
+      <button class="btn btn-ghost" id="exampleBtn">MISOL</button>
+      <button class="btn btn-ghost" id="clearBtn">TOZALASH</button>
+    </div>
+  </div></div>
+
+  <!-- results -->
+  <div class="sec-head">
+    <span class="sec-num">// 002</span>
+    <span class="sec-title">NATIJA</span>
+    <span class="sec-line"></span>
+  </div>
+
+  <div id="resultsZone">
+    <div class="empty-state" id="emptyState">
+      <div class="ico">▦</div>
+      <div class="t">Hali natija yo'q</div>
+      <div class="s">O'lchamlarni kiriting va "Hisoblash" tugmasini bosing</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="foot">
+    <div class="foot-word">m²</div>
+    <div class="foot-meta">KVADRAT · MONTAJ HISOBLAGICH · <a href="https://maqsudjon.com" target="_blank" rel="noopener">MAQSUDJON.COM</a></div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- help modal -->
+<div class="modal" id="helpModal">
+  <div class="modal-box"><div class="modal-pad">
+    <div class="modal-head">
+      <span class="modal-title">QANDAY ISHLAYDI</span>
+      <button class="modal-close" id="helpClose">✕</button>
+    </div>
+    <div class="help-row">
+      <h4>3 o'lcham — Kvadrat</h4>
+      <p>Quvur yoki qutu yuzasi. <code>137 150 15</code> → <b>2.916 m²</b>. Formula: ((B+2C)/d × A/d) + (B/d × 2C/d).</p>
+    </div>
+    <div class="help-row">
+      <h4>2 o'lcham — Flat</h4>
+      <p>Oddiy to'rtburchak. <code>287 179</code> → <b>5.1373 m²</b>. Formula: A/d × B/d.</p>
+    </div>
+    <div class="help-row">
+      <h4>Miqdor (dona)</h4>
+      <p><code>137 150 15 2sht</code> yoki <code>x2</code>, <code>шт2</code>, <code>2pcs</code> — natija dona soniga ko'paytiriladi.</p>
+    </div>
+    <div class="help-row">
+      <h4>Boshqa</h4>
+      <p>Vergul yoki nuqta kasr sifatida (<code>145,5</code>). Nom yozsangiz saqlanadi (<code>gor 124 145</code>). <code>#</code> yoki <code>//</code> bilan boshlangan qator hisoblanmaydi. Birlik SM yoki MM, kasr xona sozlanadi.</p>
+    </div>
+  </div></div>
 </div>
 
-<!-- ====================================================
-     MODALS
-     ==================================================== -->
-
-<!-- Settings modal -->
-<div class="modal-backdrop" id="settingsModal" role="dialog" aria-labelledby="settingsTitle">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="settingsTitle">⚙ Sozlamalar</div>
-      <button class="icon-btn" data-close-modal aria-label="Yopish">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="setting-row">
-        <div class="setting-label">
-          Aniqlik (kasr xonalari)
-          <div class="setting-help">Natijalarda nechta kasr xona ko'rsatiladi</div>
-        </div>
-        <div class="setting-control">
-          <input type="range" class="range-input" id="setDecimals" min="2" max="6" value="4" />
-          <span id="setDecimalsValue" class="text-mono" style="margin-left: 8px;">4</span>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          O'lchov birligi
-          <div class="setting-help">Kirish o'lchami</div>
-        </div>
-        <div class="setting-control">
-          <select class="select-input" id="setUnit">
-            <option value="cm">santimetr → m²</option>
-            <option value="mm">millimetr → m²</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          Til
-          <div class="setting-help">Interfeys tili</div>
-        </div>
-        <div class="setting-control">
-          <select class="select-input" id="setLang">
-            <option value="uz">O'zbek</option>
-            <option value="ru">Русский</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          Mavzu
-          <div class="setting-help">Yorug' yoki qorong'i</div>
-        </div>
-        <div class="setting-control">
-          <select class="select-input" id="setTheme">
-            <option value="auto">Avto</option>
-            <option value="light">Yorug'</option>
-            <option value="dark">Qorong'i</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          Avto-saqlash
-          <div class="setting-help">Har 30 soniyada avtomatik saqlash</div>
-        </div>
-        <div class="setting-control">
-          <select class="select-input" id="setAutosave">
-            <option value="on">Yoqilgan</option>
-            <option value="off">O'chirilgan</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-label">
-          Telegram shablon
-          <div class="setting-help">Eksport sarlavhasini sozlash</div>
-        </div>
-        <div class="setting-control">
-          <input type="text" class="text-input" id="setTgTitle" placeholder="📐 Kvadrat hisobi" style="width: 200px;" />
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-danger" id="btnClearAll">🗑 Hammasini tozalash</button>
-      <button class="btn btn-primary" data-close-modal>Yopish</button>
-    </div>
-  </div>
-</div>
-
-<!-- Sessions modal -->
-<div class="modal-backdrop" id="sessionsModal" role="dialog" aria-labelledby="sessionsTitle">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="sessionsTitle">📚 Saqlangan sessiyalar</div>
-      <button class="icon-btn" data-close-modal aria-label="Yopish">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="sessions-list" id="sessionsList">
-        <div class="empty-state">
-          <div class="icon">📂</div>
-          <p>Hali saqlangan sessiyalar yo'q</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-close-modal>Yopish</button>
-    </div>
-  </div>
-</div>
-
-<!-- Help modal -->
-<div class="modal-backdrop" id="helpModal" role="dialog" aria-labelledby="helpTitle">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="helpTitle">❔ Yordam</div>
-      <button class="icon-btn" data-close-modal aria-label="Yopish">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="help-section">
-        <h3>📐 Format 1: Kvadrat (3 ta raqam)</h3>
-        <p>3D quti yuzasini hisoblash uchun A B C raqamlari kiritiladi.</p>
-        <pre>Formula: ((B + C×2) / 100) × (A / 100) + (B / 100) × (C×2 / 100)
-Misol:   137 150 15  →  2.916 m²</pre>
-      </div>
-
-      <div class="help-section">
-        <h3>▭ Format 2: Flat (2 ta raqam)</h3>
-        <p>Oddiy yuza hisoblash uchun A B raqamlari kiritiladi.</p>
-        <pre>Formula: (A / 100) × (B / 100)
-Misol:   287 179  →  5.1373 m²</pre>
-      </div>
-
-      <div class="help-section">
-        <h3>✕ Miqdor (qty) belgilari</h3>
-        <p>Qator oxirida miqdor ko'rsatilsa, natija shu raqamga ko'paytiriladi:</p>
-        <div class="help-grid">
-          <span class="help-tag">2шт</span>
-          <span class="help-tag">2 штук</span>
-          <span class="help-tag">2sht</span>
-          <span class="help-tag">2pcs</span>
-          <span class="help-tag">2dona</span>
-          <span class="help-tag">x2</span>
-          <span class="help-tag">*2</span>
-          <span class="help-tag">(2) yoki [2]</span>
-        </div>
-      </div>
-
-      <div class="help-section">
-        <h3>🏷 Yorliqlar (label)</h3>
-        <p>Raqamlar orasidagi matnli so'zlar e'tiborga olinmaydi, lekin saqlanadi:</p>
-        <div class="help-grid">
-          <span class="help-tag">без каз</span>
-          <span class="help-tag">анкер</span>
-          <span class="help-tag">гор</span>
-          <span class="help-tag">шк</span>
-          <span class="help-tag">вер</span>
-          <span class="help-tag">низ</span>
-          <span class="help-tag">боковой</span>
-          <span class="help-tag">задний</span>
-        </div>
-      </div>
-
-      <div class="help-section">
-        <h3>🔣 Ajratuvchilar</h3>
-        <p>Raqamlarni quyidagi belgilar bilan ajratish mumkin:</p>
-        <pre>bo'sh joy   x  X  х  Х  ×  *  ,  ;  /
-Misol:   137 150 15
-         137x150x15
-         137 х 150 х 15
-         145,5 170,5 30  (vergul kasr sifatida)</pre>
-      </div>
-
-      <div class="help-section">
-        <h3>💡 Komment va bo'sh qatorlar</h3>
-        <p><code>#</code> yoki <code>//</code> bilan boshlanuvchi qatorlar e'tiborga olinmaydi. Bo'sh qatorlar ham o'tkazib yuboriladi.</p>
-      </div>
-
-      <div class="help-section">
-        <h3>⌨ Klaviatura yorliqlari</h3>
-        <div class="help-grid">
-          <span class="help-tag">Ctrl/Cmd+Enter — Hisoblash</span>
-          <span class="help-tag">Ctrl/Cmd+S — Saqlash</span>
-          <span class="help-tag">Ctrl/Cmd+K — Qidirish</span>
-          <span class="help-tag">Ctrl/Cmd+N — Yangi</span>
-          <span class="help-tag">Esc — Yopish</span>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="btnLoadSampleHelp">📋 Misol yuklash</button>
-      <button class="btn btn-primary" data-close-modal>Tushunarli</button>
-    </div>
-  </div>
-</div>
-
-<!-- Save session modal -->
-<div class="modal-backdrop" id="saveModal" role="dialog">
-  <div class="modal" style="max-width: 420px;">
-    <div class="modal-header">
-      <div class="modal-title">💾 Sessiyani saqlash</div>
-      <button class="icon-btn" data-close-modal aria-label="Yopish">✕</button>
-    </div>
-    <div class="modal-body">
-      <label style="display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted);">Sessiya nomi</label>
-      <input type="text" class="text-input" id="saveNameInput" placeholder="Masalan: 8-may buyurtma" style="width: 100%;" />
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-close-modal>Bekor</button>
-      <button class="btn btn-primary" id="btnSaveConfirm">Saqlash</button>
-    </div>
-  </div>
-</div>
-
-<!-- Confirm modal -->
-<div class="modal-backdrop" id="confirmModal" role="dialog">
-  <div class="modal" style="max-width: 380px;">
-    <div class="modal-header">
-      <div class="modal-title" id="confirmTitle">Tasdiqlash</div>
-    </div>
-    <div class="modal-body">
-      <p id="confirmMessage" style="font-size: 14px;">Davom etishni xohlaysizmi?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" id="btnConfirmCancel">Bekor</button>
-      <button class="btn btn-danger" id="btnConfirmOk">Davom etish</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+</body>
 
 <script>
 'use strict';
 
 /* ============================================================
-   PARSER ENGINE
-   Converts raw text input into structured calculation data.
+   PARSER ENGINE (preserved logic — handles real montaj input)
    ============================================================ */
 const Parser = (() => {
-
-  // Quantity patterns (try in order — first match wins)
-  // Each pattern must capture the quantity as group 1.
-  // Note: \b doesn't recognize Cyrillic word chars in JS, so we use explicit
-  // negative lookaheads (?!\d) and (?![а-яА-Яa-zA-Z]) for Cyrillic boundaries.
   const QTY_PATTERNS = [
-    // cyrillic-prefix MUST come before cyrillic-suffix so that "шт5" wins over "22 шт"
-    { re: /(?:^|\s)шт(?:ук[аи]?)?\s*(\d+)/iu,                          name: 'cyrillic-prefix' },
-    { re: /(\d+)\s*шт(?:ук[аи]?)?(?!\d)(?![а-яА-Яa-zA-Z])/iu,          name: 'cyrillic-suffix' },
-    { re: /(\d+)\s*(?:sht|pcs|dona)\b/i,                                name: 'latin-suffix' },
-    { re: /(?:^|\s)[x×х][\s]*(\d{1,3})(?:\s*$|\s)/iu,                   name: 'x-multiplier' },
-    { re: /(?:^|\s)\*\s*(\d{1,3})(?:\s*$|\s)/,                          name: 'star-multiplier' },
-    { re: /\((\d+)\)/,                                                  name: 'paren' },
-    { re: /\[(\d+)\]/,                                                  name: 'bracket' },
+    { re: /(?:^|\s)шт(?:ук[аи]?)?\s*(\d+)/iu,                 name: 'cyrillic-prefix' },
+    { re: /(\d+)\s*шт(?:ук[аи]?)?(?!\d)(?![а-яА-Яa-zA-Z])/iu, name: 'cyrillic-suffix' },
+    { re: /(\d+)\s*(?:sht|pcs|dona)\b/i,                      name: 'latin-suffix' },
+    { re: /(?:^|\s)[x×х][\s]*(\d{1,3})(?:\s*$|\s)/iu,         name: 'x-multiplier' },
+    { re: /(?:^|\s)\*\s*(\d{1,3})(?:\s*$|\s)/,                name: 'star-multiplier' },
+    { re: /\((\d+)\)/,                                        name: 'paren' },
+    { re: /\[(\d+)\]/,                                        name: 'bracket' },
   ];
-
-  // Number pattern: integer or decimal (with . or , as decimal sep)
   const NUMBER_RE = /-?\d+(?:[.,]\d+)?/g;
 
-  /**
-   * Try to extract a quantity marker from the line.
-   * Returns { qty, lineWithoutQty } — qty defaults to 1.
-   */
-  function extractQuantity(line) {
-    for (const pat of QTY_PATTERNS) {
-      const match = line.match(pat.re);
-      if (match) {
-        const qty = parseInt(match[1], 10);
-        if (qty > 0 && qty < 10000) {
-          // Heuristic: x-multiplier needs more care.
-          // "137x150" should NOT match as quantity (large second number).
-          // We restrict x-multiplier numbers to 1-3 digits already in the regex.
-          // BUT we also want to ensure the x-multiplier pattern isn't between
-          // two large numbers. We check if removing it leaves valid dimensions.
-          if (pat.name === 'x-multiplier' || pat.name === 'star-multiplier') {
-            // Only treat as quantity if it appears at the end of the line
-            // OR if without it the rest still has 2+ numbers.
-            const without = (line.slice(0, match.index) + ' ' + line.slice(match.index + match[0].length));
-            const numsWithout = (without.match(NUMBER_RE) || []).length;
-            const numsWith = (line.match(NUMBER_RE) || []).length;
-            // If removing the matched group reduces count by exactly 1
-            // AND the remaining count is >= 2, treat as quantity.
-            if (numsWithout < 2 || numsWith - numsWithout !== 1) {
-              continue;
-            }
+  function extractQuantity(line){
+    for(const pat of QTY_PATTERNS){
+      const m=line.match(pat.re);
+      if(m){
+        const qty=parseInt(m[1],10);
+        if(qty>0&&qty<10000){
+          if(pat.name==='x-multiplier'||pat.name==='star-multiplier'){
+            const without=(line.slice(0,m.index)+' '+line.slice(m.index+m[0].length));
+            const numsWithout=(without.match(NUMBER_RE)||[]).length;
+            const numsWith=(line.match(NUMBER_RE)||[]).length;
+            if(numsWithout<2||numsWith-numsWithout!==1) continue;
           }
-          const cleaned = line.slice(0, match.index) + ' ' + line.slice(match.index + match[0].length);
-          return { qty, lineWithoutQty: cleaned };
+          const cleaned=line.slice(0,m.index)+' '+line.slice(m.index+m[0].length);
+          return {qty,lineWithoutQty:cleaned};
         }
       }
     }
-    return { qty: 1, lineWithoutQty: line };
+    return {qty:1,lineWithoutQty:line};
   }
-
-  /**
-   * Extract numbers from a line. Handles both `.` and `,` as decimal separators.
-   * Returns array of numbers.
-   */
-  function extractNumbers(line) {
-    const matches = line.match(NUMBER_RE) || [];
-    return matches.map(s => parseFloat(s.replace(',', '.'))).filter(n => !isNaN(n));
+  function extractNumbers(line){
+    const m=line.match(NUMBER_RE)||[];
+    return m.map(s=>parseFloat(s.replace(',','.'))).filter(n=>!isNaN(n));
   }
-
-  /**
-   * Extract non-numeric labels from a line (preserved for context).
-   */
-  function extractLabels(line) {
-    return line
-      .replace(NUMBER_RE, ' ')
-      .replace(/[xXхХ×*,;\/\(\)\[\]]/gu, ' ')
-      .split(/\s+/u)
-      .filter(w => w.length > 0);
+  function extractLabels(line){
+    return line.replace(NUMBER_RE,' ').replace(/[xXхХ×*,;\/\(\)\[\]]/gu,' ').split(/\s+/u).filter(w=>w.length>0);
   }
-
-  /**
-   * Main: parse a single line into a structured row.
-   */
-  function parseLine(rawLine, index) {
-    const original = rawLine;
-    const trimmed = rawLine.trim();
-
-    if (trimmed === '') {
-      return { type: 'empty', original, index };
-    }
-    if (trimmed.startsWith('#') || trimmed.startsWith('//')) {
-      return { type: 'comment', original, index };
-    }
-
-    // Step 1: extract quantity
-    const { qty, lineWithoutQty } = extractQuantity(trimmed);
-
-    // Step 2: extract numbers from remaining line
-    const numbers = extractNumbers(lineWithoutQty);
-
-    // Step 3: extract labels
-    const labels = extractLabels(lineWithoutQty);
-
-    // Validation
-    if (numbers.length === 0) {
-      return {
-        type: 'error', original, index, qty, labels,
-        error: "Format tushunilmadi - raqam topilmadi"
-      };
-    }
-    if (numbers.some(n => n < 0)) {
-      return {
-        type: 'error', original, index, qty, labels,
-        error: "Manfiy raqamlar ruxsat etilmaydi"
-      };
-    }
-    if (numbers.length === 1) {
-      return {
-        type: 'error', original, index, qty, labels,
-        error: "Kamida 2 ta raqam kerak"
-      };
-    }
-
-    const warnings = [];
-    if (numbers.some(n => n === 0)) {
-      warnings.push("Nol qiymat aniqlandi");
-    }
-    if (numbers.some(n => n > 10000)) {
-      warnings.push("Juda katta raqam — tekshiring");
-    }
-    if (numbers.length > 3) {
-      warnings.push(`${numbers.length} ta raqam topildi, faqat birinchi 3 tasi ishlatildi`);
-    }
-
-    // Step 4: classify by number count
-    if (numbers.length === 2) {
-      return {
-        type: 'flat', original, index, qty, labels, warnings,
-        A: numbers[0], B: numbers[1],
-      };
-    }
-
-    // 3+ numbers → kvadrat (use first 3)
-    return {
-      type: 'kvadrat', original, index, qty, labels, warnings,
-      A: numbers[0], B: numbers[1], C: numbers[2],
-    };
+  function parseLine(rawLine,index){
+    const original=rawLine, trimmed=rawLine.trim();
+    if(trimmed==='') return {type:'empty',original,index};
+    if(trimmed.startsWith('#')||trimmed.startsWith('//')) return {type:'comment',original,index};
+    const {qty,lineWithoutQty}=extractQuantity(trimmed);
+    const numbers=extractNumbers(lineWithoutQty);
+    const labels=extractLabels(lineWithoutQty);
+    if(numbers.length===0) return {type:'error',original,index,qty,labels,error:"Raqam topilmadi"};
+    if(numbers.some(n=>n<0)) return {type:'error',original,index,qty,labels,error:"Manfiy raqam"};
+    if(numbers.length===1) return {type:'error',original,index,qty,labels,error:"Kamida 2 ta raqam kerak"};
+    const warnings=[];
+    if(numbers.some(n=>n===0)) warnings.push("Nol qiymat");
+    if(numbers.some(n=>n>10000)) warnings.push("Juda katta raqam");
+    if(numbers.length>3) warnings.push(numbers.length+" raqam, faqat 3 tasi ishlatildi");
+    if(numbers.length===2) return {type:'flat',original,index,qty,labels,warnings,A:numbers[0],B:numbers[1]};
+    return {type:'kvadrat',original,index,qty,labels,warnings,A:numbers[0],B:numbers[1],C:numbers[2]};
   }
-
-  /**
-   * Parse full text into an array of structured rows.
-   * Skips empty/comment rows entirely from the calculation set
-   * (they are not returned).
-   */
-  function parseText(text) {
-    const lines = text.split(/\r?\n/);
-    const rows = [];
-    lines.forEach((line, i) => {
-      const parsed = parseLine(line, i);
-      if (parsed.type !== 'empty' && parsed.type !== 'comment') {
-        rows.push(parsed);
-      }
-    });
+  function parseText(text){
+    const lines=text.split(/\r?\n/), rows=[];
+    lines.forEach((line,i)=>{ const p=parseLine(line,i); if(p.type!=='empty'&&p.type!=='comment') rows.push(p); });
     return rows;
   }
-
-  return { parseLine, parseText, extractQuantity, extractNumbers, extractLabels };
+  return {parseLine,parseText};
 })();
 
 /* ============================================================
    CALCULATOR
-   Applies formulas to parsed rows.
    ============================================================ */
 const Calculator = (() => {
-
-  /**
-   * Calculate kvadrat (3D box surface) value.
-   *   C2 = C × 2
-   *   result = ((B + C2) / 100) × (A / 100) + (B / 100) × (C2 / 100)
-   * Inputs are in cm by default; output in m².
-   */
-  function calcKvadrat(A, B, C, unitDiv) {
-    const C2 = C * 2;
-    const part1 = ((B + C2) / unitDiv) * (A / unitDiv);
-    const part2 = (B / unitDiv) * (C2 / unitDiv);
-    return { value: part1 + part2, C2, part1, part2 };
-  }
-
-  /**
-   * Calculate flat (simple rectangle) value.
-   *   result = (A / 100) × (B / 100)
-   */
-  function calcFlat(A, B, unitDiv) {
-    return { value: (A / unitDiv) * (B / unitDiv) };
-  }
-
-  function format(num, decimals) {
-    if (!isFinite(num)) return '—';
-    return num.toFixed(decimals);
-  }
-
-  /**
-   * Apply calculations to all parsed rows; returns rows with value/total/steps.
-   */
-  function calculate(rows, settings) {
-    const unitDiv = settings.unit === 'mm' ? 1000 : 100;
-    const dec = settings.decimals;
-
-    return rows.map(row => {
-      if (row.type === 'error') {
-        return { ...row, value: 0, total: 0 };
-      }
-
-      if (row.type === 'flat') {
-        const r = calcFlat(row.A, row.B, unitDiv);
-        const value = r.value;
-        const total = value * row.qty;
-        const steps =
-          `(${row.A}/${unitDiv}) × (${row.B}/${unitDiv})\n` +
-          `= ${format(row.A/unitDiv, dec)} × ${format(row.B/unitDiv, dec)}\n` +
-          `= ${format(value, dec)} m²` +
-          (row.qty !== 1 ? `\n× ${row.qty} = ${format(total, dec)} m²` : '');
-        return { ...row, value, total, steps };
-      }
-
-      // kvadrat
-      const r = calcKvadrat(row.A, row.B, row.C, unitDiv);
-      const value = r.value;
-      const total = value * row.qty;
-      const steps =
-        `C₂ = ${row.C} × 2 = ${r.C2}\n` +
-        `((B + C₂)/${unitDiv}) × (A/${unitDiv}) + (B/${unitDiv}) × (C₂/${unitDiv})\n` +
-        `= ((${row.B}+${r.C2})/${unitDiv}) × (${row.A}/${unitDiv}) + (${row.B}/${unitDiv}) × (${r.C2}/${unitDiv})\n` +
-        `= ${format(r.part1, dec)} + ${format(r.part2, dec)}\n` +
-        `= ${format(value, dec)} m²` +
-        (row.qty !== 1 ? `\n× ${row.qty} = ${format(total, dec)} m²` : '');
-      return { ...row, value, total, steps };
+  function calcKvadrat(A,B,C,d){ const C2=C*2; return ((B+C2)/d)*(A/d)+(B/d)*(C2/d); }
+  function calcFlat(A,B,d){ return (A/d)*(B/d); }
+  function calculate(rows,settings){
+    const d=settings.unit==='mm'?1000:100;
+    return rows.map(row=>{
+      if(row.type==='error') return {...row,value:0,total:0};
+      if(row.type==='flat'){ const v=calcFlat(row.A,row.B,d); return {...row,value:v,total:v*row.qty}; }
+      const v=calcKvadrat(row.A,row.B,row.C,d); return {...row,value:v,total:v*row.qty};
     });
   }
-
-  return { calculate, calcKvadrat, calcFlat, format };
+  return {calculate};
 })();
 
 /* ============================================================
-   STORAGE
-   localStorage helpers with safe wrappers.
+   UI
    ============================================================ */
-const Storage = (() => {
-  const PREFIX = 'kvadrat::';
-  const KEYS = {
-    settings: PREFIX + 'settings',
-    sessions: PREFIX + 'sessions',
-    autosave: PREFIX + 'autosave',
-    current: PREFIX + 'current',
-  };
-
-  function get(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch (e) {
-      console.warn('Storage get failed:', e);
-      return fallback;
-    }
-  }
-
-  function set(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      return true;
-    } catch (e) {
-      console.warn('Storage set failed:', e);
-      return false;
-    }
-  }
-
-  function remove(key) {
-    try { localStorage.removeItem(key); } catch (e) {}
-  }
-
-  function clearAll() {
-    try {
-      Object.values(KEYS).forEach(k => localStorage.removeItem(k));
-    } catch (e) {}
-  }
-
-  return { get, set, remove, clearAll, KEYS };
-})();
-
-/* ============================================================
-   APP STATE & MAIN UI
-   ============================================================ */
-const App = (() => {
-
-  const DEFAULT_SETTINGS = {
-    decimals: 4,
-    unit: 'cm',         // cm | mm
-    lang: 'uz',
-    theme: 'auto',      // auto | light | dark
-    autosave: 'on',
-    tgTitle: '📐 Kvadrat hisobi',
-  };
-
-  const SAMPLE_DATA = `# Misol ma'lumotlar
-137 150 15 2шт
-135 150 15 без каз
-287 179
-127 155 30
-145 170 30
-140 154 30
-гор 124 145 40
-шк 126 148 10 анкер
-200 100 25 3шт
-180 90 20
-ошибка abc
-75 60
-вер 110 130 18 2шт
-низ 110 130 18 2шт
-боковой 130 18 50 4шт
-задний 110 50 18
-135x150x15
-287х179
-145,5 170,5 30
-1 2 3 4 5 extra numbers
-500 300 50
-# bu komment - hisoblanmaydi
-220 180 22 шт5
-160 140 28
-//yana komment
-90 80`;
-
-  const state = {
-    rows: [],
-    filter: 'all',
-    search: '',
-    sort: 'order',
-    settings: { ...DEFAULT_SETTINGS },
-    expandedRows: new Set(),
-  };
-
-  // Element refs
-  const $ = (id) => document.getElementById(id);
-  const els = {};
-
-  // ---------------- Settings ----------------
-  function loadSettings() {
-    const stored = Storage.get(Storage.KEYS.settings, {});
-    state.settings = { ...DEFAULT_SETTINGS, ...stored };
-    applyTheme();
-  }
-
-  function saveSettings() {
-    Storage.set(Storage.KEYS.settings, state.settings);
-  }
-
-  function applyTheme() {
-    const theme = state.settings.theme;
-    if (theme === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', theme);
-    }
-  }
-
-  // ---------------- Toast ----------------
-  function toast(message, type = 'info', duration = 2400) {
-    const el = document.createElement('div');
-    el.className = 'toast' + (type !== 'info' ? ` toast-${type}` : '');
-    el.textContent = message;
-    els.toastContainer.appendChild(el);
-    setTimeout(() => {
-      el.classList.add('removing');
-      setTimeout(() => el.remove(), 200);
-    }, duration);
-  }
-
-  // ---------------- Modal helpers ----------------
-  function openModal(id) {
-    const m = $(id);
-    if (m) m.dataset.open = 'true';
-  }
-  function closeModal(id) {
-    const m = $(id);
-    if (m) m.dataset.open = 'false';
-  }
-  function closeAllModals() {
-    document.querySelectorAll('.modal-backdrop').forEach(m => m.dataset.open = 'false');
-  }
-
-  let confirmCb = null;
-  function confirmAction(title, message, onOk) {
-    $('confirmTitle').textContent = title;
-    $('confirmMessage').textContent = message;
-    confirmCb = onOk;
-    openModal('confirmModal');
-  }
-
-  // ---------------- Input handling ----------------
-  function updateLineCounter() {
-    const txt = els.inputArea.value;
-    const lines = txt.length === 0 ? 0 : txt.split(/\r?\n/).length;
-    const chars = txt.length;
-    els.lineCount.textContent = lines;
-    els.lineCounterDetail.textContent = `${lines} qator · ${chars} belgi`;
-  }
-
-  function setInputText(text) {
-    els.inputArea.value = text;
-    updateLineCounter();
-    autosaveCurrent();
-  }
-
-  function loadSample() {
-    setInputText(SAMPLE_DATA);
-    toast("📋 Misol ma'lumotlar yuklandi", 'success');
-    switchTab('manual');
-  }
-
-  function clearAll() {
-    confirmAction(
-      'Tozalash',
-      "Barcha ma'lumotlar tozalansinmi?",
-      () => {
-        setInputText('');
-        state.rows = [];
-        state.expandedRows.clear();
-        renderAll();
-        toast('Tozalandi', 'success');
-      }
-    );
-  }
-
-  // ---------------- Tabs ----------------
-  function switchTab(name) {
-    document.querySelectorAll('[data-tab]').forEach(b => {
-      b.setAttribute('aria-selected', String(b.dataset.tab === name));
-    });
-    document.querySelectorAll('[data-tab-panel]').forEach(p => {
-      p.dataset.active = String(p.dataset.tabPanel === name);
-    });
-  }
-
-  // ---------------- Calculate ----------------
-  function calculate() {
-    const text = els.inputArea.value;
-    if (!text.trim()) {
-      toast("Avval o'lchamlarni kiriting", 'warn');
-      return;
-    }
-
-    const t0 = performance.now();
-    const parsed = Parser.parseText(text);
-    const calculated = Calculator.calculate(parsed, state.settings);
-    state.rows = calculated;
-    state.expandedRows.clear();
-    const dt = (performance.now() - t0).toFixed(0);
-    renderAll();
-    autosaveCurrent();
-    els.brandSub.textContent = `${calculated.length} qator · ${dt}ms`;
-    toast(`✓ ${calculated.length} qator hisoblandi`, 'success', 1800);
-  }
-
-  // ---------------- Filter / Sort ----------------
-  function filteredRows() {
-    let rows = state.rows.slice();
-
-    if (state.filter !== 'all') {
-      rows = rows.filter(r => r.type === state.filter);
-    }
-
-    const q = state.search.trim().toLowerCase();
-    if (q) {
-      rows = rows.filter(r => r.original.toLowerCase().includes(q));
-    }
-
-    switch (state.sort) {
-      case 'value-desc': rows.sort((a,b) => (b.total||0) - (a.total||0)); break;
-      case 'value-asc':  rows.sort((a,b) => (a.total||0) - (b.total||0)); break;
-      case 'qty-desc':   rows.sort((a,b) => (b.qty||0) - (a.qty||0)); break;
-      // 'order' = original index — already in order
-    }
-
-    return rows;
-  }
-
-  // ---------------- Render ----------------
-  function renderAll() {
-    renderSummary();
-    renderTable();
-    renderErrors();
-    const hasResults = state.rows.length > 0;
-    els.summaryWrap.classList.toggle('hidden', !hasResults);
-    els.filterBarWrap.classList.toggle('hidden', !hasResults);
-    els.exportBarWrap.classList.toggle('hidden', !hasResults);
-  }
-
-  function renderSummary() {
-    const dec = state.settings.decimals;
-    const valid = state.rows.filter(r => r.type !== 'error');
-    const errors = state.rows.filter(r => r.type === 'error');
-    const grandTotal = valid.reduce((s, r) => s + (r.total || 0), 0);
-    const totalPieces = valid.reduce((s, r) => s + (r.qty || 1), 0);
-    const kvadrat = valid.filter(r => r.type === 'kvadrat').length;
-    const flat = valid.filter(r => r.type === 'flat').length;
-
-    els.grandTotal.textContent = grandTotal.toFixed(dec);
-    els.statValid.textContent = valid.length;
-    els.statPieces.textContent = totalPieces;
-    els.statKvadrat.textContent = kvadrat;
-    els.statFlat.textContent = flat;
-    els.statErrors.textContent = errors.length;
-    els.statErrorsWrap.style.display = errors.length > 0 ? '' : 'none';
-  }
-
-  function renderTable() {
-    const rows = filteredRows();
-    const dec = state.settings.decimals;
-    const tbody = els.resultsBody;
-
-    if (state.rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
-        <div class="icon">📐</div>
-        <h3>Hali natija yo'q</h3>
-        <p>O'lchamlarni kiriting va "Hisoblash" tugmasini bosing</p>
-      </div></td></tr>`;
-      return;
-    }
-
-    if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
-        <div class="icon">🔍</div>
-        <h3>Topilmadi</h3>
-        <p>Filtr yoki qidiruvga mos qator yo'q</p>
-      </div></td></tr>`;
-      return;
-    }
-
-    const html = rows.map(r => renderRow(r, dec)).join('');
-    tbody.innerHTML = html;
-
-    // Bind row events (delegation handles these — bind via event delegation)
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  function renderRow(r, dec) {
-    const typeTag = {
-      kvadrat: '<span class="tag tag-kvadrat">Kvadrat</span>',
-      flat: '<span class="tag tag-flat">Flat</span>',
-      error: '<span class="tag tag-error">Xato</span>',
-    }[r.type];
-
-    const expanded = state.expandedRows.has(r.index);
-    const detailRow = expanded ? `
-      <tr class="row-detail-wrap" data-detail-for="${r.index}">
-        <td colspan="7">
-          <div class="row-detail">${escapeHtml(r.steps || r.error || '')}${r.warnings && r.warnings.length ? '\n⚠ ' + r.warnings.join('; ') : ''}</div>
-        </td>
-      </tr>` : '';
-
-    if (r.type === 'error') {
-      return `
-        <tr class="row-${r.type}" data-row-index="${r.index}">
-          <td>${r.index + 1}</td>
-          <td class="row-input">${escapeHtml(r.original)}</td>
-          <td>${typeTag}</td>
-          <td class="num">—</td>
-          <td class="num text-error">—</td>
-          <td class="num text-error">${escapeHtml(r.error)}</td>
-          <td><div class="row-actions">
-            <button class="row-action-btn" data-act="edit" data-idx="${r.index}" title="Tahrirlash">✎</button>
-            <button class="row-action-btn danger" data-act="delete" data-idx="${r.index}" title="O'chirish">✕</button>
-          </div></td>
-        </tr>${detailRow}`;
-    }
-
-    return `
-      <tr class="row-${r.type}" data-row-index="${r.index}" data-toggle-row="${r.index}">
-        <td>${r.index + 1}</td>
-        <td class="row-input">${escapeHtml(r.original)}</td>
-        <td>${typeTag}</td>
-        <td class="num"><span class="qty-badge">×${r.qty}</span></td>
-        <td class="num">${r.value.toFixed(dec)}</td>
-        <td class="num"><strong>${r.total.toFixed(dec)}</strong></td>
-        <td><div class="row-actions">
-          <button class="row-action-btn" data-act="edit" data-idx="${r.index}" title="Tahrirlash">✎</button>
-          <button class="row-action-btn" data-act="dup" data-idx="${r.index}" title="Nusxa olish">⎘</button>
-          <button class="row-action-btn danger" data-act="delete" data-idx="${r.index}" title="O'chirish">✕</button>
-        </div></td>
-      </tr>${detailRow}`;
-  }
-
-  function renderErrors() {
-    const errors = state.rows.filter(r => r.type === 'error');
-    const panel = els.errorsPanel;
-    if (errors.length === 0) {
-      panel.classList.add('hidden');
-      return;
-    }
-    panel.classList.remove('hidden');
-    els.errorsCount.textContent = errors.length;
-    els.errorsList.innerHTML = errors.map(r =>
-      `<div class="error-item" data-error-idx="${r.index}">Qator ${r.index + 1}: ${escapeHtml(r.error)} — ${escapeHtml(r.original.slice(0, 60))}</div>`
-    ).join('');
-  }
-
-  // ---------------- Row actions ----------------
-  function toggleRowDetail(idx) {
-    if (state.expandedRows.has(idx)) state.expandedRows.delete(idx);
-    else state.expandedRows.add(idx);
-    renderTable();
-  }
-
-  function editRow(idx) {
-    const lines = els.inputArea.value.split(/\r?\n/);
-    const current = lines[idx] || '';
-    const newVal = prompt('Qatorni tahrirlash:', current);
-    if (newVal === null) return;
-    lines[idx] = newVal;
-    setInputText(lines.join('\n'));
-    calculate();
-  }
-
-  function duplicateRow(idx) {
-    const lines = els.inputArea.value.split(/\r?\n/);
-    const target = lines[idx];
-    if (target == null) return;
-    lines.splice(idx + 1, 0, target);
-    setInputText(lines.join('\n'));
-    calculate();
-  }
-
-  function deleteRow(idx) {
-    confirmAction(
-      "O'chirish",
-      `Qator ${idx + 1} o'chirilsinmi?`,
-      () => {
-        const lines = els.inputArea.value.split(/\r?\n/);
-        lines.splice(idx, 1);
-        setInputText(lines.join('\n'));
-        calculate();
-      }
-    );
-  }
-
-  // ---------------- Export ----------------
-  function todayStr() {
-    const d = new Date();
-    const pad = n => String(n).padStart(2, '0');
-    return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`;
-  }
-
-  function todayFile() {
-    const d = new Date();
-    const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  }
-
-  function buildTelegram() {
-    const dec = state.settings.decimals;
-    const valid = state.rows.filter(r => r.type !== 'error');
-    const total = valid.reduce((s, r) => s + (r.total||0), 0);
-    const pieces = valid.reduce((s, r) => s + (r.qty||1), 0);
-
-    const lines = [`${state.settings.tgTitle} (${todayStr()})`, ''];
-    let n = 1;
-    state.rows.forEach(r => {
-      if (r.type === 'error') return;
-      const typeMarker = r.type === 'flat' ? ' (flat)' : '';
-      lines.push(`${n}. ${r.original.trim()}${typeMarker} = ${r.total.toFixed(dec)}`);
-      n++;
-    });
-    lines.push('─────────────');
-    lines.push(`✓ Jami: ${valid.length} ta`);
-    lines.push(`📦 Donalar: ${pieces}`);
-    lines.push(`🟰 JAMI: ${total.toFixed(dec)} m²`);
-    return lines.join('\n');
-  }
-
-  function buildPlainTxt() {
-    const dec = state.settings.decimals;
-    const valid = state.rows.filter(r => r.type !== 'error');
-    const total = valid.reduce((s, r) => s + (r.total||0), 0);
-    const pieces = valid.reduce((s, r) => s + (r.qty||1), 0);
-
-    const lines = [`Kvadrat hisobi (${todayStr()})`, '='.repeat(40), ''];
-    let n = 1;
-    state.rows.forEach(r => {
-      if (r.type === 'error') return;
-      const qty = r.qty !== 1 ? ` x${r.qty}` : '';
-      const t = r.type === 'flat' ? ' (flat)' : '';
-      lines.push(`${String(n).padStart(3)}. ${r.original.trim()}${t} = ${r.total.toFixed(dec)} m2`);
-      n++;
-    });
-    lines.push('-'.repeat(40));
-    lines.push(`Yaroqli: ${valid.length}`);
-    lines.push(`Donalar: ${pieces}`);
-    lines.push(`JAMI:    ${total.toFixed(dec)} m2`);
-    return lines.join('\n');
-  }
-
-  function buildCsv() {
-    const dec = state.settings.decimals;
-    const header = ['#', 'Kirish', 'Tur', 'A', 'B', 'C', 'Miqdor', 'Birlik_qiymat', 'Jami_qiymat'];
-    const rows = [header];
-    state.rows.forEach((r, i) => {
-      const escape = (v) => {
-        if (v == null) return '';
-        const s = String(v);
-        if (s.includes(',') || s.includes('"') || s.includes('\n')) {
-          return '"' + s.replace(/"/g, '""') + '"';
-        }
-        return s;
-      };
-      rows.push([
-        i + 1,
-        escape(r.original.trim()),
-        r.type,
-        r.A != null ? r.A : '',
-        r.B != null ? r.B : '',
-        r.C != null ? r.C : '',
-        r.qty || '',
-        r.value != null ? r.value.toFixed(dec) : '',
-        r.total != null ? r.total.toFixed(dec) : '',
-      ]);
-    });
-    return rows.map(r => r.map(c => String(c)).join(',')).join('\n');
-  }
-
-  function buildJson() {
-    return JSON.stringify({
-      generatedAt: new Date().toISOString(),
-      settings: state.settings,
-      rows: state.rows,
-      summary: {
-        valid: state.rows.filter(r => r.type !== 'error').length,
-        errors: state.rows.filter(r => r.type === 'error').length,
-        total: state.rows.filter(r => r.type !== 'error').reduce((s, r) => s + (r.total||0), 0),
-        pieces: state.rows.filter(r => r.type !== 'error').reduce((s, r) => s + (r.qty||1), 0),
-      }
-    }, null, 2);
-  }
-
-  function downloadFile(content, filename, mime) {
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  async function copyText(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (e) {
-      // Fallback
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        return true;
-      } catch (e2) {
-        return false;
-      }
-    }
-  }
-
-  // ---------------- File upload ----------------
-  let pendingFile = null;
-
-  function handleFile(file) {
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast('Fayl 5 MB dan katta', 'error');
-      return;
-    }
-    if (!/\.(txt|csv)$/i.test(file.name)) {
-      toast('Faqat .txt yoki .csv qabul qilinadi', 'error');
-      return;
-    }
-    pendingFile = file;
-    $('fileName').textContent = file.name;
-    $('fileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
-    $('filePreview').classList.remove('hidden');
-  }
-
-  function readFile() {
-    if (!pendingFile) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      let text = e.target.result;
-      // For CSV: try to extract first numeric column or full row
-      if (/\.csv$/i.test(pendingFile.name)) {
-        text = parseCsvToLines(text);
-      }
-      setInputText(text);
-      switchTab('manual');
-      pendingFile = null;
-      $('filePreview').classList.add('hidden');
-      toast('Fayl yuklandi', 'success');
-    };
-    reader.onerror = () => toast("Faylni o'qib bo'lmadi", 'error');
-    reader.readAsText(pendingFile);
-  }
-
-  function parseCsvToLines(csvText) {
-    const lines = csvText.split(/\r?\n/);
-    if (lines.length === 0) return '';
-
-    // Detect header: if first row has no numbers, drop it
-    const firstHasNumbers = /\d/.test(lines[0] || '');
-    const startIdx = firstHasNumbers ? 0 : 1;
-
-    return lines.slice(startIdx).map(line => {
-      // Split on common CSV delimiters; drop quotes
-      return line.replace(/"/g, '').split(/[,;\t]+/).join(' ').trim();
-    }).filter(l => l.length > 0).join('\n');
-  }
-
-  // ---------------- Sessions ----------------
-  function getSessions() {
-    return Storage.get(Storage.KEYS.sessions, []);
-  }
-
-  function saveSession(name) {
-    const list = getSessions();
-    const dec = state.settings.decimals;
-    const valid = state.rows.filter(r => r.type !== 'error');
-    const total = valid.reduce((s, r) => s + (r.total||0), 0);
-    const session = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
-      name: name || 'Saqlangan ' + new Date().toLocaleString('uz-UZ'),
-      date: new Date().toISOString(),
-      input: els.inputArea.value,
-      lineCount: state.rows.length,
-      total: total.toFixed(dec),
-      decimals: dec,
-    };
-    list.unshift(session);
-    // Limit to 50 sessions, drop oldest
-    while (list.length > 50) list.pop();
-    Storage.set(Storage.KEYS.sessions, list);
-    return session;
-  }
-
-  function loadSession(id) {
-    const list = getSessions();
-    const s = list.find(x => x.id === id);
-    if (!s) return;
-    setInputText(s.input);
-    calculate();
-    closeAllModals();
-    toast(`"${s.name}" yuklandi`, 'success');
-  }
-
-  function deleteSession(id) {
-    const list = getSessions().filter(x => x.id !== id);
-    Storage.set(Storage.KEYS.sessions, list);
-    renderSessionsList();
-  }
-
-  function renameSession(id) {
-    const list = getSessions();
-    const s = list.find(x => x.id === id);
-    if (!s) return;
-    const name = prompt('Yangi nom:', s.name);
-    if (name === null || !name.trim()) return;
-    s.name = name.trim();
-    Storage.set(Storage.KEYS.sessions, list);
-    renderSessionsList();
-  }
-
-  function renderSessionsList() {
-    const list = getSessions();
-    const wrap = $('sessionsList');
-    if (list.length === 0) {
-      wrap.innerHTML = `<div class="empty-state">
-        <div class="icon">📂</div>
-        <p>Hali saqlangan sessiyalar yo'q</p>
-      </div>`;
-      return;
-    }
-    wrap.innerHTML = list.map(s => {
-      const dt = new Date(s.date);
-      const dateStr = dt.toLocaleDateString('uz-UZ') + ' ' + dt.toLocaleTimeString('uz-UZ', {hour:'2-digit',minute:'2-digit'});
-      return `<div class="session-item" data-session-id="${s.id}">
-        <div class="session-info" data-load-session="${s.id}">
-          <div class="session-name">${escapeHtml(s.name)}</div>
-          <div class="session-meta">${dateStr} · ${s.lineCount} qator · ${s.total} m²</div>
-        </div>
-        <div class="session-actions">
-          <button class="row-action-btn" data-rename-session="${s.id}" title="Nomini o'zgartirish">✎</button>
-          <button class="row-action-btn danger" data-delete-session="${s.id}" title="O'chirish">✕</button>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  let autosaveTimer = null;
-  function autosaveCurrent() {
-    if (state.settings.autosave !== 'on') return;
-    Storage.set(Storage.KEYS.current, {
-      input: els.inputArea.value,
-      timestamp: Date.now(),
-    });
-  }
-
-  function loadAutosave() {
-    const data = Storage.get(Storage.KEYS.current, null);
-    if (data && data.input) {
-      els.inputArea.value = data.input;
-      updateLineCounter();
-    }
-  }
-
-  function startAutosave() {
-    if (autosaveTimer) clearInterval(autosaveTimer);
-    autosaveTimer = setInterval(autosaveCurrent, 30000);
-  }
-
-  function newSession() {
-    confirmAction(
-      'Yangi sessiya',
-      "Joriy ma'lumotlar tozalanadi. Davom etilsinmi?",
-      () => {
-        setInputText('');
-        state.rows = [];
-        state.expandedRows.clear();
-        renderAll();
-        toast('Yangi sessiya boshlandi', 'success');
-      }
-    );
-  }
-
-  // ---------------- Settings UI binding ----------------
-  function initSettingsUI() {
-    $('setDecimals').value = state.settings.decimals;
-    $('setDecimalsValue').textContent = state.settings.decimals;
-    $('setUnit').value = state.settings.unit;
-    $('setLang').value = state.settings.lang;
-    $('setTheme').value = state.settings.theme;
-    $('setAutosave').value = state.settings.autosave;
-    $('setTgTitle').value = state.settings.tgTitle;
-
-    $('setDecimals').addEventListener('input', e => {
-      state.settings.decimals = parseInt(e.target.value, 10);
-      $('setDecimalsValue').textContent = state.settings.decimals;
-      saveSettings();
-      renderAll();
-    });
-    $('setUnit').addEventListener('change', e => {
-      state.settings.unit = e.target.value;
-      els.unitLabel.textContent = 'm²';
-      saveSettings();
-      if (state.rows.length) {
-        // Recalculate with new unit
-        const text = els.inputArea.value;
-        const parsed = Parser.parseText(text);
-        state.rows = Calculator.calculate(parsed, state.settings);
-        renderAll();
-      }
-    });
-    $('setLang').addEventListener('change', e => {
-      state.settings.lang = e.target.value;
-      saveSettings();
-    });
-    $('setTheme').addEventListener('change', e => {
-      state.settings.theme = e.target.value;
-      saveSettings();
-      applyTheme();
-    });
-    $('setAutosave').addEventListener('change', e => {
-      state.settings.autosave = e.target.value;
-      saveSettings();
-    });
-    $('setTgTitle').addEventListener('input', e => {
-      state.settings.tgTitle = e.target.value || DEFAULT_SETTINGS.tgTitle;
-      saveSettings();
-    });
-
-    $('btnClearAll').addEventListener('click', () => {
-      confirmAction(
-        'Barcha tarix tozalansinmi?',
-        "Barcha sozlamalar va sessiyalar o'chiriladi. Bu amal qaytarilmaydi.",
-        () => {
-          Storage.clearAll();
-          state.settings = { ...DEFAULT_SETTINGS };
-          state.rows = [];
-          setInputText('');
-          renderAll();
-          initSettingsUI();
-          applyTheme();
-          closeAllModals();
-          toast('Tozalandi', 'success');
-        }
-      );
-    });
-  }
-
-  // ---------------- Event binding ----------------
-  function bindEvents() {
-
-    // Input
-    els.inputArea.addEventListener('input', () => {
-      updateLineCounter();
-      autosaveCurrent();
-    });
-
-    // Tabs
-    document.querySelectorAll('[data-tab]').forEach(b => {
-      b.addEventListener('click', () => switchTab(b.dataset.tab));
-    });
-
-    // Buttons - main actions
-    $('btnCalculate').addEventListener('click', calculate);
-    $('btnCalculateMobile').addEventListener('click', calculate);
-    $('btnClear').addEventListener('click', clearAll);
-    $('btnSample').addEventListener('click', loadSample);
-    $('btnNew').addEventListener('click', newSession);
-
-    // File upload
-    $('dropzone').addEventListener('click', () => $('fileInput').click());
-    $('dropzone').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('fileInput').click(); }
-    });
-    $('dropzone').addEventListener('dragover', (e) => {
-      e.preventDefault();
-      $('dropzone').classList.add('drag-over');
-    });
-    $('dropzone').addEventListener('dragleave', () => {
-      $('dropzone').classList.remove('drag-over');
-    });
-    $('dropzone').addEventListener('drop', (e) => {
-      e.preventDefault();
-      $('dropzone').classList.remove('drag-over');
-      handleFile(e.dataTransfer.files[0]);
-    });
-    $('fileInput').addEventListener('change', (e) => handleFile(e.target.files[0]));
-    $('btnLoadFile').addEventListener('click', readFile);
-    $('btnClearFile').addEventListener('click', () => {
-      pendingFile = null;
-      $('filePreview').classList.add('hidden');
-      $('fileInput').value = '';
-    });
-
-    // Paste
-    $('btnPaste').addEventListener('click', async () => {
-      try {
-        const text = await navigator.clipboard.readText();
-        if (text.trim()) {
-          setInputText(text);
-          switchTab('manual');
-          toast('Buferdan joylashtirildi', 'success');
-        } else {
-          toast("Buferda matn yo'q", 'warn');
-        }
-      } catch (e) {
-        toast("Buferga ruxsat berilmagan", 'error');
-      }
-    });
-
-    // Filter & search & sort
-    $('searchInput').addEventListener('input', (e) => {
-      state.search = e.target.value;
-      renderTable();
-    });
-    document.querySelectorAll('[data-filter]').forEach(b => {
-      b.addEventListener('click', () => {
-        document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', 'false'));
-        b.setAttribute('aria-pressed', 'true');
-        state.filter = b.dataset.filter;
-        renderTable();
-      });
-    });
-    $('sortSelect').addEventListener('change', (e) => {
-      state.sort = e.target.value;
-      renderTable();
-    });
-
-    // Errors panel toggle
-    els.errorsHeader.addEventListener('click', () => {
-      const open = els.errorsPanel.dataset.open === 'true';
-      els.errorsPanel.dataset.open = String(!open);
-    });
-    els.errorsHeader.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        els.errorsHeader.click();
-      }
-    });
-
-    // Errors list — click to scroll to line
-    els.errorsList.addEventListener('click', (e) => {
-      const item = e.target.closest('[data-error-idx]');
-      if (!item) return;
-      const idx = parseInt(item.dataset.errorIdx, 10);
-      const lines = els.inputArea.value.split('\n');
-      let pos = 0;
-      for (let i = 0; i < idx && i < lines.length; i++) pos += lines[i].length + 1;
-      els.inputArea.focus();
-      els.inputArea.setSelectionRange(pos, pos + (lines[idx]||'').length);
-    });
-
-    // Results table — delegated
-    els.resultsBody.addEventListener('click', (e) => {
-      const actBtn = e.target.closest('[data-act]');
-      if (actBtn) {
-        e.stopPropagation();
-        const idx = parseInt(actBtn.dataset.idx, 10);
-        const act = actBtn.dataset.act;
-        if (act === 'edit') editRow(idx);
-        else if (act === 'dup') duplicateRow(idx);
-        else if (act === 'delete') deleteRow(idx);
-        return;
-      }
-      const tr = e.target.closest('[data-toggle-row]');
-      if (tr) {
-        const idx = parseInt(tr.dataset.toggleRow, 10);
-        toggleRowDetail(idx);
-      }
-    });
-
-    // Export buttons
-    $('btnExportTelegram').addEventListener('click', async () => {
-      const text = buildTelegram();
-      const ok = await copyText(text);
-      toast(ok ? '📋 Telegram matn nusxa olindi' : 'Nusxalash xato', ok ? 'success' : 'error');
-    });
-    $('btnExportCSV').addEventListener('click', () => {
-      downloadFile(buildCsv(), `kvadrat-hisob-${todayFile()}.csv`, 'text/csv;charset=utf-8');
-      toast('CSV yuklandi', 'success');
-    });
-    $('btnExportTXT').addEventListener('click', () => {
-      downloadFile(buildPlainTxt(), `kvadrat-hisob-${todayFile()}.txt`, 'text/plain;charset=utf-8');
-      toast('TXT yuklandi', 'success');
-    });
-    $('btnExportJSON').addEventListener('click', () => {
-      downloadFile(buildJson(), `kvadrat-hisob-${todayFile()}.json`, 'application/json');
-      toast('JSON yuklandi', 'success');
-    });
-    $('btnPrint').addEventListener('click', () => window.print());
-    $('btnExportMobile').addEventListener('click', async () => {
-      if (!state.rows.length) {
-        toast("Avval hisoblang", 'warn');
-        return;
-      }
-      const text = buildTelegram();
-      const ok = await copyText(text);
-      toast(ok ? '📋 Telegram matn nusxa olindi' : 'Nusxalash xato', ok ? 'success' : 'error');
-    });
-
-    // Modals
-    document.querySelectorAll('[data-close-modal]').forEach(b => {
-      b.addEventListener('click', () => closeAllModals());
-    });
-    document.querySelectorAll('.modal-backdrop').forEach(m => {
-      m.addEventListener('click', (e) => {
-        if (e.target === m) closeAllModals();
-      });
-    });
-
-    // Confirm modal
-    $('btnConfirmCancel').addEventListener('click', () => {
-      confirmCb = null;
-      closeModal('confirmModal');
-    });
-    $('btnConfirmOk').addEventListener('click', () => {
-      const cb = confirmCb;
-      confirmCb = null;
-      closeModal('confirmModal');
-      if (cb) cb();
-    });
-
-    // Settings / Help / Sessions
-    $('btnSettings').addEventListener('click', () => openModal('settingsModal'));
-    $('btnHelp').addEventListener('click', () => openModal('helpModal'));
-    $('btnSessions').addEventListener('click', () => {
-      renderSessionsList();
-      openModal('sessionsModal');
-    });
-    $('btnLoadSampleHelp').addEventListener('click', () => {
-      loadSample();
-      closeAllModals();
-    });
-
-    // Theme toggle (cycle: auto -> light -> dark -> auto)
-    $('btnTheme').addEventListener('click', () => {
-      const order = ['auto', 'light', 'dark'];
-      const idx = order.indexOf(state.settings.theme);
-      const next = order[(idx + 1) % order.length];
-      state.settings.theme = next;
-      $('setTheme').value = next;
-      saveSettings();
-      applyTheme();
-      const labels = { auto: 'Avto', light: "Yorug'", dark: "Qorong'i" };
-      toast('Mavzu: ' + labels[next], 'info');
-    });
-
-    // Save modal
-    $('btnSave').addEventListener('click', () => {
-      $('saveNameInput').value = '';
-      openModal('saveModal');
-      setTimeout(() => $('saveNameInput').focus(), 100);
-    });
-    $('btnSaveMobile').addEventListener('click', () => $('btnSave').click());
-    $('btnSaveConfirm').addEventListener('click', () => {
-      const name = $('saveNameInput').value.trim();
-      if (!els.inputArea.value.trim()) {
-        toast("Saqlash uchun ma'lumot yo'q", 'warn');
-        return;
-      }
-      const s = saveSession(name);
-      closeAllModals();
-      toast(`"${s.name}" saqlandi`, 'success');
-    });
-    $('saveNameInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') $('btnSaveConfirm').click();
-    });
-
-    // Sessions list
-    $('sessionsList').addEventListener('click', (e) => {
-      const renameBtn = e.target.closest('[data-rename-session]');
-      if (renameBtn) { e.stopPropagation(); renameSession(renameBtn.dataset.renameSession); return; }
-      const delBtn = e.target.closest('[data-delete-session]');
-      if (delBtn) {
-        e.stopPropagation();
-        const id = delBtn.dataset.deleteSession;
-        confirmAction("O'chirish", "Sessiya o'chirilsinmi?", () => {
-          deleteSession(id);
-          toast("O'chirildi", 'success');
-        });
-        return;
-      }
-      const loadEl = e.target.closest('[data-load-session]');
-      if (loadEl) loadSession(loadEl.dataset.loadSession);
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      const meta = e.metaKey || e.ctrlKey;
-      if (meta && e.key === 'Enter') {
-        e.preventDefault();
-        calculate();
-      } else if (meta && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        $('btnSave').click();
-      } else if (meta && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        if (!els.searchInput.offsetParent) return;
-        els.searchInput.focus();
-      } else if (meta && e.key.toLowerCase() === 'n') {
-        e.preventDefault();
-        newSession();
-      } else if (e.key === 'Escape') {
-        closeAllModals();
-      }
-    });
-
-    // System theme change watcher
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (state.settings.theme === 'auto') applyTheme();
-      });
-    }
-  }
-
-  // ---------------- Init ----------------
-  function init() {
-    // Cache element refs
-    [
-      'inputArea','lineCount','lineCounterDetail','brandSub',
-      'summaryWrap','grandTotal','unitLabel',
-      'statValid','statPieces','statKvadrat','statFlat','statErrors','statErrorsWrap',
-      'errorsPanel','errorsHeader','errorsList','errorsCount',
-      'filterBarWrap','exportBarWrap','searchInput','sortSelect',
-      'resultsBody','toastContainer'
-    ].forEach(id => els[id] = $(id));
-
-    loadSettings();
-    initSettingsUI();
-    bindEvents();
-    loadAutosave();
-    updateLineCounter();
-    startAutosave();
-
-    els.brandSub.textContent = 'Tayyor';
-  }
-
-  return { init, _state: state };
-
-})();
-
-// Boot
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', App.init);
-} else {
-  App.init();
+const $ = id => document.getElementById(id);
+let settings = { unit:'cm', decimals:4 };
+let lastResults = null;
+
+function fmt(n,d){ if(!isFinite(n)) return '—'; return n.toFixed(d); }
+function esc(t){ const x=document.createElement('div'); x.textContent=t==null?'':String(t); return x.innerHTML; }
+function toast(msg){ let el=$('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast'; document.body.appendChild(el);} el.textContent=msg; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3200); }
+
+function updateCounts(){
+  const t=$('input').value;
+  const lines=t.split(/\r?\n/).filter(l=>l.trim()!=='').length;
+  $('lineCount').textContent=lines;
+  $('charCount').textContent=t.length;
 }
+
+function calculate(){
+  const text=$('input').value;
+  if(!text.trim()){ toast('Avval o\'lcham kiriting.'); return; }
+  const rows=Parser.parseText(text);
+  if(!rows.length){ toast('Hisoblanadigan qator yo\'q.'); return; }
+  const results=Calculator.calculate(rows,settings);
+  lastResults=results;
+  renderResults(results);
+}
+
+function renderResults(results){
+  const d=settings.decimals;
+  const valid=results.filter(r=>r.type!=='error');
+  const errors=results.filter(r=>r.type==='error');
+  const kvCount=results.filter(r=>r.type==='kvadrat').length;
+  const flCount=results.filter(r=>r.type==='flat').length;
+  const totalPieces=valid.reduce((s,r)=>s+(r.qty||1),0);
+  const grandTotal=valid.reduce((s,r)=>s+(r.total||0),0);
+
+  let html='';
+  // totals
+  html+='<div class="totals">'
+    +'<div class="total-cell main"><div class="total-num">'+fmt(grandTotal,d)+'<span class="total-unit">m²</span></div><div class="total-label">Jami maydon</div></div>'
+    +'<div class="total-cell"><div class="total-num">'+valid.length+'</div><div class="total-label">✓ Yaroqli</div></div>'
+    +'<div class="total-cell"><div class="total-num">'+totalPieces+'</div><div class="total-label">📦 Donalar</div></div>'
+    +'<div class="total-cell"><div class="total-num">'+kvCount+'</div><div class="total-label">Kvadrat</div></div>'
+    +'<div class="total-cell"><div class="total-num" style="'+(errors.length?'color:var(--amber)':'')+'">'+errors.length+'</div><div class="total-label">⚠ Xato</div></div>'
+    +'</div>';
+
+  // table
+  html+='<div class="table-wrap"><table class="rtable"><thead><tr>'
+    +'<th>#</th><th>Kirish</th><th>Tur</th><th class="num">Dona</th><th class="num">Birlik m²</th><th class="num">Jami m²</th>'
+    +'</tr></thead><tbody>';
+  results.forEach((r,i)=>{
+    const cls=r.type==='kvadrat'?'r-kvadrat':(r.type==='flat'?'r-flat':'r-error');
+    const tagCls=r.type==='kvadrat'?'kvadrat':(r.type==='flat'?'flat':'error');
+    const tagTxt=r.type==='kvadrat'?'KVADRAT':(r.type==='flat'?'FLAT':'XATO');
+    html+='<tr class="'+cls+'">';
+    html+='<td>'+(i+1)+'</td>';
+    if(r.type==='error'){
+      html+='<td><span class="row-input">'+esc(r.original.trim())+'</span><div class="row-err-msg">⚠ '+esc(r.error)+'</div></td>';
+      html+='<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>';
+      html+='<td class="num">—</td><td class="num">—</td><td class="num">—</td>';
+    } else {
+      const dims=r.type==='kvadrat'?(r.A+'×'+r.B+'×'+r.C):(r.A+'×'+r.B);
+      const lbl=r.labels&&r.labels.length?' <span style="color:var(--text-4)">'+esc(r.labels.join(' '))+'</span>':'';
+      html+='<td><span class="row-input">'+dims+'</span>'+lbl+'</td>';
+      html+='<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>';
+      html+='<td class="num">'+(r.qty||1)+'</td>';
+      html+='<td class="num">'+fmt(r.value,d)+'</td>';
+      html+='<td class="num total-col">'+fmt(r.total,d)+'</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+
+  // export
+  html+='<div class="export-bar">'
+    +'<button class="btn btn-red" id="pdfBtn">📄 PDF YUKLAB OLISH <span class="arr">→</span></button>'
+    +'<button class="btn btn-ghost" id="tgBtn">📋 TELEGRAM UCHUN</button>'
+    +'<button class="btn btn-ghost" id="txtBtn">📄 TXT</button>'
+    +'</div>';
+
+  $('resultsZone').innerHTML=html;
+  $('pdfBtn').addEventListener('click',()=>exportPDF(results,grandTotal));
+  $('tgBtn').addEventListener('click',()=>copyForTelegram(results,grandTotal));
+  $('txtBtn').addEventListener('click',()=>downloadTXT(results,grandTotal));
+  $('resultsZone').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ---------- exports ---------- */
+function summaryLines(results,grandTotal){
+  const d=settings.decimals;
+  const valid=results.filter(r=>r.type!=='error');
+  const totalPieces=valid.reduce((s,r)=>s+(r.qty||1),0);
+  return {d,valid,totalPieces,grandTotal};
+}
+
+function copyForTelegram(results,grandTotal){
+  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
+  let txt='📐 KVADRAT HISOBLASH\n';
+  txt+='━━━━━━━━━━━━━━━━━━\n';
+  results.forEach((r,i)=>{
+    if(r.type==='error'){ txt+=(i+1)+'. ⚠ '+r.original.trim()+' — '+r.error+'\n'; return; }
+    const dims=r.type==='kvadrat'?(r.A+'×'+r.B+'×'+r.C):(r.A+'×'+r.B);
+    const lbl=r.labels&&r.labels.length?(' '+r.labels.join(' ')):'';
+    txt+=(i+1)+'. '+dims+lbl+(r.qty>1?(' ×'+r.qty):'')+' = '+fmt(r.total,d)+' m²\n';
+  });
+  txt+='━━━━━━━━━━━━━━━━━━\n';
+  txt+='✓ '+valid.length+' detal · 📦 '+totalPieces+' dona\n';
+  txt+='🟥 JAMI: '+fmt(grandTotal,d)+' m²';
+  navigator.clipboard.writeText(txt).then(()=>toast('✓ NUSXA OLINDI · TELEGRAMGA JOYLANG')).catch(()=>toast('Nusxa olishda xato.'));
+}
+
+function downloadTXT(results,grandTotal){
+  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
+  let txt='KVADRAT HISOBLASH\n'+new Date().toLocaleString('uz')+'\n====================\n\n';
+  results.forEach((r,i)=>{
+    if(r.type==='error'){ txt+=(i+1)+'. XATO: '+r.original.trim()+' — '+r.error+'\n'; return; }
+    const dims=r.type==='kvadrat'?(r.A+'x'+r.B+'x'+r.C):(r.A+'x'+r.B);
+    const lbl=r.labels&&r.labels.length?(' '+r.labels.join(' ')):'';
+    txt+=(i+1)+'. '+dims+lbl+(r.qty>1?(' x'+r.qty):'')+' = '+fmt(r.total,d)+' m2\n';
+  });
+  txt+='\n====================\n';
+  txt+='Yaroqli: '+valid.length+' | Donalar: '+totalPieces+'\n';
+  txt+='JAMI MAYDON: '+fmt(grandTotal,d)+' m2\n';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='kvadrat-'+Date.now()+'.txt'; a.click();
+  toast('✓ TXT YUKLANDI');
+}
+
+/* ---------- branded PDF ---------- */
+function exportPDF(results,grandTotal){
+  if(!window.jspdf){ toast('PDF kutubxonasi yuklanmadi.'); return; }
+  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'pt',format:'a4'});
+  const W = pdf.internal.pageSize.getWidth();
+  const H = pdf.internal.pageSize.getHeight();
+  const M = 44;
+  const RED=[215,25,33];
+
+  function drawLogo(x,y,s){
+    pdf.setDrawColor(RED[0],RED[1],RED[2]); pdf.setLineWidth(s*0.13);
+    pdf.roundedRect(x+s*0.26,y+s*0.26,s*0.48,s*0.48,2,2,'S');
+    pdf.setFillColor(RED[0],RED[1],RED[2]);
+    pdf.circle(x+s*0.5,y+s*0.5,s*0.07,'F');
+  }
+
+  // header band
+  pdf.setFillColor(8,8,8); pdf.rect(0,0,W,92,'F');
+  pdf.setFillColor(RED[0],RED[1],RED[2]); pdf.rect(0,92,W,2.5,'F');
+  drawLogo(M,26,40);
+  pdf.setTextColor(255,255,255); pdf.setFont('courier','bold'); pdf.setFontSize(20);
+  pdf.text('KVADRAT', M+54, 46);
+  pdf.setFont('courier','normal'); pdf.setFontSize(9); pdf.setTextColor(150,150,150);
+  pdf.text('M\u00b2 HISOBLASH \u00b7 MONTAJ', M+54, 62);
+  pdf.setFontSize(8); pdf.setTextColor(120,120,120);
+  const dateStr=new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  pdf.text(dateStr, W-M, 46, {align:'right'});
+  pdf.text(settings.unit.toUpperCase()+' \u2192 m\u00b2 \u00b7 '+d+' kasr', W-M, 62, {align:'right'});
+
+  // grand total card
+  let y=128;
+  pdf.setFillColor(20,8,9); pdf.roundedRect(M,y,W-M*2,70,4,4,'F');
+  pdf.setDrawColor(RED[0],RED[1],RED[2]); pdf.setLineWidth(1); pdf.roundedRect(M,y,W-M*2,70,4,4,'S');
+  pdf.setFont('courier','normal'); pdf.setFontSize(9); pdf.setTextColor(180,180,180);
+  pdf.text('JAMI MAYDON', M+20, y+26);
+  pdf.setFont('courier','bold'); pdf.setFontSize(30); pdf.setTextColor(RED[0],RED[1],RED[2]);
+  pdf.text(fmt(grandTotal,d)+'  m\u00b2', M+20, y+54);
+  // mini stats right
+  pdf.setFont('courier','normal'); pdf.setFontSize(8.5); pdf.setTextColor(160,160,160);
+  pdf.text('Yaroqli detal:  '+valid.length, W-M-20, y+24, {align:'right'});
+  pdf.text('Jami dona:  '+totalPieces, W-M-20, y+40, {align:'right'});
+  pdf.text('Qatorlar:  '+results.length, W-M-20, y+56, {align:'right'});
+
+  // table header
+  y+=98;
+  const cols=[M, M+34, M+170, M+250, M+330, W-M];
+  pdf.setFillColor(13,13,13); pdf.rect(M,y-16,W-M*2,24,'F');
+  pdf.setFont('courier','bold'); pdf.setFontSize(8); pdf.setTextColor(150,150,150);
+  pdf.text('#', cols[0]+6, y);
+  pdf.text('KIRISH', cols[1], y);
+  pdf.text('TUR', cols[2], y);
+  pdf.text('DONA', cols[3], y);
+  pdf.text('BIRLIK', cols[4], y);
+  pdf.text('JAMI m\u00b2', cols[5], y, {align:'right'});
+  y+=10;
+  pdf.setDrawColor(40,40,40); pdf.setLineWidth(.5); pdf.line(M,y,W-M,y);
+  y+=16;
+
+  pdf.setFont('courier','normal'); pdf.setFontSize(9);
+  results.forEach((r,i)=>{
+    if(y>H-70){ pdf.addPage(); y=60; }
+    const isErr=r.type==='error';
+    // row accent
+    const acc = r.type==='kvadrat'?RED:(r.type==='flat'?[120,120,120]:[245,179,51]);
+    pdf.setFillColor(acc[0],acc[1],acc[2]); pdf.rect(M,y-9,2,13,'F');
+    pdf.setTextColor(150,150,150); pdf.text(String(i+1), cols[0]+6, y);
+    if(isErr){
+      pdf.setTextColor(245,179,51);
+      pdf.text(pdf.splitTextToSize(r.original.trim(),120)[0]||'', cols[1], y);
+      pdf.setFontSize(7.5); pdf.text('XATO: '+r.error, cols[2], y); pdf.setFontSize(9);
+    } else {
+      const dims=r.type==='kvadrat'?(r.A+'\u00d7'+r.B+'\u00d7'+r.C):(r.A+'\u00d7'+r.B);
+      pdf.setTextColor(220,220,220); pdf.text(dims, cols[1], y);
+      pdf.setTextColor(r.type==='kvadrat'?RED[0]:140, r.type==='kvadrat'?RED[1]:140, r.type==='kvadrat'?RED[2]:140);
+      pdf.setFontSize(7.5); pdf.text(r.type==='kvadrat'?'KVADRAT':'FLAT', cols[2], y); pdf.setFontSize(9);
+      pdf.setTextColor(160,160,160); pdf.text(String(r.qty||1), cols[3]+6, y);
+      pdf.text(fmt(r.value,d), cols[4], y);
+      pdf.setTextColor(255,255,255); pdf.text(fmt(r.total,d), cols[5], y, {align:'right'});
+    }
+    y+=20;
+    pdf.setDrawColor(24,24,24); pdf.line(M,y-9,W-M,y-9);
+  });
+
+  // footer on each page
+  const pages=pdf.internal.getNumberOfPages();
+  for(let p=1;p<=pages;p++){
+    pdf.setPage(p);
+    pdf.setDrawColor(40,40,40); pdf.line(M,H-40,W-M,H-40);
+    pdf.setFont('courier','normal'); pdf.setFontSize(7.5); pdf.setTextColor(110,110,110);
+    pdf.text('KVADRAT \u00b7 maqsudjon.com', M, H-26);
+    pdf.text(p+' / '+pages, W-M, H-26, {align:'right'});
+  }
+
+  pdf.save('kvadrat-'+Date.now()+'.pdf');
+  toast('✓ PDF YUKLANDI');
+}
+
+/* ---------- example / clear ---------- */
+const EXAMPLE='137 150 15\n287 179\ngor 124 145 40 2sht\n145,5 170,5 30\n# Pastki ramka\n200 80 25 x3\n# Bu qator hisoblanmaydi';
+function loadExample(){ $('input').value=EXAMPLE; updateCounts(); calculate(); }
+function clearAll(){ $('input').value=''; updateCounts(); lastResults=null; $('resultsZone').innerHTML='<div class="empty-state" id="emptyState"><div class="ico">▦</div><div class="t">Hali natija yo\'q</div><div class="s">O\'lchamlarni kiriting va "Hisoblash" tugmasini bosing</div></div>'; $('input').focus(); }
+
+/* ---------- init ---------- */
+function init(){
+  // clock
+  function clock(){ const d=new Date(),p=n=>(n<10?'0':'')+n; const el=$('clock'); if(el) el.textContent='TASHKENT '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); }
+  clock(); setInterval(clock,1000);
+
+  $('input').addEventListener('input',updateCounts);
+  $('calcBtn').addEventListener('click',calculate);
+  $('exampleBtn').addEventListener('click',loadExample);
+  $('clearBtn').addEventListener('click',clearAll);
+
+  // Ctrl/Cmd+Enter to calculate
+  $('input').addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); calculate(); } });
+
+  // settings
+  $('unitSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    settings.unit=b.dataset.unit;
+    $('unitSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+    if(lastResults) calculate();
+  }));
+  $('decSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    settings.decimals=parseInt(b.dataset.dec,10);
+    $('decSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+    if(lastResults) calculate();
+  }));
+
+  // help
+  $('helpBtn').addEventListener('click',()=>$('helpModal').classList.add('show'));
+  $('helpClose').addEventListener('click',()=>$('helpModal').classList.remove('show'));
+  $('helpModal').addEventListener('click',e=>{ if(e.target===$('helpModal')) $('helpModal').classList.remove('show'); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('helpModal').classList.remove('show'); });
+
+  updateCounts();
+
+  // scroll progress + particles
+  const prog=$('prog');
+  addEventListener('scroll',()=>{ const h=document.documentElement.scrollHeight-innerHeight; prog.style.width=(h>0?(scrollY/h)*100:0)+'%'; },{passive:true});
+  (function(){
+    const cv=$('fx'); if(!cv) return; const ctx=cv.getContext('2d'); let W,H,pts=[];
+    function size(){ W=cv.width=innerWidth; H=cv.height=innerHeight; } size(); addEventListener('resize',size);
+    const N=Math.min(38,Math.floor(innerWidth/36));
+    for(let i=0;i<N;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22});
+    function loop(){ ctx.clearRect(0,0,W,H);
+      for(let i=0;i<pts.length;i++){ const p=pts[i]; p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,1,0,7); ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fill();
+        for(let j=i+1;j<pts.length;j++){ const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,dd=Math.hypot(dx,dy);
+          if(dd<116){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=(dd<56?'rgba(215,25,33,':'rgba(255,255,255,')+(0.09*(1-dd/116))+')'; ctx.lineWidth=.6; ctx.stroke(); } } }
+      requestAnimationFrame(loop); }
+    if(!matchMedia('(prefers-reduced-motion:reduce)').matches) loop();
+  })();
+}
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 </script>
-</body>
+
 </html>
