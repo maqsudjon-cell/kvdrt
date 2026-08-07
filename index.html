@@ -360,21 +360,44 @@ tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
 .empty .t{font-weight:700;font-size:15px}
 .empty .s{font-size:13.5px;color:var(--ink-3);margin-top:6px}
 
-.export{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.export .btn{flex:1;min-width:145px}
-
-/* ── MOBILE STICKY BAR ────────────────────────────────── */
-.mobar{
-  position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
-  align-items:center;justify-content:space-between;gap:12px;
-  padding:11px 15px calc(11px + env(safe-area-inset-bottom));
-  background:color-mix(in srgb,var(--surface) 94%,transparent);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-top:1px solid var(--line);box-shadow:0 -6px 24px -12px rgba(0,0,0,.3);
+/* "yana N ta" kengaytirgich */
+.more{
+  display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+  padding:14px;background:var(--surface-2);border:none;border-top:1px solid var(--line);
+  cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink-2);transition:.15s;
 }
-@media(max-width:1000px){.mobar.on{display:flex}body{padding-bottom:76px}}
-.mobar .v{font-family:var(--mono);font-weight:700;font-size:22px;letter-spacing:-.03em;line-height:1}
-.mobar .k{font-size:10.5px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.more:hover{background:var(--paper-2);color:var(--ink)}
+.more svg{width:15px;height:15px;transition:transform .2s}
+.more.open svg{transform:rotate(180deg)}
+.cards .more{border:1px dashed var(--line-2);border-radius:var(--r-sm);background:var(--surface-2)}
+
+/* ── DOIMIY PASTKI PANEL ──────────────────────────────── */
+.actionbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
+  background:color-mix(in srgb,var(--surface) 93%,transparent);
+  backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);
+  border-top:1px solid var(--line);box-shadow:0 -8px 30px -18px rgba(0,0,0,.4);
+}
+.actionbar.on{display:block}
+.ab-in{
+  max-width:1180px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:14px;
+  padding:11px 22px calc(11px + env(safe-area-inset-bottom));
+}
+@media(max-width:640px){.ab-in{padding:10px 15px calc(10px + env(safe-area-inset-bottom))}}
+.ab-total{min-width:0}
+.ab-total .v{font-family:var(--mono);font-weight:700;font-size:23px;letter-spacing:-.03em;line-height:1}
+.ab-total .k{font-size:11.5px;color:var(--ink-3);margin-top:5px;display:flex;gap:9px;flex-wrap:wrap}
+.ab-total .k b{color:var(--ok);font-weight:700;font-family:var(--mono)}
+.ab-btns{display:flex;align-items:center;gap:8px;flex:none}
+.ab-btns .iconbtn{width:36px;height:36px}
+@media(max-width:560px){
+  .ab-total .v{font-size:19px}
+  .ab-total .k{font-size:10.5px;gap:6px}
+  .lbl-long,.ab-dona{display:none}
+  .ab-btns{gap:6px}
+  .ab-btns .iconbtn{width:34px;height:34px}
+}
 
 /* ── MODAL ────────────────────────────────────────────── */
 .modal{position:fixed;inset:0;z-index:200;background:rgba(12,16,23,.55);backdrop-filter:blur(5px);display:none;place-items:center;padding:20px}
@@ -461,7 +484,7 @@ tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
   transition:.25s cubic-bezier(.2,.8,.2,1);max-width:calc(100vw - 40px);text-align:center;
 }
 .toast.on{opacity:1;transform:translate(-50%,0)}
-@media(max-width:1000px){.toast{bottom:88px}}
+
 
 /* ── FOOTER ───────────────────────────────────────────── */
 footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 0 40px}
@@ -470,7 +493,7 @@ footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 0 40px}
 .foot-in a:hover{color:var(--ink);border-color:var(--ink)}
 
 @media print{
-  .hdr,.mobar,.export,.side,.tabs,#paneSingle,#paneList,.legend-note,footer,.toast{display:none!important}
+  .hdr,.actionbar,.side,.tabs,#paneSingle,#paneList,.legend-note,footer,.toast,.more,.del{display:none!important}
   body{background:#fff;padding:0}
   .card,.tbl-wrap{box-shadow:none;border-color:#ccc}
 }
@@ -673,18 +696,6 @@ oshxona 100 140
       <span class="ta-stat" id="resHint"></span>
     </div>
     <div id="resZone"></div>
-    <div class="export" id="exportBar" hidden>
-      <button class="btn btn-primary" id="pdfBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M4 20h16"/></svg>
-        PDF yuklab olish
-      </button>
-      <button class="btn btn-ghost" id="tgBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
-        Telegram uchun nusxa
-      </button>
-      <button class="btn btn-ghost" id="txtBtn">TXT</button>
-      <button class="btn btn-ghost" id="printBtn">Chop etish</button>
-    </div>
   </section>
 
 </main>
@@ -696,13 +707,27 @@ oshxona 100 140
   </div>
 </footer>
 
-<!-- ══ MOBILE BAR ══════════════════════════════════════ -->
-<div class="mobar" id="mobar">
-  <div>
-    <div class="v mono"><span id="mbTotal">0.00</span> m²</div>
-    <div class="k" id="mbSub">0 detal</div>
+<!-- ══ DOIMIY PASTKI PANEL ═════════════════════════════ -->
+<div class="actionbar" id="actionbar">
+  <div class="ab-in">
+    <div class="ab-total">
+      <div class="v mono"><span id="abTotal">0.00</span> m²</div>
+      <div class="k"><span id="abSub">0 detal</span><span class="ab-dona" id="abDona"></span><b id="abSum" hidden></b></div>
+    </div>
+    <div class="ab-btns">
+      <button class="iconbtn" id="topBtn" aria-label="Tepaga qaytish" title="Tepaga">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </button>
+      <button class="btn btn-ghost btn-sm" id="tgBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+        Telegram<span class="lbl-long"> uchun nusxa</span>
+      </button>
+      <button class="btn btn-primary btn-sm" id="pdfBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M4 20h16"/></svg>
+        PDF<span class="lbl-long"> yuklab olish</span>
+      </button>
+    </div>
   </div>
-  <button class="btn btn-primary btn-sm" id="mbBtn">Natijani ko'rish ↓</button>
 </div>
 
 <!-- ══ HELP MODAL ══════════════════════════════════════ -->
@@ -804,6 +829,7 @@ const state = {
   price: 0,
   text: '',
   selected: -1,
+  showAll: false,
 };
 let results = [];
 let totals  = { area:0, pieces:0, valid:0, errors:0 };
@@ -1069,9 +1095,15 @@ function render(){
   $('grandSum').hidden     = !hasPrice;
   if (hasPrice) $('grandSum').textContent = money(totals.area * state.price) + " so'm";
 
-  $('mbTotal').textContent = fmt(totals.area);
-  $('mbSub').textContent   = totals.valid + ' detal · ' + totals.pieces + ' dona';
-  $('mobar').classList.toggle('on', results.length > 0);
+  // ── doimiy pastki panel ──
+  const on = results.length > 0;
+  $('abTotal').textContent = fmt(totals.area);
+  $('abSub').textContent   = totals.valid + ' detal';
+  $('abDona').textContent  = '· ' + totals.pieces + ' dona';
+  $('abSum').hidden        = !hasPrice;
+  if (hasPrice) $('abSum').textContent = money(totals.area * state.price) + " so'm";
+  $('actionbar').classList.toggle('on', on);
+  fitBar();
 
   $('resHint').innerHTML = results.length
     ? `qatorni bosing — chizmada ko'rinadi`
@@ -1085,10 +1117,25 @@ function render(){
         <div class="t">Hali o'lcham kiritilmadi</div>
         <div class="s">Yuqoridan eni va bo'yini yozing — natija shu yerda paydo bo'ladi.</div>
       </div>`;
-    $('exportBar').hidden = true;
     return;
   }
-  $('exportBar').hidden = false;
+
+  // ── uzun ro'yxatni qisqartiramiz: sahifa cho'zilib ketmasin ──
+  const LIMIT  = 15;
+  const capped = !state.showAll && results.length > LIMIT;
+  const shown  = capped ? results.slice(0, LIMIT) : results;
+  const hidden = results.length - shown.length;
+  const moreBtn = (cls) => capped
+    ? `<button class="more ${cls}" data-more="1">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+         Yana ${hidden} ta qatorni ko'rsatish
+       </button>`
+    : (state.showAll && results.length > LIMIT
+        ? `<button class="more open ${cls}" data-more="0">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+             Ro'yxatni yig'ish
+           </button>`
+        : '');
 
   // ── jadval (desktop) ──
   let t = `<div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr>
@@ -1096,7 +1143,7 @@ function render(){
     <th class="num">Dona</th><th class="num">1 dona m²</th><th class="num">Jami m²</th>
     ${hasPrice ? '<th class="num">Summa</th>' : ''}<th></th></tr></thead><tbody>`;
 
-  results.forEach((r, i) => {
+  shown.forEach((r, i) => {
     const sel = state.selected === i ? ' sel' : '';
     if (r.type === 'error'){
       t += `<tr class="err${sel}" data-i="${i}">
@@ -1124,11 +1171,11 @@ function render(){
     <td class="num lbl">m²</td>
     <td class="num big">${fmt(totals.area)}</td>
     ${hasPrice ? `<td class="num big" style="color:var(--ok)">${money(totals.area*state.price)}</td>` : ''}
-    <td></td></tr></tfoot></table></div></div>`;
+    <td></td></tr></tfoot></table></div>${moreBtn('')}</div>`;
 
   // ── kartalar (mobil) ──
   let c = '<div class="cards">';
-  results.forEach((r, i) => {
+  shown.forEach((r, i) => {
     if (r.type === 'error'){
       c += `<div class="rc err" data-i="${i}">
         <div class="rc-top"><div><div class="dims">${esc(r.raw)}</div><div class="errmsg">${esc(r.err)}</div></div>
@@ -1146,7 +1193,7 @@ function render(){
       <div class="rc-tot"><span class="k">Jami${state.price>0 ? ` · <b style="color:var(--ok)">${money(r.sum*state.price)} so'm</b>` : ''}</span><span class="v">${fmt(r.sum)} m²</span></div>
     </div>`;
   });
-  c += '</div>';
+  c += moreBtn('') + '</div>';
 
   $('resZone').innerHTML = t + c;
 }
@@ -1193,27 +1240,25 @@ function tgText(){
   return s;
 }
 
-function txtText(){
-  const u = state.unit === 'mm' ? 'mm' : 'sm';
-  let s = 'KVADRAT - m2 hisob\n' + new Date().toLocaleString('ru-RU') + '\n';
-  s += 'Olcham birligi: ' + u + '\n' + '='.repeat(46) + '\n\n';
-  results.forEach((r,i) => {
-    if (r.type === 'error'){ s += `${i+1}. XATO: ${r.raw} - ${r.err}\n`; return; }
-    const d = r.type === 'box' ? `${r.A}x${r.B}x${r.C}` : `${r.A}x${r.B}`;
-    s += `${i+1}. ${d}${r.name ? ' ('+r.name+')' : ''} x${r.qty} = ${fmt(r.sum)} m2\n`;
-  });
-  s += '\n' + '='.repeat(46) + '\n';
-  s += `Detal: ${totals.valid} | Dona: ${totals.pieces}\n`;
-  s += `JAMI: ${fmt(totals.area)} m2\n`;
-  if (state.price > 0) s += `SUMMA: ${money(totals.area*state.price)} som\n`;
-  return s;
-}
-
-function download(name, text){
-  const b = new Blob([text], { type:'text/plain;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(b); a.download = name; a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+/* PDF standart shriftlari kirill/o'zbek belgilarini ko'rsata olmaydi —
+   foydalanuvchi yozgan nomlarni lotinga o'giramiz, PDF hech qachon buzilmasin. */
+const CYR = {
+  а:'a',б:'b',в:'v',г:'g',ғ:"g'",д:'d',е:'e',ё:'yo',ж:'j',з:'z',и:'i',й:'y',
+  к:'k',қ:'q',л:'l',м:'m',н:'n',о:'o',ў:"o'",п:'p',р:'r',с:'s',т:'t',у:'u',
+  ф:'f',х:'x',ҳ:'h',ц:'ts',ч:'ch',ш:'sh',щ:'sh',ъ:'',ы:'i',ь:'',э:'e',ю:'yu',я:'ya'
+};
+function ascii(v){
+  return String(v == null ? '' : v)
+    .replace(/[ʻʼ‘’`´]/g, "'")
+    .replace(/[–—]/g, '-')
+    .replace(/[Ѐ-ӿ]/g, ch => {
+      const low = ch.toLowerCase(), t = CYR[low];
+      if (t == null) return '';
+      return ch === low ? t : (t ? t[0].toUpperCase() + t.slice(1) : '');
+    })
+    .replace(/[^\x20-\x7E]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /* ── PDF: yorug', hujjatga o'xshash ── */
@@ -1275,38 +1320,59 @@ function exportPDF(){
   }
   head();
 
+  // faqat haqiqiy detallar jadvalga tushadi
+  const rows    = results.filter(r => r.type !== 'error');
+  const nameMax = cx[3] - 24 - cx[2];   // nom ustuni kengligi
+
   p.setFont('helvetica','normal'); p.setFontSize(9);
-  results.forEach((r,i) => {
-    if (y > H-72){ p.addPage(); y = 62; head(); p.setFont('helvetica','normal'); p.setFontSize(9); }
-    if (r.type === 'error'){
-      p.setTextColor(180,83,9);
-      p.text(String(i+1), cx[0], y);
-      p.text(String(r.raw).slice(0,26), cx[1], y);
-      p.setFontSize(7.5); p.text('XATO: ' + r.err, cx[2], y); p.setFontSize(9);
-    } else {
-      const d = r.type === 'box' ? `${r.A} x ${r.B} x ${r.C}` : `${r.A} x ${r.B}`;
-      p.setTextColor(...MUT); p.text(String(i+1), cx[0], y);
-      p.setTextColor(...INK); p.setFont('helvetica','bold'); p.text(d, cx[1], y);
-      p.setFont('helvetica','normal'); p.setTextColor(...MUT);
-      if (r.name) p.text(String(r.name).slice(0,22), cx[2], y);
-      p.text(String(r.qty), cx[3], y, { align:'right' });
-      p.text(fmt(r.one), cx[4], y, { align:'right' });
-      p.setTextColor(...INK); p.setFont('helvetica','bold');
-      p.text(fmt(r.sum), cx[5], y, { align:'right' });
-      if (hasPrice){ p.setTextColor(15,138,95); p.text(money(r.sum*state.price), cx[6], y, { align:'right' }); }
-      p.setFont('helvetica','normal');
+  rows.forEach((r,i) => {
+    if (y > H-78){ p.addPage(); y = 62; head(); p.setFont('helvetica','normal'); p.setFontSize(9); }
+    if (i % 2 === 1){ p.setFillColor(250,249,247); p.rect(M, y-10, W-M*2, 19, 'F'); }
+
+    const d = r.type === 'box' ? `${r.A} x ${r.B} x ${r.C}` : `${r.A} x ${r.B}`;
+    p.setTextColor(...MUT); p.setFontSize(8); p.text(String(i+1), cx[0], y); p.setFontSize(9);
+    p.setTextColor(...INK); p.setFont('helvetica','bold'); p.text(d, cx[1], y);
+    p.setFont('helvetica','normal'); p.setTextColor(...MUT);
+    if (r.name){
+      const nm = ascii(r.name);
+      p.text(nm ? (p.splitTextToSize(nm, nameMax)[0] || '') : '', cx[2], y);
     }
+    p.text(String(r.qty), cx[3], y, { align:'right' });
+    p.text(fmt(r.one), cx[4], y, { align:'right' });
+    p.setTextColor(...INK); p.setFont('helvetica','bold');
+    p.text(fmt(r.sum), cx[5], y, { align:'right' });
+    if (hasPrice){ p.setTextColor(15,138,95); p.text(money(r.sum*state.price), cx[6], y, { align:'right' }); }
+    p.setFont('helvetica','normal');
+
     y += 19;
     p.setDrawColor(240,238,232); p.setLineWidth(.6); p.line(M, y-8, W-M, y-8);
   });
 
-  // yakuniy qator
+  // yakuniy qator (sahifa oxiriga sig'masa — yangi sahifa)
+  if (y > H-96){ p.addPage(); y = 62; }
   y += 4;
   p.setDrawColor(...INK); p.setLineWidth(1.2); p.line(M, y-8, W-M, y-8);
   p.setFont('helvetica','bold'); p.setFontSize(10); p.setTextColor(...INK);
-  p.text('JAMI', cx[1], y+8);
-  p.text(fmt(totals.area) + ' m2', cx[5], y+8, { align:'right' });
-  if (hasPrice){ p.setTextColor(15,138,95); p.text(money(totals.area*state.price), cx[6], y+8, { align:'right' }); }
+  p.text('JAMI', cx[1], y+9);
+  p.setFont('helvetica','normal'); p.setFontSize(8); p.setTextColor(...MUT);
+  p.text(totals.valid + ' detal, ' + totals.pieces + ' dona', cx[2], y+9);
+  p.setFont('helvetica','bold'); p.setFontSize(10); p.setTextColor(...INK);
+  p.text(fmt(totals.area) + ' m2', cx[5], y+9, { align:'right' });
+  if (hasPrice){ p.setTextColor(15,138,95); p.text(money(totals.area*state.price) + ' som', cx[6], y+9, { align:'right' }); }
+
+  // hisobga olinmagan qatorlar
+  if (totals.errors){
+    y += 30;
+    if (y > H-70){ p.addPage(); y = 70; }
+    p.setFont('helvetica','bold'); p.setFontSize(8); p.setTextColor(180,83,9);
+    p.text('Hisobga olinmadi (' + totals.errors + ' ta qator):', M, y);
+    p.setFont('helvetica','normal'); p.setTextColor(...MUT);
+    results.filter(r => r.type === 'error').slice(0,8).forEach(r => {
+      y += 12;
+      if (y > H-60){ p.addPage(); y = 70; }
+      p.text('- ' + ascii(r.raw).slice(0,60) + '  (' + ascii(r.err) + ')', M+8, y);
+    });
+  }
 
   // izoh + footer
   const pages = p.internal.getNumberOfPages();
@@ -1314,9 +1380,9 @@ function exportPDF(){
     p.setPage(i);
     p.setDrawColor(...LINE); p.setLineWidth(.8); p.line(M, H-46, W-M, H-46);
     p.setFont('helvetica','normal'); p.setFontSize(7.5); p.setTextColor(...MUT);
-    p.text('Formula:  eni x boyi + 2 x vistup x (eni + boyi)', M, H-32);
-    p.text('kvdrt.maqsudjon.com', W/2, H-32, { align:'center' });
-    p.text(i + ' / ' + pages, W-M, H-32, { align:'right' });
+    p.text('Olcham tartibi: eni x boyi x vistup   |   Yuza = eni x boyi + 2 x vistup x (eni + boyi)', M, H-32);
+    p.text('kvdrt.maqsudjon.com', W-M, H-32, { align:'right' });
+    p.text(i + ' / ' + pages, W-M, H-20, { align:'right' });
   }
 
   p.save('kvadrat-' + new Date().toISOString().slice(0,10) + '.pdf');
@@ -1358,7 +1424,7 @@ const SLIDES = [
     art: `<div class="mini-total">
             <div class="v">25.67<span>m²</span></div>
             <div class="s">6 417 331 so'm</div>
-            <div class="mini-pills"><i>PDF</i><i>Telegram</i><i>TXT</i><i>Chop etish</i></div>
+            <div class="mini-pills"><i>PDF yuklab olish</i><i>Telegram uchun nusxa</i></div>
           </div>`,
     h: "Jami darhol tayyor",
     p: "1 m² narxini yozsangiz umumiy summa ham chiqadi. Natijani PDF qilib yoki Telegramga tashlab yuborasiz."
@@ -1405,6 +1471,15 @@ function closeIntro(){
 /* ═══════════════════════════════════════════════════════
    8. UI
    ═══════════════════════════════════════════════════════ */
+/* Pastki panel balandligi mazmunga qarab o'zgaradi (narx, tor ekran) —
+   sahifa oxiri va toast panel ostida qolib ketmasin. */
+function fitBar(){
+  const bar = $('actionbar');
+  const h = bar.classList.contains('on') ? bar.offsetHeight : 0;
+  document.body.style.paddingBottom = h ? (h + 18) + 'px' : '';
+  $('toast').style.bottom = (h ? h + 18 : 26) + 'px';
+}
+
 let toastT;
 function toast(msg){
   const el = $('toast');
@@ -1521,6 +1596,8 @@ function init(){
 
   // natija bilan ishlash
   $('resZone').addEventListener('click', e => {
+    const m = e.target.closest('[data-more]');
+    if (m){ state.showAll = m.dataset.more === '1'; render(); return; }
     const d = e.target.closest('[data-del]');
     if (d){ e.stopPropagation(); removeLine(parseInt(d.dataset.del,10)); return; }
     const row = e.target.closest('[data-i]');
@@ -1537,8 +1614,9 @@ function init(){
 
   // eksport
   $('pdfBtn').addEventListener('click', exportPDF);
-  $('txtBtn').addEventListener('click', () => { download('kvadrat-' + Date.now() + '.txt', txtText()); toast('✓ TXT yuklandi'); });
-  $('printBtn').addEventListener('click', () => print());
+  $('topBtn').addEventListener('click', () => scrollTo({ top:0, behavior:'smooth' }));
+  // chop etishda ro'yxat to'liq bo'lsin (yig'ilgan holatda qolib ketmasin)
+  addEventListener('beforeprint', () => { if (!state.showAll){ state.showAll = true; render(); } });
   $('tgBtn').addEventListener('click', () => {
     const t = tgText();
     if (navigator.clipboard && navigator.clipboard.writeText){
@@ -1553,9 +1631,6 @@ function init(){
     try{ document.execCommand('copy'); toast('✓ Nusxa olindi'); }catch(e){ toast('Nusxa olib bo‘lmadi'); }
     document.body.removeChild(ta);
   }
-
-  // mobil panel
-  $('mbBtn').addEventListener('click', () => $('results').scrollIntoView({ behavior:'smooth', block:'start' }));
 
   // yordam
   const hm = $('helpModal');
@@ -1597,6 +1672,8 @@ function init(){
   counts();
   refresh();
   if ($('bulk').value.trim()) setTab('list');
+
+  addEventListener('resize', fitBar);
 
   // birinchi kirishda qisqa tanishtiruv
   let seen = true;

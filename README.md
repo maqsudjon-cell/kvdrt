@@ -69,7 +69,13 @@ S = eni × bo'yi        →  287 179  =  5.1373 m²
   yozilayotgan raqamlarga qarab o'zgaradi.
 - **SM / MM** — o'lchov birligi tanlanadi, natija baribir m² da.
 - **Narx** — 1 m² narxi kiritilsa umumiy summa ham hisoblanadi.
-- **Eksport** — PDF, Telegram uchun nusxa, TXT, chop etish.
+- **Doimiy pastki panel** — jami m², summa va **PDF** / **Telegram** tugmalari
+  ekrandan ketmaydi. Ro'yxat qancha uzun bo'lmasin, natijaga scroll qilib
+  borish shart emas. Yonida «tepaga» tugmasi.
+- **Uzun ro'yxat yig'iladi** — 15 qatordan ko'pi «Yana N ta qatorni ko'rsatish»
+  ostiga yashiriladi. Jami va eksport doim to'liq ro'yxat bo'yicha.
+- **Eksport** — PDF va Telegram uchun nusxa. PDF da kirill/o'zbek harflari
+  lotinga o'giriladi (`гор` → `gor`), shuning uchun hech qachon buzilmaydi.
 - **Yorug' / qorong'i mavzu**, avtomatik saqlash, mobilga to'liq moslashgan.
 
 ## Ishga tushirish
