@@ -60,9 +60,10 @@ S = eni × bo'yi        →  287 179  =  5.1373 m²
 
 ## Imkoniyatlar
 
-- **Qisqa tanishtiruv** — birinchi kirishda 4 ta slayd (nima qiladi, raqamlar
-  tartibi, qator qoidalari, natija). Bir marta ko'rsatiladi
-  (`localStorage: kvadrat.intro.v1`), keyin yordam oynasidan qayta ochiladi.
+- **Qisqa tanishtiruv** — birinchi kirishda 5 ta slayd: sayt nimaligi, nima
+  qilishi, raqamlar tartibi, qator qoidalari, natija. Bir marta ko'rsatiladi
+  (`localStorage: kvadrat.intro.v2`), keyin yordam oynasidan qayta ochiladi.
+  Slayd qo'shilsa kalit raqamini oshiring — hamma yangisini bir marta ko'radi.
 - **Ikki xil kiritish** — bittalab (maydonlar bo'yicha) yoki ro'yxat/nusxa
   (bir necha o'nlab qatorni birdan qo'yish).
 - **Jonli chizma** — eni / bo'yi / vistup qaysi tomon ekanini ko'rsatadi,
@@ -87,7 +88,39 @@ open index.html
 Boshqa hech narsa kerak emas. Yagona tashqi bog'liqlik — PDF uchun jsPDF (CDN)
 va Google Fonts; ular yuklanmasa ham hisoblash ishlayveradi.
 
+## Rasm va ikonkalar
+
+Barchasi `assets/` ichida, manbasi SVG — PNG lar shundan generatsiya qilinadi:
+
+| Fayl | Nimaga |
+|------|--------|
+| `icon.svg` | favicon (vektor), manifest |
+| `favicon.ico` | 16/32/48 — eski brauzerlar |
+| `favicon-16.png`, `favicon-32.png` | brauzer yorlig'i |
+| `apple-touch-icon.png` (180) | iPhone «bosh ekranga qo'shish» |
+| `icon-192.png`, `icon-512.png` | manifest, maskable |
+| `og.png` (1200×630) | Telegram / Facebook / X havola ko'rinishi |
+| `og.svg` | og.png ning manbasi |
+
+Qayta generatsiya (cairosvg kerak):
+
+```bash
+python3 -c "
+import cairosvg
+for src,out,sz in [('assets/icon.svg','assets/favicon-16.png',16),('assets/icon.svg','assets/favicon-32.png',32),('assets/icon.svg','assets/favicon-48.png',48),('assets/icon-full.svg','assets/apple-touch-icon.png',180),('assets/icon-full.svg','assets/icon-192.png',192),('assets/icon-full.svg','assets/icon-512.png',512)]:
+    cairosvg.svg2png(url=src, write_to=out, output_width=sz, output_height=sz)
+cairosvg.svg2png(url='assets/og.svg', write_to='assets/og.png', output_width=1200, output_height=630)
+"
+magick assets/favicon-16.png assets/favicon-32.png assets/favicon-48.png assets/favicon.ico
+```
+
+`icon.svg` — burchagi yumaloq (favicon uchun), `icon-full.svg` — to'la fonli
+va markazda kichikroq (iOS/Android o'zi yumaloqlaydi, kesib qo'ymasin).
+
 ## Deploy
 
 GitHub Pages, `main` bo'lim ildizidan. Domen `CNAME` faylida:
 `kvdrt.maqsudjon.com`.
+
+OG rasm manzili `index.html` da to'liq URL bilan yozilgan — domen o'zgarsa
+`og:image`, `twitter:image` va `og:url` ni ham yangilash kerak.

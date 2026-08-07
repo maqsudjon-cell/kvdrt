@@ -6,12 +6,38 @@
 <meta name="theme-color" content="#F7F6F3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0C1017" media="(prefers-color-scheme: dark)">
 <title>KVADRAT — panjara m² hisoblagich</title>
-<meta name="description" content="Eni, bo'yi va vistupdan kvadrat metrni bir zumda hisoblang. Panjara, kozirek, balkon uchun. Chizmali, tushunarli, bepul.">
-<meta property="og:title" content="KVADRAT — panjara m² hisoblagich">
-<meta property="og:description" content="Eni · bo'yi · vistup → m². Chizmali va tushunarli hisoblagich.">
-<meta property="og:type" content="website">
+<meta name="description" content="Reshotka — oyna panjarasi, balkon, kozirek kvadrat metrini hisoblash. Eni, bo'yi va vistupni yozasiz, m² bir zumda chiqadi. Chizmali, tushunarli, bepul.">
+<meta name="author" content="Maqsudjon Polatov">
 <link rel="canonical" href="https://kvdrt.maqsudjon.com/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2312161D'/%3E%3Cpath d='M14 44 L14 22 L38 22 L38 44 Z' fill='none' stroke='%23FFFFFF' stroke-width='3.4' stroke-linejoin='round'/%3E%3Cpath d='M14 22 L24 13 L48 13 L38 22' fill='none' stroke='%23F59E0B' stroke-width='3.4' stroke-linejoin='round'/%3E%3Cpath d='M38 22 L48 13 L48 35 L38 44' fill='none' stroke='%23F59E0B' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+<!-- Open Graph / Telegram / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KVADRAT">
+<meta property="og:locale" content="uz_UZ">
+<meta property="og:url" content="https://kvdrt.maqsudjon.com/">
+<meta property="og:title" content="KVADRAT — panjara kvadrat metrini hisoblash">
+<meta property="og:description" content="Reshotka, balkon, kozirek. Eni · bo'yi · vistup yozasiz — m² darhol chiqadi. Bepul.">
+<meta property="og:image" content="https://kvdrt.maqsudjon.com/assets/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="KVADRAT — panjara chizmasi: eni 120, bo'yi 130, vistup 30 → 3.06 m²">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KVADRAT — panjara kvadrat metrini hisoblash">
+<meta name="twitter:description" content="Reshotka, balkon, kozirek. Eni · bo'yi · vistup yozasiz — m² darhol chiqadi.">
+<meta name="twitter:image" content="https://kvdrt.maqsudjon.com/assets/og.png">
+
+<!-- Ikonkalar -->
+<link rel="icon" href="/assets/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="KVADRAT">
+<meta name="application-name" content="KVADRAT">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -446,7 +472,8 @@ tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
   background:var(--surface-2);border:1px solid var(--line);border-radius:14px;
   padding:14px;margin-bottom:18px;display:grid;place-items:center;min-height:190px;
 }
-.slide-art svg.dg{width:100%;max-width:330px;height:auto;display:block}
+.dgwrap{width:100%}
+.slide-art svg.dg{width:100%;max-width:330px;height:auto;display:block;margin:0 auto}
 .slide-step{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:7px}
 .slide h3{font-size:21px;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:9px}
 @media(max-width:520px){.slide h3{font-size:19px}}
@@ -458,6 +485,12 @@ tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
 .intro-ft .btn.back{flex:0 0 auto;min-width:92px}
 
 /* slayd illyustratsiyalari */
+.brandart{text-align:center;padding:4px 0}
+.brandart .mk{width:72px;height:72px;margin:0 auto 15px;display:block;border-radius:17px;box-shadow:var(--shadow)}
+.brandart .nm{font-weight:800;font-size:25px;letter-spacing:-.02em;line-height:1}
+.brandart .dm{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);margin-top:8px}
+.brandart .tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:17px}
+.brandart .tags i{font-style:normal;font-size:11.5px;font-weight:600;color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);border-radius:99px;padding:5px 11px}
 .flow{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
 .flow-in{font-family:var(--mono);font-size:17px;font-weight:700;background:var(--surface);border:1.5px solid var(--line-2);border-radius:10px;padding:11px 15px}
 .flow-in .e{color:var(--eni)} .flow-in .b{color:var(--boyi)} .flow-in .c{color:var(--vistup)}
@@ -1392,9 +1425,25 @@ function exportPDF(){
 /* ═══════════════════════════════════════════════════════
    7.5 TANISHTIRUV — birinchi kirishda 4 ta qisqa slayd
    ═══════════════════════════════════════════════════════ */
-const INTRO_SEEN = 'kvadrat.intro.v1';
+const INTRO_SEEN = 'kvadrat.intro.v2';
 
 const SLIDES = [
+  {
+    art: `<div class="brandart">
+            <svg class="mk" viewBox="0 0 64 64" aria-hidden="true">
+              <rect width="64" height="64" rx="15" fill="#12161D"/>
+              <path d="M14 44 L14 22 L38 22 L38 44 Z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/>
+              <path d="M14 22 L24 13 L48 13 L38 22" fill="none" stroke="#F59E0B" stroke-width="3.4" stroke-linejoin="round"/>
+              <path d="M38 22 L48 13 L48 35 L38 44" fill="none" stroke="#F59E0B" stroke-width="3.4" stroke-linejoin="round"/>
+            </svg>
+            <div class="nm">KVADRAT</div>
+            <div class="dm">kvdrt.maqsudjon.com</div>
+            <div class="tags"><i>oyna panjarasi</i><i>balkon</i><i>kozirek</i></div>
+          </div>`,
+    h: "Panjara kvadrat metrini hisoblaydi",
+    p: "Reshotka — oyna panjarasi, balkon, kozirek. O'lchamini yozasiz, necha <b>m²</b> chiqishini bir zumda ko'rsatadi.",
+    p2: "Bepul, ro'yxatdan o'tish shart emas. Hisobingiz faqat shu telefonda qoladi."
+  },
   {
     art: `<div class="flow">
             <div class="flow-in"><span class="e">120</span> <span class="b">130</span> <span class="c">30</span></div>
@@ -1436,13 +1485,13 @@ let slide = 0;
 function renderIntro(){
   $('track').innerHTML = SLIDES.map((s,i) => `
     <div class="slide">
-      <div class="slide-art">${s.art !== null ? s.art : `<div style="width:100%">${buildDiagram(120,130,30,'i')}</div>`}</div>
+      <div class="slide-art">${s.art !== null ? s.art : `<div class="dgwrap">${buildDiagram(120,130,30,'i')}</div>`}</div>
       <div class="slide-step">${i+1} / ${SLIDES.length}</div>
       <h3>${s.h}</h3>
       <p>${s.p}</p>
       ${s.p2 ? `<p>${s.p2}</p>` : ''}
     </div>`).join('');
-  $('track').querySelectorAll('svg').forEach(el => el.classList.add('dg'));
+  $('track').querySelectorAll('.dgwrap > svg').forEach(el => el.classList.add('dg'));
   $('dots').innerHTML = SLIDES.map(() => '<i></i>').join('');
   goSlide(0);
 }

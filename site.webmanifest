@@ -1,0 +1,21 @@
+{
+  "name": "KVADRAT — panjara m² hisoblagich",
+  "short_name": "KVADRAT",
+  "description": "Reshotka — oyna panjarasi, balkon, kozirek kvadrat metrini hisoblash. Eni, bo'yi va vistupni yozasiz, m² darhol chiqadi.",
+  "lang": "uz",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F7F6F3",
+  "theme_color": "#12161D",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "/assets/icon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/assets/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/assets/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "maskable" },
+    { "src": "/assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}
