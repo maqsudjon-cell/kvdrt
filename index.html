@@ -400,6 +400,59 @@ tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
 .formula .c{color:var(--vistup);font-weight:600}
 .formula .r{color:var(--ok);font-weight:700}
 
+/* ── TANISHTIRUV (birinchi kirishda) ──────────────────── */
+.intro{position:fixed;inset:0;z-index:400;background:rgba(12,16,23,.6);backdrop-filter:blur(6px);display:none;place-items:center;padding:18px}
+.intro.on{display:grid}
+.intro-box{
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  width:100%;max-width:520px;max-height:92vh;display:flex;flex-direction:column;
+  overflow:hidden;box-shadow:var(--shadow-lg);
+}
+.intro-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px 0}
+.dots{display:flex;gap:6px}
+.dots i{width:22px;height:4px;border-radius:99px;background:var(--line-2);transition:.25s}
+.dots i.on{background:var(--ink);width:30px}
+.skip{background:none;border:none;color:var(--ink-3);font-size:13px;font-weight:600;cursor:pointer;padding:6px 2px}
+.skip:hover{color:var(--ink)}
+
+.stage{overflow:hidden;flex:1;min-height:0}
+.track{display:flex;transition:transform .34s cubic-bezier(.3,.8,.3,1);height:100%}
+.slide{flex:0 0 100%;padding:8px 26px 4px;display:flex;flex-direction:column;overflow-y:auto}
+@media(max-width:520px){.slide{padding:8px 18px 4px}}
+.slide-art{
+  background:var(--surface-2);border:1px solid var(--line);border-radius:14px;
+  padding:14px;margin-bottom:18px;display:grid;place-items:center;min-height:190px;
+}
+.slide-art svg.dg{width:100%;max-width:330px;height:auto;display:block}
+.slide-step{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:7px}
+.slide h3{font-size:21px;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:9px}
+@media(max-width:520px){.slide h3{font-size:19px}}
+.slide p{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.slide p + p{margin-top:8px}
+.slide code{font-family:var(--mono);font-size:13px;background:var(--paper-2);border:1px solid var(--line);padding:2px 7px;border-radius:6px;color:var(--ink);white-space:nowrap}
+.intro-ft{display:flex;align-items:center;gap:10px;padding:16px 18px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface)}
+.intro-ft .btn{flex:1;justify-content:center}
+.intro-ft .btn.back{flex:0 0 auto;min-width:92px}
+
+/* slayd illyustratsiyalari */
+.flow{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.flow-in{font-family:var(--mono);font-size:17px;font-weight:700;background:var(--surface);border:1.5px solid var(--line-2);border-radius:10px;padding:11px 15px}
+.flow-in .e{color:var(--eni)} .flow-in .b{color:var(--boyi)} .flow-in .c{color:var(--vistup)}
+.flow-ar{color:var(--ink-4);font-size:22px;line-height:1}
+.flow-out{font-family:var(--mono);font-size:27px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.flow-out span{font-size:.5em;color:var(--ink-3);margin-left:4px}
+.rules{display:flex;flex-direction:column;gap:9px;width:100%}
+.rule{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+.rule b{font-family:var(--mono);font-size:13.5px;font-weight:700;white-space:nowrap}
+.rule b .e{color:var(--eni)} .rule b .b{color:var(--boyi)} .rule b .c{color:var(--vistup)}
+.rule span{font-size:12.5px;color:var(--ink-3);margin-left:auto;text-align:right}
+.mini-total{width:100%;text-align:center}
+.mini-total .v{font-family:var(--mono);font-size:38px;font-weight:700;letter-spacing:-.035em;line-height:1}
+.mini-total .v span{font-size:.42em;color:var(--ink-3);margin-left:5px}
+.mini-total .s{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ok);margin-top:6px}
+.mini-pills{display:flex;gap:7px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.mini-pills i{font-style:normal;font-size:11.5px;font-weight:600;color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);border-radius:99px;padding:6px 12px}
+
 /* ── TOAST ────────────────────────────────────────────── */
 .toast{
   position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);z-index:300;
@@ -710,6 +763,28 @@ oshxona 100 140
         Jadvaldagi qatorni bossangiz chizmada o'sha detal ko'rinadi. <code>Ctrl</code>+<code>Enter</code> — qo'shish.</p>
       </div>
 
+      <div class="hrow">
+        <button class="btn btn-ghost" id="replayIntro" type="button" style="width:100%">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 4v4h4"/></svg>
+          Qisqa tanishtiruvni qayta ko'rish
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ TANISHTIRUV ═════════════════════════════════════ -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Tanishtiruv">
+  <div class="intro-box">
+    <div class="intro-hd">
+      <div class="dots" id="dots"></div>
+      <button class="skip" id="introSkip">O'tkazib yuborish</button>
+    </div>
+    <div class="stage"><div class="track" id="track"></div></div>
+    <div class="intro-ft">
+      <button class="btn btn-ghost back" id="introPrev" type="button">Orqaga</button>
+      <button class="btn btn-primary" id="introNext" type="button">Keyingi →</button>
     </div>
   </div>
 </div>
@@ -846,7 +921,8 @@ function compute(){
 /* ═══════════════════════════════════════════════════════
    4. CHIZMA (jonli izometrik SVG)
    ═══════════════════════════════════════════════════════ */
-function drawDiagram(A, B, C){
+function buildDiagram(A, B, C, uid){
+  uid = uid || 'm';
   const unit = state.unit === 'mm' ? 'mm' : 'sm';
   const hasC = C > 0;
   const maxv = Math.max(A, B, 1);
@@ -871,7 +947,7 @@ function drawDiagram(A, B, C){
   // devor tekisligi + orqa (devordagi) ochiq joy
   if (hasC){
     const wl = bx-30, wt = by-24, ww = pw+60, wh = ph+48;
-    g += `<rect x="${wl.toFixed(1)}" y="${wt.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="url(#hatch)" stroke="var(--line-2)" stroke-width="1"/>`;
+    g += `<rect x="${wl.toFixed(1)}" y="${wt.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="url(#hatch-${uid})" stroke="var(--line-2)" stroke-width="1"/>`;
     g += `<text x="${(wl+9).toFixed(1)}" y="${(wt+15).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--ink-4)" letter-spacing="1.3">DEVOR</text>`;
     // devordagi tuynuk
     g += `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" fill="var(--paper)" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3"/>`;
@@ -900,7 +976,7 @@ function drawDiagram(A, B, C){
   const eY = fby + 34;
   g += `<line x1="${fx}" y1="${fby+3}" x2="${fx}" y2="${eY+7}" stroke="var(--eni)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
   g += `<line x1="${rx}" y1="${fby+3}" x2="${rx}" y2="${eY+7}" stroke="var(--eni)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
-  g += `<line x1="${fx}" y1="${eY}" x2="${rx}" y2="${eY}" stroke="var(--eni)" stroke-width="1.6" marker-start="url(#aE)" marker-end="url(#aE)"/>`;
+  g += `<line x1="${fx}" y1="${eY}" x2="${rx}" y2="${eY}" stroke="var(--eni)" stroke-width="1.6" marker-start="url(#aE-${uid})" marker-end="url(#aE-${uid})"/>`;
   g += `<g><rect x="${(fx+pw/2-40).toFixed(1)}" y="${eY+8}" width="80" height="21" rx="6" fill="var(--eni-bg)" stroke="var(--eni-br)" stroke-width="1"/>`
      + `<text x="${(fx+pw/2).toFixed(1)}" y="${eY+22.5}" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--eni)">${A||'—'} <tspan font-size="9.5" font-weight="500">${unit}</tspan></text></g>`;
   g += `<text x="${(fx+pw/2).toFixed(1)}" y="${eY-7}" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="var(--eni)">ENI</text>`;
@@ -909,7 +985,7 @@ function drawDiagram(A, B, C){
   const bX = fx - 40;
   g += `<line x1="${fx-3}" y1="${fy}" x2="${bX-7}" y2="${fy}" stroke="var(--boyi)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
   g += `<line x1="${fx-3}" y1="${fby}" x2="${bX-7}" y2="${fby}" stroke="var(--boyi)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
-  g += `<line x1="${bX}" y1="${fy}" x2="${bX}" y2="${fby}" stroke="var(--boyi)" stroke-width="1.6" marker-start="url(#aB)" marker-end="url(#aB)"/>`;
+  g += `<line x1="${bX}" y1="${fy}" x2="${bX}" y2="${fby}" stroke="var(--boyi)" stroke-width="1.6" marker-start="url(#aB-${uid})" marker-end="url(#aB-${uid})"/>`;
   g += `<g transform="translate(${bX-13},${(fy+ph/2).toFixed(1)}) rotate(-90)">`
      + `<rect x="-40" y="-11" width="80" height="21" rx="6" fill="var(--boyi-bg)" stroke="var(--boyi-br)" stroke-width="1"/>`
      + `<text x="0" y="3.5" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--boyi)">${B||'—'} <tspan font-size="9.5" font-weight="500">${unit}</tspan></text>`
@@ -922,7 +998,7 @@ function drawDiagram(A, B, C){
     const ox = 22, oy = -13;          // o'lcham chizig'ini qirradan chetga surish
     g += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${(sx+ox).toFixed(1)}" y2="${(sy+oy).toFixed(1)}" stroke="var(--vistup)" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`;
     g += `<line x1="${ex.toFixed(1)}" y1="${ey.toFixed(1)}" x2="${(ex+ox).toFixed(1)}" y2="${(ey+oy).toFixed(1)}" stroke="var(--vistup)" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`;
-    g += `<line x1="${(sx+ox*0.82).toFixed(1)}" y1="${(sy+oy*0.82).toFixed(1)}" x2="${(ex+ox*0.82).toFixed(1)}" y2="${(ey+oy*0.82).toFixed(1)}" stroke="var(--vistup)" stroke-width="1.6" marker-start="url(#aV)" marker-end="url(#aV)"/>`;
+    g += `<line x1="${(sx+ox*0.82).toFixed(1)}" y1="${(sy+oy*0.82).toFixed(1)}" x2="${(ex+ox*0.82).toFixed(1)}" y2="${(ey+oy*0.82).toFixed(1)}" stroke="var(--vistup)" stroke-width="1.6" marker-start="url(#aV-${uid})" marker-end="url(#aV-${uid})"/>`;
     mx = (sx+ex)/2 + ox + 44; my = (sy+ey)/2 + oy;
     maxX = Math.max(maxX, mx + 42, bx + pw + 34);
     minY = Math.min(minY, by - 26, my - 30);
@@ -940,19 +1016,22 @@ function drawDiagram(A, B, C){
   const sX = (VW - cW * k) / 2 - minX * k;
   const sY = (VH - cH * k) / 2 - minY * k;
 
-  $('diagram').innerHTML =
-    `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Panjara o'lchamlari chizmasi">
+  return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Panjara o'lchamlari chizmasi">
       <defs>
-        ${mk('aE','var(--eni)')}${mk('aB','var(--boyi)')}${mk('aV','var(--vistup)')}
-        <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        ${mk('aE-'+uid,'var(--eni)')}${mk('aB-'+uid,'var(--boyi)')}${mk('aV-'+uid,'var(--vistup)')}
+        <pattern id="hatch-${uid}" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
           <rect width="7" height="7" fill="var(--paper-2)"/>
           <line x1="0" y1="0" x2="0" y2="7" stroke="var(--line-2)" stroke-width="1.1"/>
         </pattern>
       </defs>
       <g transform="translate(${sX.toFixed(1)},${sY.toFixed(1)}) scale(${k.toFixed(3)})">${g}</g>
     </svg>`;
+}
 
-  const a = area(A, B, C);
+function drawDiagram(A, B, C){
+  const unit = state.unit === 'mm' ? 'mm' : 'sm';
+  const hasC = C > 0, a = area(A, B, C);
+  $('diagram').innerHTML = buildDiagram(A, B, C, 'm');
   $('dgMode').textContent = hasC ? 'Vistupli' : 'Tekis';
   $('dgMode').style.color = hasC ? 'var(--vistup)' : 'var(--ink-3)';
   $('dgCap').innerHTML = (A && B)
@@ -1245,6 +1324,85 @@ function exportPDF(){
 }
 
 /* ═══════════════════════════════════════════════════════
+   7.5 TANISHTIRUV — birinchi kirishda 4 ta qisqa slayd
+   ═══════════════════════════════════════════════════════ */
+const INTRO_SEEN = 'kvadrat.intro.v1';
+
+const SLIDES = [
+  {
+    art: `<div class="flow">
+            <div class="flow-in"><span class="e">120</span> <span class="b">130</span> <span class="c">30</span></div>
+            <div class="flow-ar">→</div>
+            <div class="flow-out">3.06<span>m²</span></div>
+          </div>`,
+    h: "O'lchamni yozing — m² o'zi chiqadi",
+    p: "Panjara, kozirek, balkon — payvand ishlari uchun. Kalkulyator ham, qog'oz ham kerak emas."
+  },
+  {
+    art: null,   // jonli chizma shu yerga qo'yiladi
+    h: "Tartib: eni → bo'yi → vistup",
+    p: "Eng muhimi shu. <code>120 130 30</code> degani: eni <b>120</b>, bo'yi <b>130</b>, oldinga <b>30</b> chiqadi.",
+    p2: "Vistup — panjara devordan qancha bo'rtib turishi."
+  },
+  {
+    art: `<div class="rules">
+            <div class="rule"><b><span class="e">120</span> <span class="b">130</span> <span class="c">30</span></b><span>vistupli</span></div>
+            <div class="rule"><b><span class="e">120</span> <span class="b">130</span></b><span>tekis — vistupsiz</span></div>
+            <div class="rule"><b>oshxona <span class="e">120</span> <span class="b">130</span> <span class="c">30</span></b><span>nomi bilan</span></div>
+            <div class="rule"><b><span class="e">120</span> <span class="b">130</span> <span class="c">30</span> 2 dona</b><span>2 ta bir xil</span></div>
+          </div>`,
+    h: "Har bir qator — bitta detal",
+    p: "Vistup bo'lmasa ikkita raqam yozasiz. Xohlasangiz nom va dona sonini ham qo'shasiz."
+  },
+  {
+    art: `<div class="mini-total">
+            <div class="v">25.67<span>m²</span></div>
+            <div class="s">6 417 331 so'm</div>
+            <div class="mini-pills"><i>PDF</i><i>Telegram</i><i>TXT</i><i>Chop etish</i></div>
+          </div>`,
+    h: "Jami darhol tayyor",
+    p: "1 m² narxini yozsangiz umumiy summa ham chiqadi. Natijani PDF qilib yoki Telegramga tashlab yuborasiz."
+  }
+];
+
+let slide = 0;
+
+function renderIntro(){
+  $('track').innerHTML = SLIDES.map((s,i) => `
+    <div class="slide">
+      <div class="slide-art">${s.art !== null ? s.art : `<div style="width:100%">${buildDiagram(120,130,30,'i')}</div>`}</div>
+      <div class="slide-step">${i+1} / ${SLIDES.length}</div>
+      <h3>${s.h}</h3>
+      <p>${s.p}</p>
+      ${s.p2 ? `<p>${s.p2}</p>` : ''}
+    </div>`).join('');
+  $('track').querySelectorAll('svg').forEach(el => el.classList.add('dg'));
+  $('dots').innerHTML = SLIDES.map(() => '<i></i>').join('');
+  goSlide(0);
+}
+
+function goSlide(i){
+  slide = Math.max(0, Math.min(SLIDES.length - 1, i));
+  $('track').style.transform = `translateX(${-slide * 100}%)`;
+  $('dots').querySelectorAll('i').forEach((d,n) => d.classList.toggle('on', n === slide));
+  $('introPrev').style.visibility = slide === 0 ? 'hidden' : 'visible';
+  const last = slide === SLIDES.length - 1;
+  $('introNext').textContent = last ? 'Boshladik ✓' : 'Keyingi →';
+  $('introSkip').style.visibility = last ? 'hidden' : 'visible';
+  const cur = $('track').children[slide];
+  if (cur) cur.scrollTop = 0;
+}
+
+function openIntro(){
+  if (!$('track').children.length) renderIntro(); else goSlide(0);
+  $('intro').classList.add('on');
+}
+function closeIntro(){
+  $('intro').classList.remove('on');
+  try{ localStorage.setItem(INTRO_SEEN, '1'); }catch(e){}
+}
+
+/* ═══════════════════════════════════════════════════════
    8. UI
    ═══════════════════════════════════════════════════════ */
 let toastT;
@@ -1404,7 +1562,32 @@ function init(){
   $('helpBtn').addEventListener('click', () => hm.classList.add('on'));
   $('helpClose').addEventListener('click', () => hm.classList.remove('on'));
   hm.addEventListener('click', e => { if (e.target === hm) hm.classList.remove('on'); });
+  $('replayIntro').addEventListener('click', () => { hm.classList.remove('on'); openIntro(); });
+
+  // tanishtiruv
+  $('introNext').addEventListener('click', () => slide === SLIDES.length-1 ? closeIntro() : goSlide(slide+1));
+  $('introPrev').addEventListener('click', () => goSlide(slide-1));
+  $('introSkip').addEventListener('click', closeIntro);
+  $('intro').addEventListener('click', e => { if (e.target === $('intro')) closeIntro(); });
+  (function swipe(){
+    let x0 = null;
+    const st = document.querySelector('.stage');
+    st.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+    st.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 45) goSlide(slide + (dx < 0 ? 1 : -1));
+    }, {passive:true});
+  })();
+
   document.addEventListener('keydown', e => {
+    if ($('intro').classList.contains('on')){
+      if (e.key === 'Escape')     { closeIntro(); return; }
+      if (e.key === 'ArrowRight') { goSlide(slide+1); return; }
+      if (e.key === 'ArrowLeft')  { goSlide(slide-1); return; }
+      if (e.key === 'Enter')      { e.preventDefault(); slide === SLIDES.length-1 ? closeIntro() : goSlide(slide+1); return; }
+      return;
+    }
     if (e.key === 'Escape') hm.classList.remove('on');
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); if (!$('paneSingle').hidden) addRow(); else refresh(); }
   });
@@ -1414,6 +1597,11 @@ function init(){
   counts();
   refresh();
   if ($('bulk').value.trim()) setTab('list');
+
+  // birinchi kirishda qisqa tanishtiruv
+  let seen = true;
+  try{ seen = localStorage.getItem(INTRO_SEEN) === '1'; }catch(e){}
+  if (!seen) openIntro();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

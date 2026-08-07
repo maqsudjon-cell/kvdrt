@@ -60,6 +60,9 @@ S = eni × bo'yi        →  287 179  =  5.1373 m²
 
 ## Imkoniyatlar
 
+- **Qisqa tanishtiruv** — birinchi kirishda 4 ta slayd (nima qiladi, raqamlar
+  tartibi, qator qoidalari, natija). Bir marta ko'rsatiladi
+  (`localStorage: kvadrat.intro.v1`), keyin yordam oynasidan qayta ochiladi.
 - **Ikki xil kiritish** — bittalab (maydonlar bo'yicha) yoki ro'yxat/nusxa
   (bir necha o'nlab qatorni birdan qo'yish).
 - **Jonli chizma** — eni / bo'yi / vistup qaysi tomon ekanini ko'rsatadi,
