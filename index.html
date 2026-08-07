@@ -1,667 +1,1423 @@
 <!DOCTYPE html>
-<html lang="uz" data-theme="dark">
+<html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<title>KVADRAT — m² Hisoblash</title>
-<meta name="description" content="Payvand va montaj o'lchamlaridan kvadrat metr (m²) avtomatik hisoblash. Toza, tez, bepul.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Crect x='18' y='18' width='28' height='28' rx='3' fill='none' stroke='%23D71921' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23D71921'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F7F6F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C1017" media="(prefers-color-scheme: dark)">
+<title>KVADRAT — panjara m² hisoblagich</title>
+<meta name="description" content="Eni, bo'yi va vistupdan kvadrat metrni bir zumda hisoblang. Panjara, kozirek, balkon uchun. Chizmali, tushunarli, bepul.">
+<meta property="og:title" content="KVADRAT — panjara m² hisoblagich">
+<meta property="og:description" content="Eni · bo'yi · vistup → m². Chizmali va tushunarli hisoblagich.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://kvdrt.maqsudjon.com/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2312161D'/%3E%3Cpath d='M14 44 L14 22 L38 22 L38 44 Z' fill='none' stroke='%23FFFFFF' stroke-width='3.4' stroke-linejoin='round'/%3E%3Cpath d='M14 22 L24 13 L48 13 L38 22' fill='none' stroke='%23F59E0B' stroke-width='3.4' stroke-linejoin='round'/%3E%3Cpath d='M38 22 L48 13 L48 35 L38 44' fill='none' stroke='%23F59E0B' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script>
+/* mavzuni darhol o'rnatamiz — sahifa oq bo'lib chaqnamasligi uchun */
+(function(){try{
+  var d=JSON.parse(localStorage.getItem('kvadrat.v2')||'{}');
+  document.documentElement.dataset.theme = d.theme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+}catch(e){}})();
+</script>
 <style>
-/* ============================================================
-   KVADRAT · Nothing-inspired · black + red · m² calculator
-   ============================================================ */
+/* ══════════════════════════════════════════════════════════════
+   KVADRAT · Workshop Blueprint
+   Paper + ink UI · uchta o'lcham uchun uchta semantik rang
+   ══════════════════════════════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
+
 :root{
-  --bg:#000;--bg-1:#070707;--bg-2:#0d0d0d;--bg-3:#141414;
-  --line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.18);--line-3:rgba(255,255,255,.28);
-  --text:#fff;--text-2:#b8b8b8;--text-3:#6e6e6e;--text-4:#444;
-  --red:#D71921;--red-glow:rgba(215,25,33,.5);--red-soft:rgba(215,25,33,.12);
-  --green:#27d07f;--amber:#f5b333;
-  --dot:rgba(255,255,255,.07);
-  --mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',system-ui,sans-serif;--r:4px;
+  /* neytral — qog'oz va siyoh */
+  --paper:#F7F6F3; --paper-2:#EFEDE8; --surface:#FFFFFF; --surface-2:#FAF9F7;
+  --ink:#12161D; --ink-2:#3D4653; --ink-3:#6B7482; --ink-4:#9AA2AE;
+  --line:#E4E1DA; --line-2:#D2CEC4; --line-3:#BDB8AC;
+
+  /* o'lcham ranglari — butun saytda bir xil ma'noda */
+  --eni:#2563EB;      --eni-bg:rgba(37,99,235,.09);   --eni-br:rgba(37,99,235,.28);
+  --boyi:#7C3AED;     --boyi-bg:rgba(124,58,237,.09); --boyi-br:rgba(124,58,237,.28);
+  --vistup:#EA580C;   --vistup-bg:rgba(234,88,12,.10);--vistup-br:rgba(234,88,12,.30);
+
+  --ok:#0F8A5F; --ok-bg:rgba(15,138,95,.10);
+  --warn:#B45309; --warn-bg:rgba(180,83,9,.10);
+
+  --grid:rgba(18,22,29,.045);
+  --shadow-sm:0 1px 2px rgba(18,22,29,.05), 0 1px 1px rgba(18,22,29,.04);
+  --shadow:0 2px 4px rgba(18,22,29,.04), 0 8px 24px -12px rgba(18,22,29,.16);
+  --shadow-lg:0 4px 8px rgba(18,22,29,.05), 0 24px 60px -20px rgba(18,22,29,.28);
+
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',monospace;
+  --r:14px; --r-sm:10px; --r-xs:7px;
 }
-html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:24px 24px;mask-image:radial-gradient(circle at 50% 0%,#000,transparent 72%);-webkit-mask-image:radial-gradient(circle at 50% 0%,#000,transparent 72%)}
-::selection{background:var(--red);color:#fff}
+html[data-theme="dark"]{
+  --paper:#0C1017; --paper-2:#11161F; --surface:#151B25; --surface-2:#1A212C;
+  --ink:#F2F4F7; --ink-2:#C2C9D4; --ink-3:#8B95A4; --ink-4:#646E7D;
+  --line:#242C39; --line-2:#313A4A; --line-3:#414C5E;
+
+  --eni:#6699FF;    --eni-bg:rgba(102,153,255,.13);  --eni-br:rgba(102,153,255,.34);
+  --boyi:#A98BFF;   --boyi-bg:rgba(169,139,255,.13); --boyi-br:rgba(169,139,255,.34);
+  --vistup:#FF9A4D; --vistup-bg:rgba(255,154,77,.14);--vistup-br:rgba(255,154,77,.34);
+
+  --ok:#3DD598; --ok-bg:rgba(61,213,152,.13);
+  --warn:#F0B23E; --warn-bg:rgba(240,178,62,.13);
+
+  --grid:rgba(255,255,255,.045);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow:0 2px 4px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.7);
+  --shadow-lg:0 4px 10px rgba(0,0,0,.35), 0 30px 70px -24px rgba(0,0,0,.85);
+}
+
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:var(--sans);background:var(--paper);color:var(--ink);
+  font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;background-position:-1px -1px;
+  padding-bottom:env(safe-area-inset-bottom);
+}
 a{color:inherit;text-decoration:none}
-#fx{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45}
-#prog{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:300;width:0;box-shadow:0 0 10px var(--red-glow)}
-.shell{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 20px}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+::selection{background:var(--ink);color:var(--paper)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+@media(max-width:640px){.wrap{padding:0 15px}}
 
-/* topbar */
-.topbar{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;margin:0 -20px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:11px}
-.brand-mark{width:26px;height:26px;flex:none;display:grid;place-items:center}
-.brand-mark svg{width:26px;height:26px;filter:drop-shadow(0 0 5px var(--red-glow))}
-.brand-name{font-family:var(--mono);font-weight:800;font-size:14px;letter-spacing:.18em}
-.tb-clock{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.08em}
-@media(max-width:560px){.tb-clock{display:none}}
+/* ── HEADER ───────────────────────────────────────────── */
+.hdr{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;gap:14px;height:62px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand svg{width:32px;height:32px;flex:none;border-radius:9px}
+.brand-t{min-width:0}
+.brand-n{font-weight:800;font-size:15.5px;letter-spacing:-.02em;line-height:1.15}
+.brand-s{font-size:10.5px;color:var(--ink-3);letter-spacing:.04em;font-weight:500;white-space:nowrap}
+@media(max-width:420px){.brand-s{display:none}}
+.hdr-r{display:flex;align-items:center;gap:8px}
 
-/* hero */
-.hero{padding:46px 0 28px;border-bottom:1px solid var(--line)}
-.hero-coords{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--text-3);text-transform:uppercase;margin-bottom:18px;display:flex;gap:16px;flex-wrap:wrap}
-.hero-coords .on{color:var(--red)}
-.hero h1{font-family:var(--mono);font-weight:800;font-size:clamp(34px,7vw,68px);line-height:.96;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:10px}
-.hero h1 .red{color:var(--red)}
-.hero h1 .unit{font-size:.42em;vertical-align:super;color:var(--red)}
-.hero-sub{font-size:15px;color:var(--text-2);max-width:520px;margin-top:12px}
+.seg{display:flex;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:3px;gap:2px}
+.seg button{
+  font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.04em;
+  padding:6px 11px;border:none;background:transparent;color:var(--ink-3);
+  border-radius:6px;cursor:pointer;transition:.16s;line-height:1;
+}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
 
-/* section heads */
-.sec-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 16px}
-.sec-num{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.1em}
-.sec-title{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
-.sec-line{flex:1;height:1px;background:var(--line)}
+.iconbtn{
+  width:38px;height:38px;flex:none;display:grid;place-items:center;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--ink-2);transition:.16s;
+}
+.iconbtn:hover{border-color:var(--line-3);color:var(--ink);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.iconbtn svg{width:17px;height:17px}
+html[data-theme="dark"] .sun{display:none}
+html:not([data-theme="dark"]) .moon{display:none}
 
-/* input panel */
-.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--bg-1);position:relative;overflow:hidden}
-.panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--line-3),transparent)}
-.panel-pad{padding:20px}
-textarea{width:100%;min-height:200px;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r);color:var(--text);font-family:var(--mono);font-size:15px;line-height:1.8;padding:16px;resize:vertical;transition:.18s;tab-size:2}
-textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
-textarea::placeholder{color:var(--text-4);font-size:13.5px;line-height:1.9}
+/* ── HERO ─────────────────────────────────────────────── */
+.hero{padding:44px 0 8px}
+@media(max-width:640px){.hero{padding:30px 0 4px}}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
+  font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--surface);border:1px solid var(--line);
+  padding:6px 12px;border-radius:999px;margin-bottom:18px;
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-bg)}
+h1{font-size:clamp(30px,5.4vw,50px);font-weight:800;letter-spacing:-.035em;line-height:1.05;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--ink-3)}
+.lead{font-size:clamp(15px,2vw,17.5px);color:var(--ink-2);max-width:600px;line-height:1.55}
 
-.input-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;flex-wrap:wrap}
-.input-stat{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.06em}
-.input-stat b{color:var(--text)}
-.input-hint{font-family:var(--mono);font-size:10.5px;color:var(--text-4);letter-spacing:.03em}
+/* ── FORMAT LEGEND — asosiy tushuntirish ──────────────── */
+.legend{margin:30px 0 6px}
+.legend-hd{
+  display:flex;align-items:center;gap:11px;margin-bottom:13px;
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.legend-hd::after{content:"";flex:1;height:1px;background:var(--line)}
+.legend-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:620px){.legend-row{grid-template-columns:1fr;gap:9px}}
+.lg{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);
+}
+.lg::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--c)}
+@media(max-width:620px){.lg{display:flex;align-items:center;gap:16px;padding:13px 16px}}
+.lg-num{
+  font-family:var(--mono);font-weight:700;font-size:34px;line-height:1;
+  letter-spacing:-.03em;color:var(--c);
+}
+@media(max-width:620px){.lg-num{font-size:27px;flex:none;min-width:52px}}
+.lg-nm{font-weight:700;font-size:14.5px;letter-spacing:-.01em;margin-top:9px}
+@media(max-width:620px){.lg-nm{margin-top:0}}
+.lg-ds{font-size:12.5px;color:var(--ink-3);line-height:1.45;margin-top:2px}
+.lg.eni{--c:var(--eni)} .lg.boyi{--c:var(--boyi)} .lg.vistup{--c:var(--vistup)}
+.legend-note{
+  margin-top:13px;font-size:13.5px;color:var(--ink-2);display:flex;gap:9px;
+  align-items:flex-start;background:var(--surface-2);border:1px dashed var(--line-2);
+  border-radius:var(--r-sm);padding:12px 15px;
+}
+.legend-note b{color:var(--ink);font-weight:700}
+.legend-note code{font-family:var(--mono);font-size:12.5px;background:var(--paper-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
 
-/* buttons */
-.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:14px 22px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;transition:.18s}
-.btn-red{background:var(--red);color:#fff;border-color:var(--red);flex:1;min-width:160px}
-.btn-red:hover{box-shadow:0 0 22px -4px var(--red-glow);transform:translateY(-1px)}
-.btn-ghost{background:transparent;color:var(--text-2);border-color:var(--line-2)}
-.btn-ghost:hover{border-color:var(--red);color:var(--red)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.btn .arr{transition:transform .2s}
-.btn:hover .arr{transform:translateX(3px)}
+/* ── LAYOUT ───────────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:1fr 400px;gap:22px;margin-top:34px;align-items:start}
+@media(max-width:1000px){.grid{grid-template-columns:1fr;gap:18px}}
+.side{position:sticky;top:78px;display:flex;flex-direction:column;gap:18px}
+@media(max-width:1000px){.side{position:static;order:-1}}
 
-/* settings inline */
-.settings{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.set-group{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;background:var(--bg-1)}
-.set-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
-.seg{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line-2);border-radius:var(--r);padding:2px}
-.seg button{font-family:var(--mono);font-size:11px;font-weight:600;padding:5px 11px;border:none;background:transparent;color:var(--text-3);border-radius:3px;cursor:pointer;transition:.15s}
-.seg button.active{background:var(--red);color:#fff}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.card-hd{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:15px 18px;border-bottom:1px solid var(--line);
+}
+.card-t{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.card-b{padding:18px}
+@media(max-width:640px){.card-b{padding:15px}.card-hd{padding:13px 15px}}
 
-/* ===== RESULTS ===== */
-.totals{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
-@media(max-width:680px){.totals{grid-template-columns:repeat(2,1fr)}}
-.total-cell{background:var(--bg-1);padding:22px 14px;text-align:center}
-.total-cell.main{background:var(--red-soft);grid-column:span 1}
-@media(max-width:680px){.total-cell.main{grid-column:span 2}}
-.total-num{font-family:var(--mono);font-weight:800;font-size:clamp(24px,3.4vw,38px);line-height:1;letter-spacing:-.02em}
-.total-cell.main .total-num{color:var(--red);font-size:clamp(30px,4.5vw,46px)}
-.total-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:9px}
-.total-unit{font-size:.5em;color:var(--text-3);margin-left:3px}
+/* ── TABS ─────────────────────────────────────────────── */
+.tabs{display:flex;gap:4px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:4px}
+.tabs button{
+  flex:1;padding:9px 14px;border:none;background:transparent;color:var(--ink-3);
+  border-radius:7px;cursor:pointer;font-weight:600;font-size:13.5px;transition:.16s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.tabs button svg{width:15px;height:15px}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+.pane[hidden]{display:none}
 
-/* results table */
-.table-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg-1)}
-.rtable{width:100%;border-collapse:collapse;font-size:13.5px}
-.rtable th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line-2);background:var(--bg-2);white-space:nowrap}
-.rtable th.num,.rtable td.num{text-align:right;font-variant-numeric:tabular-nums}
-.rtable td{padding:12px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);color:var(--text-2)}
-.rtable tr:last-child td{border-bottom:none}
-.rtable tr.r-kvadrat td:first-child{box-shadow:inset 2px 0 var(--red)}
-.rtable tr.r-flat td:first-child{box-shadow:inset 2px 0 var(--text-3)}
-.rtable tr.r-error td{color:var(--amber)}
-.rtable tr.r-error td:first-child{box-shadow:inset 2px 0 var(--amber)}
-.rtable tr:hover td{background:var(--bg-2)}
-.rtable .total-col{color:var(--text);font-weight:600}
-.tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--line-2)}
-.tag.kvadrat{color:var(--red);border-color:var(--red-soft);background:var(--red-soft)}
-.tag.flat{color:var(--text-3)}
-.tag.error{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 35%,transparent)}
-.row-input{color:var(--text);font-weight:500}
-.row-err-msg{font-family:var(--mono);font-size:11px;color:var(--amber);margin-top:3px}
+/* ── FIELDS ───────────────────────────────────────────── */
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:520px){.fields{grid-template-columns:1fr 1fr}.fields .f-vistup{grid-column:span 2}}
+.f{position:relative}
+.f-lab{
+  display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--c,var(--ink-3));margin-bottom:7px;
+}
+.f-lab .chip{width:9px;height:9px;border-radius:3px;background:var(--c);flex:none}
+.f-lab small{font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-4);font-size:11.5px}
+.f input{
+  width:100%;background:var(--surface-2);border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:13px 44px 13px 14px;font-family:var(--mono);font-size:19px;font-weight:600;
+  letter-spacing:-.01em;transition:.16s;
+}
+.f input::placeholder{color:var(--ink-4);font-weight:400}
+.f input:focus{outline:none;border-color:var(--c,var(--ink-3));background:var(--surface);box-shadow:0 0 0 4px var(--cbg,transparent)}
+.f .unit{
+  position:absolute;right:13px;bottom:14px;font-family:var(--mono);font-size:12px;
+  color:var(--ink-4);pointer-events:none;font-weight:500;
+}
+.f-eni{--c:var(--eni);--cbg:var(--eni-bg)}
+.f-boyi{--c:var(--boyi);--cbg:var(--boyi-bg)}
+.f-vistup{--c:var(--vistup);--cbg:var(--vistup-bg)}
 
-/* export bar */
-.export-bar{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-.export-bar .btn{flex:1;min-width:140px}
+.fields-2{display:grid;grid-template-columns:1fr 130px;gap:12px;margin-top:12px}
+@media(max-width:520px){.fields-2{grid-template-columns:1fr}}
+.f.plain{--c:var(--ink-3);--cbg:rgba(0,0,0,.04)}
+.f.plain input{font-size:15px;font-family:var(--sans);font-weight:500;padding-right:14px}
 
-.empty-state{text-align:center;padding:50px 20px;border:1px dashed var(--line-2);border-radius:var(--r);background:var(--bg-1)}
-.empty-state .ico{font-size:32px;opacity:.3;margin-bottom:14px}
-.empty-state .t{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--text-3);text-transform:uppercase}
-.empty-state .s{font-size:13px;color:var(--text-4);margin-top:8px}
+/* ── BUTTONS ──────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-weight:700;font-size:14px;letter-spacing:-.01em;padding:13px 20px;
+  border-radius:var(--r-sm);cursor:pointer;border:1.5px solid transparent;transition:.16s;
+  white-space:nowrap;
+}
+.btn svg{width:16px;height:16px;flex:none}
+.btn-primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--shadow);opacity:.92}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:var(--surface);color:var(--ink-2);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--line-3);color:var(--ink);background:var(--surface-2)}
+.btn-sm{padding:9px 14px;font-size:12.5px;border-radius:var(--r-xs)}
+.btn-sm svg{width:14px;height:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn-row .grow{flex:1;min-width:150px}
 
-/* toast */
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(16px);z-index:700;background:var(--bg-1);border:1px solid var(--red);border-radius:var(--r);padding:13px 20px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--text);box-shadow:0 16px 50px -12px rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:.28s}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── TEXTAREA ─────────────────────────────────────────── */
+.ta-wrap{position:relative}
+textarea#bulk{
+  width:100%;min-height:230px;background:var(--surface-2);border:1.5px solid var(--line);
+  border-radius:var(--r-sm);padding:15px;font-family:var(--mono);font-size:15px;
+  line-height:1.85;resize:vertical;transition:.16s;tab-size:2;
+}
+textarea#bulk:focus{outline:none;border-color:var(--ink-3);background:var(--surface);box-shadow:0 0 0 4px rgba(0,0,0,.035)}
+html[data-theme="dark"] textarea#bulk:focus{box-shadow:0 0 0 4px rgba(255,255,255,.05)}
+textarea#bulk::placeholder{color:var(--ink-4);font-size:13.5px;line-height:1.9}
+.ta-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:11px;flex-wrap:wrap}
+.ta-stat{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.ta-stat b{color:var(--ink);font-weight:600}
+.hint{font-size:12.5px;color:var(--ink-3);line-height:1.6}
+.hint code{font-family:var(--mono);font-size:11.5px;background:var(--paper-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;color:var(--ink-2)}
 
-/* help modal */
-.modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);display:none;place-items:center;padding:20px}
-.modal.show{display:grid}
-.modal-box{background:var(--bg-1);border:1px solid var(--line-2);border-radius:var(--r);max-width:540px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
-.modal-box::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
-.modal-pad{padding:24px}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.modal-title{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-.modal-close{width:32px;height:32px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);border-radius:3px;cursor:pointer;font-size:15px;transition:.15s}
-.modal-close:hover{border-color:var(--red);color:var(--red)}
-.help-row{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
-.help-row:last-child{border:none;margin:0;padding:0}
-.help-row h4{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
-.help-row p{font-size:13.5px;color:var(--text-2);line-height:1.7}
-.help-row code{font-family:var(--mono);background:var(--bg-3);padding:2px 7px;border-radius:3px;color:var(--text);font-size:12.5px}
-.icon-btn{width:36px;height:36px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);border-radius:var(--r);cursor:pointer;display:grid;place-items:center;transition:.18s}
-.icon-btn:hover{border-color:var(--red);color:var(--red)}
-.icon-btn svg{width:16px;height:16px}
+/* ── DIAGRAM ──────────────────────────────────────────── */
+.diagram{background:var(--surface-2);border-radius:var(--r-sm);padding:6px;overflow:hidden}
+.diagram svg{width:100%;height:auto;display:block}
+.dg-cap{
+  margin-top:12px;font-size:12.5px;color:var(--ink-3);text-align:center;line-height:1.5;
+}
+.dg-cap b{color:var(--ink-2);font-weight:600}
 
-/* footer */
-.foot{margin:54px -20px 0;border-top:1px solid var(--line);padding:32px 20px 46px;text-align:center}
-.foot-word{font-family:var(--mono);font-weight:800;font-size:clamp(38px,13vw,120px);letter-spacing:.04em;color:transparent;-webkit-text-stroke:1px var(--line-2);line-height:1;margin-bottom:16px;text-transform:uppercase}
-.foot-meta{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-4)}
-.foot-meta a{color:var(--text-3)}
-.foot-meta a:hover{color:var(--red)}
+/* ── TOTAL CARD ───────────────────────────────────────── */
+.total-card{overflow:hidden}
+.total-main{padding:22px 20px;border-bottom:1px solid var(--line);position:relative}
+.total-main::after{content:"";position:absolute;left:20px;right:20px;bottom:-1px;height:2px;background:var(--ink);border-radius:2px}
+.total-lab{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.total-val{font-family:var(--mono);font-weight:700;font-size:clamp(38px,6vw,50px);line-height:1;letter-spacing:-.035em}
+.total-val .u{font-size:.42em;color:var(--ink-3);margin-left:7px;letter-spacing:0}
+.total-sum{margin-top:10px;font-family:var(--mono);font-size:16px;font-weight:600;color:var(--ok)}
+.total-sum[hidden]{display:none}
+.mini{display:grid;grid-template-columns:repeat(3,1fr)}
+.mini div{padding:14px 10px;text-align:center;border-right:1px solid var(--line)}
+.mini div:last-child{border-right:none}
+.mini .n{font-family:var(--mono);font-weight:700;font-size:19px;line-height:1;letter-spacing:-.02em}
+.mini .l{font-size:10.5px;color:var(--ink-3);margin-top:6px;letter-spacing:.03em;font-weight:500}
+.mini .warn .n{color:var(--warn)}
 
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--line-2)}
-::-webkit-scrollbar-thumb:hover{background:var(--text-4)}
-@media(max-width:560px){.shell{padding:0 14px}.topbar{padding:12px 14px;margin:0 -14px}.panel-pad{padding:16px}.foot{margin:46px -14px 0}}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.05s!important}}
+/* narx */
+.price-box{padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.price-box label{font-size:12.5px;color:var(--ink-3);font-weight:600;white-space:nowrap}
+.price-box input{
+  flex:1;min-width:110px;background:var(--surface-2);border:1.5px solid var(--line);
+  border-radius:var(--r-xs);padding:8px 11px;font-family:var(--mono);font-size:13.5px;font-weight:600;
+}
+.price-box input:focus{outline:none;border-color:var(--ink-3);background:var(--surface)}
+
+/* ── RESULTS ──────────────────────────────────────────── */
+.results{margin-top:34px;scroll-margin-top:80px}
+.sec-hd{display:flex;align-items:center;gap:13px;margin-bottom:15px;flex-wrap:wrap}
+.sec-t{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.sec-hd .line{flex:1;height:1px;background:var(--line);min-width:20px}
+@media(max-width:620px){#resHint{display:none}}
+
+.tbl-wrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
+thead th{
+  font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;padding:12px 14px;background:var(--surface-2);
+  border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;
+}
+th.num,td.num{text-align:right}
+tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .13s;cursor:pointer}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr.sel{background:var(--surface-2);box-shadow:inset 3px 0 var(--ink)}
+td.idx{font-family:var(--mono);font-size:12px;color:var(--ink-4);width:44px}
+.dims{font-family:var(--mono);font-weight:600;font-size:14.5px;letter-spacing:-.01em;white-space:nowrap}
+.dims .a{color:var(--eni)} .dims .b{color:var(--boyi)} .dims .c{color:var(--vistup)}
+.dims .x{color:var(--ink-4);margin:0 3px;font-weight:400}
+.rowname{font-size:12.5px;color:var(--ink-3);margin-top:3px}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid;white-space:nowrap;
+}
+.badge.box{color:var(--vistup);background:var(--vistup-bg);border-color:var(--vistup-br)}
+.badge.flat{color:var(--ink-3);background:var(--paper-2);border-color:var(--line-2)}
+.badge.err{color:var(--warn);background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
+td.num .mono{font-size:14px}
+td.tot{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.02em}
+tr.err td{color:var(--warn)}
+.errmsg{font-size:12px;color:var(--warn);margin-top:3px}
+.del{
+  width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line);
+  background:var(--surface);border-radius:7px;cursor:pointer;color:var(--ink-4);transition:.15s;
+}
+.del:hover{border-color:var(--warn);color:var(--warn);background:var(--warn-bg)}
+.del svg{width:13px;height:13px}
+tfoot td{padding:14px;background:var(--surface-2);border-top:2px solid var(--ink);font-weight:700}
+tfoot .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+tfoot .big{font-family:var(--mono);font-size:19px;letter-spacing:-.03em}
+
+/* mobil kartalar */
+.cards{display:none;flex-direction:column;gap:10px}
+@media(max-width:700px){.tbl-wrap{display:none}.cards{display:flex}}
+.rc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;box-shadow:var(--shadow-sm);position:relative}
+.rc.err{border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.rc-tot{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px dashed var(--line-2)}
+.rc-tot .v{font-family:var(--mono);font-weight:700;font-size:20px;letter-spacing:-.03em}
+.rc-tot .k{font-size:12px;color:var(--ink-3)}
+.rc-meta{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+
+.empty{
+  text-align:center;padding:52px 22px;border:1.5px dashed var(--line-2);border-radius:var(--r);
+  background:var(--surface-2);
+}
+.empty svg{width:44px;height:44px;color:var(--ink-4);opacity:.6;margin-bottom:14px}
+.empty .t{font-weight:700;font-size:15px}
+.empty .s{font-size:13.5px;color:var(--ink-3);margin-top:6px}
+
+.export{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.export .btn{flex:1;min-width:145px}
+
+/* ── MOBILE STICKY BAR ────────────────────────────────── */
+.mobar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
+  align-items:center;justify-content:space-between;gap:12px;
+  padding:11px 15px calc(11px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--surface) 94%,transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);box-shadow:0 -6px 24px -12px rgba(0,0,0,.3);
+}
+@media(max-width:1000px){.mobar.on{display:flex}body{padding-bottom:76px}}
+.mobar .v{font-family:var(--mono);font-weight:700;font-size:22px;letter-spacing:-.03em;line-height:1}
+.mobar .k{font-size:10.5px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+
+/* ── MODAL ────────────────────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(12,16,23,.55);backdrop-filter:blur(5px);display:none;place-items:center;padding:20px}
+.modal.on{display:grid}
+.modal-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);max-width:620px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-hd h3{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.modal-b{padding:22px}
+.hrow{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.hrow:last-child{border:none;margin:0;padding:0}
+.hrow h4{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hrow h4 .sq{width:10px;height:10px;border-radius:3px;flex:none}
+.hrow p{font-size:14px;color:var(--ink-2);line-height:1.65}
+.hrow p + p{margin-top:8px}
+.hrow code{font-family:var(--mono);font-size:13px;background:var(--paper-2);border:1px solid var(--line);padding:2px 7px;border-radius:6px;color:var(--ink)}
+.formula{
+  font-family:var(--mono);font-size:13.5px;line-height:1.9;background:var(--surface-2);
+  border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:var(--r-xs);
+  padding:14px 16px;margin-top:11px;overflow-x:auto;
+}
+.formula .a{color:var(--eni);font-weight:600}
+.formula .b{color:var(--boyi);font-weight:600}
+.formula .c{color:var(--vistup);font-weight:600}
+.formula .r{color:var(--ok);font-weight:700}
+
+/* ── TOAST ────────────────────────────────────────────── */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);z-index:300;
+  background:var(--ink);color:var(--paper);border-radius:var(--r-sm);padding:13px 20px;
+  font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:.25s cubic-bezier(.2,.8,.2,1);max-width:calc(100vw - 40px);text-align:center;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1000px){.toast{bottom:88px}}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{margin-top:60px;border-top:1px solid var(--line);padding:28px 0 40px}
+.foot-in{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--ink-3)}
+.foot-in a{color:var(--ink-2);font-weight:600;border-bottom:1px solid var(--line-2)}
+.foot-in a:hover{color:var(--ink);border-color:var(--ink)}
+
+@media print{
+  .hdr,.mobar,.export,.side,.tabs,#paneSingle,#paneList,.legend-note,footer,.toast{display:none!important}
+  body{background:#fff;padding:0}
+  .card,.tbl-wrap{box-shadow:none;border-color:#ccc}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<canvas id="fx"></canvas>
-<div id="prog"></div>
 
-<div class="shell">
-
-  <!-- topbar -->
-  <div class="topbar">
+<!-- ══ HEADER ══════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="wrap hdr-in">
     <div class="brand">
-      <div class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="18" y="18" width="28" height="28" rx="3" fill="none" stroke="var(--red)" stroke-width="4"/><circle cx="32" cy="32" r="4" fill="var(--red)"/></svg></div>
-      <div class="brand-name">KVADRAT</div>
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="15" fill="#12161D"/>
+        <path d="M14 44 L14 22 L38 22 L38 44 Z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/>
+        <path d="M14 22 L24 13 L48 13 L38 22" fill="none" stroke="#F59E0B" stroke-width="3.4" stroke-linejoin="round"/>
+        <path d="M38 22 L48 13 L48 35 L38 44" fill="none" stroke="#F59E0B" stroke-width="3.4" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-t">
+        <div class="brand-n">KVADRAT</div>
+        <div class="brand-s">Panjara m² hisoblagich</div>
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span class="tb-clock" id="clock">--:--:--</span>
-      <button class="icon-btn" id="helpBtn" aria-label="Yordam">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9.3a2.7 2.7 0 0 1 5.2.9c0 1.8-2.7 2.4-2.7 2.4M12 17h.01"/></svg>
+    <div class="hdr-r">
+      <div class="seg" role="group" aria-label="O'lchov birligi">
+        <button type="button" data-unit="cm" aria-pressed="true">SM</button>
+        <button type="button" data-unit="mm" aria-pressed="false">MM</button>
+      </div>
+      <button class="iconbtn" id="themeBtn" aria-label="Mavzuni almashtirish" title="Yorug' / qorong'i">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <button class="iconbtn" id="helpBtn" aria-label="Yordam" title="Qanday ishlaydi?">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4.9c0 1.9-2.7 2.5-2.7 2.5M12 17h.01"/></svg>
       </button>
     </div>
   </div>
+</header>
 
-  <!-- hero -->
+<main class="wrap">
+
+  <!-- ══ HERO ══════════════════════════════════════════ -->
   <section class="hero">
-    <div class="hero-coords">
-      <span><span class="on">●</span> READY</span>
-      <span>BATCH CALCULATOR</span>
-      <span>cm / mm → m²</span>
-    </div>
-    <h1>KVADRAT<br><span class="red">HISOBLASH</span> <span class="unit">m²</span></h1>
-    <p class="hero-sub">O'lchamlarni qatorlab kiriting — har bir qator bitta detal. Jami kvadrat metr darhol chiqadi va chiroyli PDF qilib saqlanadi.</p>
+    <div class="eyebrow"><span class="dot"></span> Ustaxona uchun · offline ishlaydi</div>
+    <h1>O'lchamni yozing —<br><em>kvadrat metrni o'zi hisoblaydi.</em></h1>
+    <p class="lead">Panjara, kozirek, balkon va boshqa payvand ishlari uchun. Bitta qatorga uchta raqam: <b>eni</b>, <b>bo'yi</b>, <b>vistup</b>.</p>
   </section>
 
-  <!-- input -->
-  <div class="sec-head">
-    <span class="sec-num">// 001</span>
-    <span class="sec-title">O'LCHAMLAR</span>
-    <span class="sec-line"></span>
-  </div>
-
-  <div class="panel"><div class="panel-pad">
-    <textarea id="input" placeholder="Har bir qatorga bitta o'lcham:&#10;&#10;120 130 30" spellcheck="false" autocomplete="off" autocapitalize="off" data-gramm="false"></textarea>
-    <div class="input-foot">
-      <span class="input-stat"><b id="lineCount">0</b> qator · <b id="charCount">0</b> belgi</span>
-      <span class="input-hint">Miqdor: <code style="font-family:var(--mono);font-size:10px">шт · sht · pcs · x2</code> · Komment: <code style="font-family:var(--mono);font-size:10px"># //</code></span>
-    </div>
-
-    <div class="settings">
-      <div class="set-group">
-        <span class="set-label">Birlik</span>
-        <div class="seg" id="unitSeg">
-          <button data-unit="cm" class="active">SM</button>
-          <button data-unit="mm">MM</button>
-        </div>
+  <!-- ══ FORMAT LEGEND ═════════════════════════════════ -->
+  <section class="legend">
+    <div class="legend-hd">Raqamlar tartibi</div>
+    <div class="legend-row">
+      <div class="lg eni">
+        <div class="lg-num">120</div>
+        <div class="lg-nm">ENI</div>
+        <div class="lg-ds">Kengligi — chapdan o'ngga</div>
       </div>
-      <div class="set-group">
-        <span class="set-label">Kasr xona</span>
-        <div class="seg" id="decSeg">
-          <button data-dec="2">2</button>
-          <button data-dec="3">3</button>
-          <button data-dec="4" class="active">4</button>
-        </div>
+      <div class="lg boyi">
+        <div class="lg-num">130</div>
+        <div class="lg-nm">BO'YI</div>
+        <div class="lg-ds">Balandligi — pastdan tepaga</div>
+      </div>
+      <div class="lg vistup">
+        <div class="lg-num">30</div>
+        <div class="lg-nm">VISTUP</div>
+        <div class="lg-ds">Oldinga qancha chiqadi — chuqurligi</div>
       </div>
     </div>
-
-    <div class="btn-row">
-      <button class="btn btn-red" id="calcBtn">⚡ HISOBLASH <span class="arr">→</span></button>
-      <button class="btn btn-ghost" id="exampleBtn">MISOL</button>
-      <button class="btn btn-ghost" id="clearBtn">TOZALASH</button>
+    <div class="legend-note">
+      <span aria-hidden="true">✍️</span>
+      <span><b>Tartib doim shu:</b> <code>eni bo'yi vistup</code>. Ya'ni <code>120 130 30</code> — eni 120, bo'yi 130, oldinga 30 chiqadi.
+      Vistup yo'q bo'lsa (tekis panjara) faqat ikkita raqam yozing: <code>120 130</code>.</span>
     </div>
-  </div></div>
+  </section>
 
-  <!-- results -->
-  <div class="sec-head">
-    <span class="sec-num">// 002</span>
-    <span class="sec-title">NATIJA</span>
-    <span class="sec-line"></span>
+  <!-- ══ MAIN GRID ═════════════════════════════════════ -->
+  <div class="grid">
+
+    <!-- LEFT: input -->
+    <div>
+      <div class="card">
+        <div class="card-b">
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" id="tabOne" aria-selected="true" aria-controls="paneSingle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M12 8v8M8 12h8"/></svg>
+              Bittalab kiritish
+            </button>
+            <button type="button" role="tab" id="tabList" aria-selected="false" aria-controls="paneList">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>
+              Ro'yxat / nusxa
+            </button>
+          </div>
+
+          <!-- PANE: single -->
+          <div class="pane" id="paneSingle" role="tabpanel" style="margin-top:18px">
+            <div class="fields">
+              <div class="f f-eni">
+                <label class="f-lab" for="inEni"><span class="chip"></span> Eni</label>
+                <input id="inEni" type="text" inputmode="decimal" placeholder="120" autocomplete="off">
+                <span class="unit u-lab">sm</span>
+              </div>
+              <div class="f f-boyi">
+                <label class="f-lab" for="inBoyi"><span class="chip"></span> Bo'yi</label>
+                <input id="inBoyi" type="text" inputmode="decimal" placeholder="130" autocomplete="off">
+                <span class="unit u-lab">sm</span>
+              </div>
+              <div class="f f-vistup">
+                <label class="f-lab" for="inVistup"><span class="chip"></span> Vistup <small>ixtiyoriy</small></label>
+                <input id="inVistup" type="text" inputmode="decimal" placeholder="30" autocomplete="off">
+                <span class="unit u-lab">sm</span>
+              </div>
+            </div>
+            <div class="fields-2">
+              <div class="f plain">
+                <label class="f-lab" for="inNom">Nomi <small>ixtiyoriy</small></label>
+                <input id="inNom" type="text" placeholder="masalan: oshxona oynasi" autocomplete="off">
+              </div>
+              <div class="f plain">
+                <label class="f-lab" for="inDona">Dona</label>
+                <input id="inDona" type="text" inputmode="numeric" placeholder="1" autocomplete="off">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary grow" id="addBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                Ro'yxatga qo'shish
+              </button>
+              <button class="btn btn-ghost" id="resetOne" type="button">Tozalash</button>
+            </div>
+            <p class="hint" style="margin-top:13px">Yozayotganingizda o'ngdagi chizma va natija darhol yangilanadi. Qo'shgach maydonlar bo'shaydi — keyingisini yozaverasiz.</p>
+          </div>
+
+          <!-- PANE: list -->
+          <div class="pane" id="paneList" role="tabpanel" hidden style="margin-top:18px">
+            <div class="ta-wrap">
+              <textarea id="bulk" spellcheck="false" autocomplete="off" autocapitalize="off" data-gramm="false"
+placeholder="Har bir qator — bitta detal:
+
+120 130 30
+150 90 25 2 dona
+oshxona 100 140
+# izoh qatori hisoblanmaydi"></textarea>
+            </div>
+            <div class="ta-foot">
+              <span class="ta-stat"><b id="lineCount">0</b> qator · <b id="charCount">0</b> belgi</span>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-ghost btn-sm" id="exampleBtn" type="button">Misol yuklash</button>
+                <button class="btn btn-ghost btn-sm" id="clearBtn" type="button">Hammasini o'chirish</button>
+              </div>
+            </div>
+            <p class="hint" style="margin-top:13px">
+              Dona: <code>2 dona</code> · <code>2sht</code> · <code>2шт</code> · <code>x2</code> &nbsp;·&nbsp;
+              Kasr: <code>145,5</code> yoki <code>145.5</code> &nbsp;·&nbsp;
+              Izoh: <code>#</code> yoki <code>//</code> bilan boshlang.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: diagram + total -->
+    <aside class="side">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-t">Chizma</span>
+          <span class="card-t" id="dgMode" style="color:var(--vistup)">Vistupli</span>
+        </div>
+        <div class="card-b" style="padding-top:14px">
+          <div class="diagram" id="diagram"></div>
+          <p class="dg-cap" id="dgCap"></p>
+        </div>
+      </div>
+
+      <div class="card total-card">
+        <div class="total-main">
+          <div class="total-lab">Jami maydon</div>
+          <div class="total-val mono"><span id="grandTotal">0.00</span><span class="u">m²</span></div>
+          <div class="total-sum mono" id="grandSum" hidden></div>
+        </div>
+        <div class="mini">
+          <div><div class="n mono" id="mDetal">0</div><div class="l">detal</div></div>
+          <div><div class="n mono" id="mDona">0</div><div class="l">dona</div></div>
+          <div id="mErrBox"><div class="n mono" id="mErr">0</div><div class="l">xato</div></div>
+        </div>
+        <div class="price-box">
+          <label for="inPrice">1 m² narxi</label>
+          <input id="inPrice" type="text" inputmode="numeric" placeholder="masalan 250000" autocomplete="off">
+          <span style="font-size:12px;color:var(--ink-3);font-family:var(--mono)">so'm</span>
+        </div>
+      </div>
+    </aside>
   </div>
 
-  <div id="resultsZone">
-    <div class="empty-state" id="emptyState">
-      <div class="ico">▦</div>
-      <div class="t">Hali natija yo'q</div>
-      <div class="s">O'lchamlarni kiriting va "Hisoblash" tugmasini bosing</div>
+  <!-- ══ RESULTS ═══════════════════════════════════════ -->
+  <section class="results" id="results">
+    <div class="sec-hd">
+      <span class="sec-t">Natija</span>
+      <span class="line"></span>
+      <span class="ta-stat" id="resHint"></span>
     </div>
+    <div id="resZone"></div>
+    <div class="export" id="exportBar" hidden>
+      <button class="btn btn-primary" id="pdfBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4M4 20h16"/></svg>
+        PDF yuklab olish
+      </button>
+      <button class="btn btn-ghost" id="tgBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+        Telegram uchun nusxa
+      </button>
+      <button class="btn btn-ghost" id="txtBtn">TXT</button>
+      <button class="btn btn-ghost" id="printBtn">Chop etish</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div><b style="color:var(--ink-2)">KVADRAT</b> · payvand va montaj uchun m² hisoblagich</div>
+    <div>Ma'lumot faqat brauzeringizda saqlanadi · <a href="https://maqsudjon.com" target="_blank" rel="noopener">maqsudjon.com</a></div>
   </div>
+</footer>
 
-  <!-- footer -->
-  <div class="foot">
-    <div class="foot-word">m²</div>
-    <div class="foot-meta">KVADRAT · MONTAJ HISOBLAGICH · <a href="https://maqsudjon.com" target="_blank" rel="noopener">MAQSUDJON.COM</a></div>
+<!-- ══ MOBILE BAR ══════════════════════════════════════ -->
+<div class="mobar" id="mobar">
+  <div>
+    <div class="v mono"><span id="mbTotal">0.00</span> m²</div>
+    <div class="k" id="mbSub">0 detal</div>
   </div>
-
-</div><!-- /shell -->
-
-<!-- help modal -->
-<div class="modal" id="helpModal">
-  <div class="modal-box"><div class="modal-pad">
-    <div class="modal-head">
-      <span class="modal-title">QANDAY ISHLAYDI</span>
-      <button class="modal-close" id="helpClose">✕</button>
-    </div>
-    <div class="help-row">
-      <h4>3 o'lcham — Kvadrat</h4>
-      <p>Quvur yoki qutu yuzasi. <code>137 150 15</code> → <b>2.916 m²</b>. Formula: ((B+2C)/d × A/d) + (B/d × 2C/d).</p>
-    </div>
-    <div class="help-row">
-      <h4>2 o'lcham — Flat</h4>
-      <p>Oddiy to'rtburchak. <code>287 179</code> → <b>5.1373 m²</b>. Formula: A/d × B/d.</p>
-    </div>
-    <div class="help-row">
-      <h4>Miqdor (dona)</h4>
-      <p><code>137 150 15 2sht</code> yoki <code>x2</code>, <code>шт2</code>, <code>2pcs</code> — natija dona soniga ko'paytiriladi.</p>
-    </div>
-    <div class="help-row">
-      <h4>Boshqa</h4>
-      <p>Vergul yoki nuqta kasr sifatida (<code>145,5</code>). Nom yozsangiz saqlanadi (<code>gor 124 145</code>). <code>#</code> yoki <code>//</code> bilan boshlangan qator hisoblanmaydi. Birlik SM yoki MM, kasr xona sozlanadi.</p>
-    </div>
-  </div></div>
+  <button class="btn btn-primary btn-sm" id="mbBtn">Natijani ko'rish ↓</button>
 </div>
 
-</body>
+<!-- ══ HELP MODAL ══════════════════════════════════════ -->
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <h3 id="helpTitle">Qanday ishlaydi?</h3>
+      <button class="iconbtn" id="helpClose" aria-label="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-b">
+
+      <div class="hrow">
+        <h4><span class="sq" style="background:var(--vistup)"></span> Uchta raqam — vistupli panjara</h4>
+        <p>Panjara devordan oldinga chiqib turadi. Shunda old yuza + to'rtta yon yuza payvand qilinadi.</p>
+        <div class="formula">
+<span class="a">eni</span> × <span class="b">bo'yi</span> + 2 × <span class="c">vistup</span> × (<span class="a">eni</span> + <span class="b">bo'yi</span>)<br>
+<span style="color:var(--ink-3)">— misol: 120 130 30 —</span><br>
+1.20 × 1.30 + 2 × 0.30 × (1.20 + 1.30)<br>
+= 1.56 + 1.50 = <span class="r">3.06 m²</span>
+        </div>
+      </div>
+
+      <div class="hrow">
+        <h4><span class="sq" style="background:var(--ink-3)"></span> Ikkita raqam — tekis panjara</h4>
+        <p>Vistupsiz, oddiy to'rtburchak. Faqat <code>eni × bo'yi</code>.</p>
+        <div class="formula">
+<span class="a">120</span> × <span class="b">130</span> → 1.20 × 1.30 = <span class="r">1.56 m²</span>
+        </div>
+      </div>
+
+      <div class="hrow">
+        <h4>Dona soni</h4>
+        <p>Bir xil detal bir nechta bo'lsa, qator oxiriga yozing:
+        <code>120 130 30 2 dona</code>, <code>2sht</code>, <code>2шт</code>, <code>x2</code> yoki <code>(2)</code>. Natija shu songa ko'paytiriladi.</p>
+      </div>
+
+      <div class="hrow">
+        <h4>Nom yozish</h4>
+        <p>Raqamlardan oldin yoki keyin so'z yozsangiz, u detal nomi sifatida saqlanadi:
+        <code>oshxona 120 130 30</code>. Bu PDF va Telegram xabarida ham chiqadi.</p>
+      </div>
+
+      <div class="hrow">
+        <h4>SM yoki MM</h4>
+        <p>Yuqoridagi tugmadan birlikni tanlaysiz. <b>SM</b> tanlansa raqamlar santimetr, <b>MM</b> tanlansa millimetr deb olinadi. Natija baribir m² da chiqadi.</p>
+      </div>
+
+      <div class="hrow">
+        <h4>Narx</h4>
+        <p>O'ng tarafdagi «1 m² narxi» maydoniga narx yozsangiz, umumiy summa ham hisoblanadi va PDF ga tushadi. Bo'sh qoldirsangiz — faqat m² ko'rsatiladi.</p>
+      </div>
+
+      <div class="hrow">
+        <h4>Boshqa qulayliklar</h4>
+        <p>Yozganlaringiz brauzerda saqlanadi — sahifani yopib qaytsangiz yo'qolmaydi.
+        Jadvaldagi qatorni bossangiz chizmada o'sha detal ko'rinadi. <code>Ctrl</code>+<code>Enter</code> — qo'shish.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 
-/* ============================================================
-   PARSER ENGINE (preserved logic — handles real montaj input)
-   ============================================================ */
+/* ═══════════════════════════════════════════════════════
+   1. HOLAT (state)
+   ═══════════════════════════════════════════════════════ */
+const LS = 'kvadrat.v2';
+const state = {
+  unit: 'cm',      // 'cm' | 'mm'
+  dec: 2,
+  price: 0,
+  text: '',
+  selected: -1,
+};
+let results = [];
+let totals  = { area:0, pieces:0, valid:0, errors:0 };
+
+const $  = id => document.getElementById(id);
+const esc = s => { const d=document.createElement('div'); d.textContent = s==null?'':String(s); return d.innerHTML; };
+const div = () => state.unit === 'mm' ? 1000 : 100;
+
+function fmt(n, d){ return isFinite(n) ? n.toFixed(d==null?state.dec:d) : '—'; }
+function money(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function num(v){ const n = parseFloat(String(v).replace(',','.')); return isFinite(n) ? n : 0; }
+
+/* ═══════════════════════════════════════════════════════
+   2. PARSER — erkin yozilgan qatorlarni tushunadi
+   ═══════════════════════════════════════════════════════ */
 const Parser = (() => {
-  const QTY_PATTERNS = [
-    { re: /(?:^|\s)шт(?:ук[аи]?)?\s*(\d+)/iu,                 name: 'cyrillic-prefix' },
-    { re: /(\d+)\s*шт(?:ук[аи]?)?(?!\d)(?![а-яА-Яa-zA-Z])/iu, name: 'cyrillic-suffix' },
-    { re: /(\d+)\s*(?:sht|pcs|dona)\b/i,                      name: 'latin-suffix' },
-    { re: /(?:^|\s)[x×х][\s]*(\d{1,3})(?:\s*$|\s)/iu,         name: 'x-multiplier' },
-    { re: /(?:^|\s)\*\s*(\d{1,3})(?:\s*$|\s)/,                name: 'star-multiplier' },
-    { re: /\((\d+)\)/,                                        name: 'paren' },
-    { re: /\[(\d+)\]/,                                        name: 'bracket' },
+  const QTY = [
+    { re:/(?:^|\s)шт(?:ук[аи]?)?\s*(\d+)/iu,                  free:false },
+    { re:/(\d+)\s*шт(?:ук[аи]?)?(?!\d)(?![а-яА-Яa-zA-Z])/iu,  free:false },
+    { re:/(\d+)\s*(?:sht|pcs|dona|dona\.)\b/i,                free:false },
+    { re:/(?:^|\s)[x×х]\s*(\d{1,3})(?:\s*$|\s)/iu,            free:true  },
+    { re:/(?:^|\s)\*\s*(\d{1,3})(?:\s*$|\s)/,                 free:true  },
+    { re:/\((\d+)\)/,                                         free:false },
+    { re:/\[(\d+)\]/,                                         free:false },
   ];
-  const NUMBER_RE = /-?\d+(?:[.,]\d+)?/g;
+  const NUM = /-?\d+(?:[.,]\d+)?/g;
 
-  function extractQuantity(line){
-    for(const pat of QTY_PATTERNS){
-      const m=line.match(pat.re);
-      if(m){
-        const qty=parseInt(m[1],10);
-        if(qty>0&&qty<10000){
-          if(pat.name==='x-multiplier'||pat.name==='star-multiplier'){
-            const without=(line.slice(0,m.index)+' '+line.slice(m.index+m[0].length));
-            const numsWithout=(without.match(NUMBER_RE)||[]).length;
-            const numsWith=(line.match(NUMBER_RE)||[]).length;
-            if(numsWithout<2||numsWith-numsWithout!==1) continue;
-          }
-          const cleaned=line.slice(0,m.index)+' '+line.slice(m.index+m[0].length);
-          return {qty,lineWithoutQty:cleaned};
-        }
+  function qty(line){
+    for (const p of QTY){
+      const m = line.match(p.re);
+      if (!m) continue;
+      const q = parseInt(m[1],10);
+      if (!(q>0 && q<10000)) continue;
+      if (p.free){
+        // "x2" ni o'lcham ajratgichidan farqlash: olib tashlaganda kamida 2 raqam qolsin
+        const without = line.slice(0,m.index) + ' ' + line.slice(m.index+m[0].length);
+        const a = (without.match(NUM)||[]).length, b = (line.match(NUM)||[]).length;
+        if (a < 2 || b - a !== 1) continue;
       }
+      return { q, rest: line.slice(0,m.index) + ' ' + line.slice(m.index+m[0].length) };
     }
-    return {qty:1,lineWithoutQty:line};
+    return { q:1, rest:line };
   }
-  function extractNumbers(line){
-    const m=line.match(NUMBER_RE)||[];
-    return m.map(s=>parseFloat(s.replace(',','.'))).filter(n=>!isNaN(n));
+  function nums(s){ return (s.match(NUM)||[]).map(x => parseFloat(x.replace(',','.'))).filter(n => !isNaN(n)); }
+  // Nom: raqamlar va ajratgichlar olib tashlanadi.
+  // "x" faqat alohida turgan bo'lsa o'chadi — "oshxona" kabi so'zlar buzilmaydi.
+  const SEP  = /^[xX×хХ]+$/u;
+  const QWRD = /^(sht|pcs|dona|dona\.|шт|штук|штука|штуки)$/iu;
+  function name(s){
+    return s.replace(NUM,' ')
+            .replace(/[*,;\/\(\)\[\]]/gu,' ')
+            .split(/\s+/u)
+            .filter(w => w && !SEP.test(w) && !QWRD.test(w))
+            .join(' ');
   }
-  function extractLabels(line){
-    return line.replace(NUMBER_RE,' ').replace(/[xXхХ×*,;\/\(\)\[\]]/gu,' ').split(/\s+/u).filter(w=>w.length>0);
+
+  function line(raw, i){
+    const t = raw.trim();
+    if (t === '')                                return { type:'empty',   i };
+    if (t.startsWith('#') || t.startsWith('//')) return { type:'comment', i };
+
+    const { q, rest } = qty(t);
+    const n = nums(rest);
+    const nm = name(rest);
+    const base = { i, raw:t, qty:q, name:nm };
+
+    if (n.length === 0)      return { ...base, type:'error', err:"Raqam yo'q" };
+    if (n.some(v => v < 0))  return { ...base, type:'error', err:'Manfiy raqam' };
+    if (n.length === 1)      return { ...base, type:'error', err:'Kamida 2 ta raqam kerak (eni, bo‘yi)' };
+
+    const warn = [];
+    if (n[0] === 0 || n[1] === 0) warn.push("Eni yoki bo‘yi nol");
+    if (n.some(v => v > 20000))   warn.push('Juda katta raqam — birlikni tekshiring');
+    if (n.length > 3)             warn.push(n.length + ' ta raqam yozilgan, faqat dastlabki 3 tasi olindi');
+
+    if (n.length === 2) return { ...base, type:'flat', warn, A:n[0], B:n[1], C:0 };
+    return { ...base, type:'box', warn, A:n[0], B:n[1], C:n[2] };
   }
-  function parseLine(rawLine,index){
-    const original=rawLine, trimmed=rawLine.trim();
-    if(trimmed==='') return {type:'empty',original,index};
-    if(trimmed.startsWith('#')||trimmed.startsWith('//')) return {type:'comment',original,index};
-    const {qty,lineWithoutQty}=extractQuantity(trimmed);
-    const numbers=extractNumbers(lineWithoutQty);
-    const labels=extractLabels(lineWithoutQty);
-    if(numbers.length===0) return {type:'error',original,index,qty,labels,error:"Raqam topilmadi"};
-    if(numbers.some(n=>n<0)) return {type:'error',original,index,qty,labels,error:"Manfiy raqam"};
-    if(numbers.length===1) return {type:'error',original,index,qty,labels,error:"Kamida 2 ta raqam kerak"};
-    const warnings=[];
-    if(numbers.some(n=>n===0)) warnings.push("Nol qiymat");
-    if(numbers.some(n=>n>10000)) warnings.push("Juda katta raqam");
-    if(numbers.length>3) warnings.push(numbers.length+" raqam, faqat 3 tasi ishlatildi");
-    if(numbers.length===2) return {type:'flat',original,index,qty,labels,warnings,A:numbers[0],B:numbers[1]};
-    return {type:'kvadrat',original,index,qty,labels,warnings,A:numbers[0],B:numbers[1],C:numbers[2]};
-  }
-  function parseText(text){
-    const lines=text.split(/\r?\n/), rows=[];
-    lines.forEach((line,i)=>{ const p=parseLine(line,i); if(p.type!=='empty'&&p.type!=='comment') rows.push(p); });
-    return rows;
-  }
-  return {parseLine,parseText};
+
+  return {
+    line,
+    text(s){
+      const out = [];
+      s.split(/\r?\n/).forEach((l,i) => { const p = line(l,i); if (p.type!=='empty' && p.type!=='comment') out.push(p); });
+      return out;
+    }
+  };
 })();
 
-/* ============================================================
-   CALCULATOR
-   ============================================================ */
-const Calculator = (() => {
-  function calcKvadrat(A,B,C,d){ const C2=C*2; return ((B+C2)/d)*(A/d)+(B/d)*(C2/d); }
-  function calcFlat(A,B,d){ return (A/d)*(B/d); }
-  function calculate(rows,settings){
-    const d=settings.unit==='mm'?1000:100;
-    return rows.map(row=>{
-      if(row.type==='error') return {...row,value:0,total:0};
-      if(row.type==='flat'){ const v=calcFlat(row.A,row.B,d); return {...row,value:v,total:v*row.qty}; }
-      const v=calcKvadrat(row.A,row.B,row.C,d); return {...row,value:v,total:v*row.qty};
-    });
+/* ═══════════════════════════════════════════════════════
+   3. HISOB
+   yuza = eni·bo'yi + 2·vistup·(eni + bo'yi)
+   (old yuza + to'rtta yon yuza)
+   ═══════════════════════════════════════════════════════ */
+function area(A, B, C){
+  const d = div(), a = A/d, b = B/d, c = (C||0)/d;
+  return a*b + 2*c*(a+b);
+}
+
+function compute(){
+  const rows = Parser.text($('bulk').value);
+  results = rows.map(r => {
+    if (r.type === 'error') return { ...r, one:0, sum:0 };
+    const one = area(r.A, r.B, r.C);
+    return { ...r, one, sum: one * r.qty };
+  });
+  totals = {
+    area:   results.reduce((s,r) => s + (r.sum||0), 0),
+    pieces: results.filter(r=>r.type!=='error').reduce((s,r) => s + r.qty, 0),
+    valid:  results.filter(r=>r.type!=='error').length,
+    errors: results.filter(r=>r.type==='error').length,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+   4. CHIZMA (jonli izometrik SVG)
+   ═══════════════════════════════════════════════════════ */
+function drawDiagram(A, B, C){
+  const unit = state.unit === 'mm' ? 'mm' : 'sm';
+  const hasC = C > 0;
+  const maxv = Math.max(A, B, 1);
+  const base = 176;
+  let pw = base * (A / maxv);
+  let ph = base * (B / maxv);
+  if (pw < 34) pw = 34;
+  if (ph < 34) ph = 34;
+  let pd = hasC ? Math.min(86, Math.max(18, base * (C / maxv))) : 0;
+
+  const dx =  pd * 0.78, dy = -pd * 0.5;
+  const fx = 96, fby = 250, fy = fby - ph;      // old yuza: chap-past burchak
+  const rx = fx + pw;                            // old yuza o'ng qirrasi
+  const bx = fx + dx, by = fy + dy;              // orqa (devor) yuza chap-tepa
+
+  const P = (x,y) => x.toFixed(1)+','+y.toFixed(1);
+  let g = '';
+  let mx = 0, my = 0;                            // vistup yorlig'i markazi
+  let maxX = Math.max(rx + 24, fx + pw/2 + 44);  // chizmani markazlash uchun chegara
+  let minY = fy - 24;
+
+  // devor tekisligi + orqa (devordagi) ochiq joy
+  if (hasC){
+    const wl = bx-30, wt = by-24, ww = pw+60, wh = ph+48;
+    g += `<rect x="${wl.toFixed(1)}" y="${wt.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="url(#hatch)" stroke="var(--line-2)" stroke-width="1"/>`;
+    g += `<text x="${(wl+9).toFixed(1)}" y="${(wt+15).toFixed(1)}" font-family="'JetBrains Mono',monospace" font-size="10" fill="var(--ink-4)" letter-spacing="1.3">DEVOR</text>`;
+    // devordagi tuynuk
+    g += `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" fill="var(--paper)" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3"/>`;
+    // yashirin qirra (chap-past)
+    g += `<line x1="${fx}" y1="${fby.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${(by+ph).toFixed(1)}" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3"/>`;
+    // ko'rinadigan yon yuzalar: TEPA va O'NG — vistup rangi
+    g += `<polygon points="${P(fx,fy)} ${P(bx,by)} ${P(bx+pw,by)} ${P(rx,fy)}" fill="var(--vistup-bg)" stroke="var(--vistup-br)" stroke-width="1.3"/>`;
+    g += `<polygon points="${P(rx,fy)} ${P(bx+pw,by)} ${P(bx+pw,by+ph)} ${P(rx,fby)}" fill="var(--vistup-bg)" stroke="var(--vistup-br)" stroke-width="1.3"/>`;
   }
-  return {calculate};
-})();
 
-/* ============================================================
-   UI
-   ============================================================ */
-const $ = id => document.getElementById(id);
-let settings = { unit:'cm', decimals:4 };
-let lastResults = null;
+  // old yuza — panjara
+  g += `<rect x="${fx}" y="${fy}" width="${pw}" height="${ph}" fill="var(--surface)" stroke="var(--ink)" stroke-width="2.2" rx="2"/>`;
+  const bars = Math.max(2, Math.min(6, Math.round(pw/26)));
+  for (let i=1;i<bars;i++){
+    const x = fx + (pw*i/bars);
+    g += `<line x1="${x.toFixed(1)}" y1="${fy+4}" x2="${x.toFixed(1)}" y2="${fy+ph-4}" stroke="var(--ink-4)" stroke-width="1.4"/>`;
+  }
+  const rowsN = Math.max(1, Math.min(4, Math.round(ph/40)));
+  for (let i=1;i<rowsN;i++){
+    const y = fy + (ph*i/rowsN);
+    g += `<line x1="${fx+4}" y1="${y.toFixed(1)}" x2="${rx-4}" y2="${y.toFixed(1)}" stroke="var(--ink-4)" stroke-width="1.4"/>`;
+  }
 
-function fmt(n,d){ if(!isFinite(n)) return '—'; return n.toFixed(d); }
-function esc(t){ const x=document.createElement('div'); x.textContent=t==null?'':String(t); return x.innerHTML; }
-function toast(msg){ let el=$('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; el.className='toast'; document.body.appendChild(el);} el.textContent=msg; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3200); }
+  // ── o'lcham chiziqlari ──
+  // ENI — pastda
+  const eY = fby + 34;
+  g += `<line x1="${fx}" y1="${fby+3}" x2="${fx}" y2="${eY+7}" stroke="var(--eni)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
+  g += `<line x1="${rx}" y1="${fby+3}" x2="${rx}" y2="${eY+7}" stroke="var(--eni)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
+  g += `<line x1="${fx}" y1="${eY}" x2="${rx}" y2="${eY}" stroke="var(--eni)" stroke-width="1.6" marker-start="url(#aE)" marker-end="url(#aE)"/>`;
+  g += `<g><rect x="${(fx+pw/2-40).toFixed(1)}" y="${eY+8}" width="80" height="21" rx="6" fill="var(--eni-bg)" stroke="var(--eni-br)" stroke-width="1"/>`
+     + `<text x="${(fx+pw/2).toFixed(1)}" y="${eY+22.5}" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--eni)">${A||'—'} <tspan font-size="9.5" font-weight="500">${unit}</tspan></text></g>`;
+  g += `<text x="${(fx+pw/2).toFixed(1)}" y="${eY-7}" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="var(--eni)">ENI</text>`;
 
-function updateCounts(){
-  const t=$('input').value;
-  const lines=t.split(/\r?\n/).filter(l=>l.trim()!=='').length;
-  $('lineCount').textContent=lines;
-  $('charCount').textContent=t.length;
+  // BO'YI — chapda
+  const bX = fx - 40;
+  g += `<line x1="${fx-3}" y1="${fy}" x2="${bX-7}" y2="${fy}" stroke="var(--boyi)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
+  g += `<line x1="${fx-3}" y1="${fby}" x2="${bX-7}" y2="${fby}" stroke="var(--boyi)" stroke-width="1" stroke-dasharray="2 2" opacity=".55"/>`;
+  g += `<line x1="${bX}" y1="${fy}" x2="${bX}" y2="${fby}" stroke="var(--boyi)" stroke-width="1.6" marker-start="url(#aB)" marker-end="url(#aB)"/>`;
+  g += `<g transform="translate(${bX-13},${(fy+ph/2).toFixed(1)}) rotate(-90)">`
+     + `<rect x="-40" y="-11" width="80" height="21" rx="6" fill="var(--boyi-bg)" stroke="var(--boyi-br)" stroke-width="1"/>`
+     + `<text x="0" y="3.5" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--boyi)">${B||'—'} <tspan font-size="9.5" font-weight="500">${unit}</tspan></text>`
+     + `<text x="0" y="-17" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="var(--boyi)">BO‘YI</text></g>`;
+
+  // VISTUP — o'ng-tepa qirra bo'ylab (devordan oldinga)
+  if (hasC){
+    const sx = bx+pw, sy = by;        // devordagi nuqta
+    const ex = rx,    ey = fy;        // oldingi nuqta
+    const ox = 22, oy = -13;          // o'lcham chizig'ini qirradan chetga surish
+    g += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${(sx+ox).toFixed(1)}" y2="${(sy+oy).toFixed(1)}" stroke="var(--vistup)" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`;
+    g += `<line x1="${ex.toFixed(1)}" y1="${ey.toFixed(1)}" x2="${(ex+ox).toFixed(1)}" y2="${(ey+oy).toFixed(1)}" stroke="var(--vistup)" stroke-width="1" stroke-dasharray="2 2" opacity=".6"/>`;
+    g += `<line x1="${(sx+ox*0.82).toFixed(1)}" y1="${(sy+oy*0.82).toFixed(1)}" x2="${(ex+ox*0.82).toFixed(1)}" y2="${(ey+oy*0.82).toFixed(1)}" stroke="var(--vistup)" stroke-width="1.6" marker-start="url(#aV)" marker-end="url(#aV)"/>`;
+    mx = (sx+ex)/2 + ox + 44; my = (sy+ey)/2 + oy;
+    maxX = Math.max(maxX, mx + 42, bx + pw + 34);
+    minY = Math.min(minY, by - 26, my - 30);
+    g += `<g><rect x="${(mx-40).toFixed(1)}" y="${(my-10).toFixed(1)}" width="80" height="21" rx="6" fill="var(--vistup-bg)" stroke="var(--vistup-br)" stroke-width="1"/>`
+       + `<text x="${mx.toFixed(1)}" y="${(my+4.5).toFixed(1)}" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700" fill="var(--vistup)">${C} <tspan font-size="9.5" font-weight="500">${unit}</tspan></text>`
+       + `<text x="${mx.toFixed(1)}" y="${(my-16).toFixed(1)}" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10.5" font-weight="700" letter-spacing="1.1" fill="var(--vistup)">VISTUP</text></g>`;
+  }
+
+  const mk = (id,color) => `<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="${color}"/></marker>`;
+
+  // chizmani ramkaga sig'dirib markazlashtiramiz (ramka balandligi o'zgarmaydi)
+  const VW = 470, VH = 330, minX = 26, maxY = 322;
+  const cW = Math.max(1, maxX - minX), cH = Math.max(1, maxY - minY);
+  const k  = Math.min(1.4, (VW - 16) / cW, (VH - 12) / cH);
+  const sX = (VW - cW * k) / 2 - minX * k;
+  const sY = (VH - cH * k) / 2 - minY * k;
+
+  $('diagram').innerHTML =
+    `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Panjara o'lchamlari chizmasi">
+      <defs>
+        ${mk('aE','var(--eni)')}${mk('aB','var(--boyi)')}${mk('aV','var(--vistup)')}
+        <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <rect width="7" height="7" fill="var(--paper-2)"/>
+          <line x1="0" y1="0" x2="0" y2="7" stroke="var(--line-2)" stroke-width="1.1"/>
+        </pattern>
+      </defs>
+      <g transform="translate(${sX.toFixed(1)},${sY.toFixed(1)}) scale(${k.toFixed(3)})">${g}</g>
+    </svg>`;
+
+  const a = area(A, B, C);
+  $('dgMode').textContent = hasC ? 'Vistupli' : 'Tekis';
+  $('dgMode').style.color = hasC ? 'var(--vistup)' : 'var(--ink-3)';
+  $('dgCap').innerHTML = (A && B)
+    ? (hasC
+        ? `<b>${A}</b> × <b>${B}</b> × <b>${C}</b> ${unit} → old yuza + 4 ta yon yuza = <b>${fmt(a)} m²</b>`
+        : `<b>${A}</b> × <b>${B}</b> ${unit} → tekis to'rtburchak = <b>${fmt(a)} m²</b>`)
+    : `Eni va bo'yini kiriting — chizma shu yerda ko'rinadi.`;
 }
 
-function calculate(){
-  const text=$('input').value;
-  if(!text.trim()){ toast('Avval o\'lcham kiriting.'); return; }
-  const rows=Parser.parseText(text);
-  if(!rows.length){ toast('Hisoblanadigan qator yo\'q.'); return; }
-  const results=Calculator.calculate(rows,settings);
-  lastResults=results;
-  renderResults(results);
+function diagramFromInputs(){
+  const A = num($('inEni').value), B = num($('inBoyi').value), C = num($('inVistup').value);
+  if (A || B || C) { state.selected = -1; drawDiagram(A, B, C); }
+  else if (state.selected < 0) drawDiagram(120, 130, 30);
 }
 
-function renderResults(results){
-  const d=settings.decimals;
-  const valid=results.filter(r=>r.type!=='error');
-  const errors=results.filter(r=>r.type==='error');
-  const kvCount=results.filter(r=>r.type==='kvadrat').length;
-  const flCount=results.filter(r=>r.type==='flat').length;
-  const totalPieces=valid.reduce((s,r)=>s+(r.qty||1),0);
-  const grandTotal=valid.reduce((s,r)=>s+(r.total||0),0);
+/* ═══════════════════════════════════════════════════════
+   5. RENDER
+   ═══════════════════════════════════════════════════════ */
+function dimsHTML(r){
+  const x = '<span class="x">×</span>';
+  return r.type === 'box'
+    ? `<span class="a">${r.A}</span>${x}<span class="b">${r.B}</span>${x}<span class="c">${r.C}</span>`
+    : `<span class="a">${r.A}</span>${x}<span class="b">${r.B}</span>`;
+}
 
-  let html='';
-  // totals
-  html+='<div class="totals">'
-    +'<div class="total-cell main"><div class="total-num">'+fmt(grandTotal,d)+'<span class="total-unit">m²</span></div><div class="total-label">Jami maydon</div></div>'
-    +'<div class="total-cell"><div class="total-num">'+valid.length+'</div><div class="total-label">✓ Yaroqli</div></div>'
-    +'<div class="total-cell"><div class="total-num">'+totalPieces+'</div><div class="total-label">📦 Donalar</div></div>'
-    +'<div class="total-cell"><div class="total-num">'+kvCount+'</div><div class="total-label">Kvadrat</div></div>'
-    +'<div class="total-cell"><div class="total-num" style="'+(errors.length?'color:var(--amber)':'')+'">'+errors.length+'</div><div class="total-label">⚠ Xato</div></div>'
-    +'</div>';
+function render(){
+  const hasPrice = state.price > 0;
 
-  // table
-  html+='<div class="table-wrap"><table class="rtable"><thead><tr>'
-    +'<th>#</th><th>Kirish</th><th>Tur</th><th class="num">Dona</th><th class="num">Birlik m²</th><th class="num">Jami m²</th>'
-    +'</tr></thead><tbody>';
-  results.forEach((r,i)=>{
-    const cls=r.type==='kvadrat'?'r-kvadrat':(r.type==='flat'?'r-flat':'r-error');
-    const tagCls=r.type==='kvadrat'?'kvadrat':(r.type==='flat'?'flat':'error');
-    const tagTxt=r.type==='kvadrat'?'KVADRAT':(r.type==='flat'?'FLAT':'XATO');
-    html+='<tr class="'+cls+'">';
-    html+='<td>'+(i+1)+'</td>';
-    if(r.type==='error'){
-      html+='<td><span class="row-input">'+esc(r.original.trim())+'</span><div class="row-err-msg">⚠ '+esc(r.error)+'</div></td>';
-      html+='<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>';
-      html+='<td class="num">—</td><td class="num">—</td><td class="num">—</td>';
-    } else {
-      const dims=r.type==='kvadrat'?(r.A+'×'+r.B+'×'+r.C):(r.A+'×'+r.B);
-      const lbl=r.labels&&r.labels.length?' <span style="color:var(--text-4)">'+esc(r.labels.join(' '))+'</span>':'';
-      html+='<td><span class="row-input">'+dims+'</span>'+lbl+'</td>';
-      html+='<td><span class="tag '+tagCls+'">'+tagTxt+'</span></td>';
-      html+='<td class="num">'+(r.qty||1)+'</td>';
-      html+='<td class="num">'+fmt(r.value,d)+'</td>';
-      html+='<td class="num total-col">'+fmt(r.total,d)+'</td>';
+  // ── yuqoridagi umumiy raqamlar ──
+  $('grandTotal').textContent = fmt(totals.area);
+  $('mDetal').textContent  = totals.valid;
+  $('mDona').textContent   = totals.pieces;
+  $('mErr').textContent    = totals.errors;
+  $('mErrBox').className   = totals.errors ? 'warn' : '';
+  $('grandSum').hidden     = !hasPrice;
+  if (hasPrice) $('grandSum').textContent = money(totals.area * state.price) + " so'm";
+
+  $('mbTotal').textContent = fmt(totals.area);
+  $('mbSub').textContent   = totals.valid + ' detal · ' + totals.pieces + ' dona';
+  $('mobar').classList.toggle('on', results.length > 0);
+
+  $('resHint').innerHTML = results.length
+    ? `qatorni bosing — chizmada ko'rinadi`
+    : '';
+
+  // ── bo'sh holat ──
+  if (!results.length){
+    $('resZone').innerHTML =
+      `<div class="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 9h18M9 21V9"/></svg>
+        <div class="t">Hali o'lcham kiritilmadi</div>
+        <div class="s">Yuqoridan eni va bo'yini yozing — natija shu yerda paydo bo'ladi.</div>
+      </div>`;
+    $('exportBar').hidden = true;
+    return;
+  }
+  $('exportBar').hidden = false;
+
+  // ── jadval (desktop) ──
+  let t = `<div class="tbl-wrap"><div class="tbl-scroll"><table><thead><tr>
+    <th>#</th><th>O'lcham (${state.unit === 'mm' ? 'mm' : 'sm'})</th><th>Tur</th>
+    <th class="num">Dona</th><th class="num">1 dona m²</th><th class="num">Jami m²</th>
+    ${hasPrice ? '<th class="num">Summa</th>' : ''}<th></th></tr></thead><tbody>`;
+
+  results.forEach((r, i) => {
+    const sel = state.selected === i ? ' sel' : '';
+    if (r.type === 'error'){
+      t += `<tr class="err${sel}" data-i="${i}">
+        <td class="idx">${i+1}</td>
+        <td><span class="dims">${esc(r.raw)}</span><div class="errmsg">${esc(r.err)}</div></td>
+        <td><span class="badge err">Xato</span></td>
+        <td class="num">—</td><td class="num">—</td><td class="num">—</td>
+        ${hasPrice ? '<td class="num">—</td>' : ''}
+        <td class="num"><button class="del" data-del="${i}" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></td></tr>`;
+      return;
     }
-    html+='</tr>';
+    t += `<tr class="${sel.trim()}" data-i="${i}">
+      <td class="idx">${i+1}</td>
+      <td><span class="dims">${dimsHTML(r)}</span>${r.name ? `<div class="rowname">${esc(r.name)}</div>` : ''}</td>
+      <td><span class="badge ${r.type === 'box' ? 'box">Vistupli' : 'flat">Tekis'}</span></td>
+      <td class="num mono">${r.qty}</td>
+      <td class="num mono" style="color:var(--ink-3)">${fmt(r.one)}</td>
+      <td class="num tot">${fmt(r.sum)}</td>
+      ${hasPrice ? `<td class="num mono" style="color:var(--ok);font-weight:600">${money(r.sum*state.price)}</td>` : ''}
+      <td class="num"><button class="del" data-del="${i}" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></td></tr>`;
   });
-  html+='</tbody></table></div>';
 
-  // export
-  html+='<div class="export-bar">'
-    +'<button class="btn btn-red" id="pdfBtn">📄 PDF YUKLAB OLISH <span class="arr">→</span></button>'
-    +'<button class="btn btn-ghost" id="tgBtn">📋 TELEGRAM UCHUN</button>'
-    +'<button class="btn btn-ghost" id="txtBtn">📄 TXT</button>'
-    +'</div>';
+  t += `</tbody><tfoot><tr>
+    <td colspan="${hasPrice ? 4 : 4}" class="lbl">Jami · ${totals.valid} detal · ${totals.pieces} dona</td>
+    <td class="num lbl">m²</td>
+    <td class="num big">${fmt(totals.area)}</td>
+    ${hasPrice ? `<td class="num big" style="color:var(--ok)">${money(totals.area*state.price)}</td>` : ''}
+    <td></td></tr></tfoot></table></div></div>`;
 
-  $('resultsZone').innerHTML=html;
-  $('pdfBtn').addEventListener('click',()=>exportPDF(results,grandTotal));
-  $('tgBtn').addEventListener('click',()=>copyForTelegram(results,grandTotal));
-  $('txtBtn').addEventListener('click',()=>downloadTXT(results,grandTotal));
-  $('resultsZone').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-/* ---------- exports ---------- */
-function summaryLines(results,grandTotal){
-  const d=settings.decimals;
-  const valid=results.filter(r=>r.type!=='error');
-  const totalPieces=valid.reduce((s,r)=>s+(r.qty||1),0);
-  return {d,valid,totalPieces,grandTotal};
-}
-
-function copyForTelegram(results,grandTotal){
-  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
-  let txt='📐 KVADRAT HISOBLASH\n';
-  txt+='━━━━━━━━━━━━━━━━━━\n';
-  results.forEach((r,i)=>{
-    if(r.type==='error'){ txt+=(i+1)+'. ⚠ '+r.original.trim()+' — '+r.error+'\n'; return; }
-    const dims=r.type==='kvadrat'?(r.A+'×'+r.B+'×'+r.C):(r.A+'×'+r.B);
-    const lbl=r.labels&&r.labels.length?(' '+r.labels.join(' ')):'';
-    txt+=(i+1)+'. '+dims+lbl+(r.qty>1?(' ×'+r.qty):'')+' = '+fmt(r.total,d)+' m²\n';
+  // ── kartalar (mobil) ──
+  let c = '<div class="cards">';
+  results.forEach((r, i) => {
+    if (r.type === 'error'){
+      c += `<div class="rc err" data-i="${i}">
+        <div class="rc-top"><div><div class="dims">${esc(r.raw)}</div><div class="errmsg">${esc(r.err)}</div></div>
+        <button class="del" data-del="${i}" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+        <div class="rc-tot"><span class="k"><span class="badge err">Xato</span></span><span class="v" style="color:var(--warn)">—</span></div></div>`;
+      return;
+    }
+    c += `<div class="rc" data-i="${i}">
+      <div class="rc-top">
+        <div><div class="dims" style="font-size:17px">${dimsHTML(r)}</div>
+        ${r.name ? `<div class="rowname">${esc(r.name)}</div>` : ''}</div>
+        <button class="del" data-del="${i}" aria-label="O'chirish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="rc-meta"><span class="badge ${r.type === 'box' ? 'box">Vistupli' : 'flat">Tekis'}</span> &nbsp; ${r.qty} dona × ${fmt(r.one)} m²</div>
+      <div class="rc-tot"><span class="k">Jami${state.price>0 ? ` · <b style="color:var(--ok)">${money(r.sum*state.price)} so'm</b>` : ''}</span><span class="v">${fmt(r.sum)} m²</span></div>
+    </div>`;
   });
-  txt+='━━━━━━━━━━━━━━━━━━\n';
-  txt+='✓ '+valid.length+' detal · 📦 '+totalPieces+' dona\n';
-  txt+='🟥 JAMI: '+fmt(grandTotal,d)+' m²';
-  navigator.clipboard.writeText(txt).then(()=>toast('✓ NUSXA OLINDI · TELEGRAMGA JOYLANG')).catch(()=>toast('Nusxa olishda xato.'));
+  c += '</div>';
+
+  $('resZone').innerHTML = t + c;
 }
 
-function downloadTXT(results,grandTotal){
-  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
-  let txt='KVADRAT HISOBLASH\n'+new Date().toLocaleString('uz')+'\n====================\n\n';
-  results.forEach((r,i)=>{
-    if(r.type==='error'){ txt+=(i+1)+'. XATO: '+r.original.trim()+' — '+r.error+'\n'; return; }
-    const dims=r.type==='kvadrat'?(r.A+'x'+r.B+'x'+r.C):(r.A+'x'+r.B);
-    const lbl=r.labels&&r.labels.length?(' '+r.labels.join(' ')):'';
-    txt+=(i+1)+'. '+dims+lbl+(r.qty>1?(' x'+r.qty):'')+' = '+fmt(r.total,d)+' m2\n';
+function refresh(){ compute(); render(); save(); }
+
+/* ═══════════════════════════════════════════════════════
+   6. SAQLASH
+   ═══════════════════════════════════════════════════════ */
+function save(){
+  try{
+    localStorage.setItem(LS, JSON.stringify({
+      unit: state.unit, price: state.price, text: $('bulk').value,
+      theme: document.documentElement.dataset.theme || ''
+    }));
+  }catch(e){}
+}
+function load(){
+  let d = {};
+  try{ d = JSON.parse(localStorage.getItem(LS) || '{}'); }catch(e){}
+  if (d.theme) document.documentElement.dataset.theme = d.theme;
+  else if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+  if (d.unit === 'mm' || d.unit === 'cm') state.unit = d.unit;
+  if (typeof d.price === 'number' && d.price > 0){ state.price = d.price; $('inPrice').value = d.price; }
+  if (typeof d.text === 'string') $('bulk').value = d.text;
+}
+
+/* ═══════════════════════════════════════════════════════
+   7. EKSPORT
+   ═══════════════════════════════════════════════════════ */
+function tgText(){
+  const u = state.unit === 'mm' ? 'mm' : 'sm';
+  let s = '📐 KVADRAT — hisob\n';
+  s += '─────────────────\n';
+  results.forEach((r,i) => {
+    if (r.type === 'error'){ s += `${i+1}. ⚠️ ${r.raw} — ${r.err}\n`; return; }
+    const d = r.type === 'box' ? `${r.A}×${r.B}×${r.C}` : `${r.A}×${r.B}`;
+    s += `${i+1}. ${d}${r.name ? ' ('+r.name+')' : ''}${r.qty>1 ? ' ×'+r.qty : ''} = ${fmt(r.sum)} m²\n`;
   });
-  txt+='\n====================\n';
-  txt+='Yaroqli: '+valid.length+' | Donalar: '+totalPieces+'\n';
-  txt+='JAMI MAYDON: '+fmt(grandTotal,d)+' m2\n';
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='kvadrat-'+Date.now()+'.txt'; a.click();
-  toast('✓ TXT YUKLANDI');
+  s += '─────────────────\n';
+  s += `${totals.valid} detal · ${totals.pieces} dona · o'lcham ${u}\n`;
+  s += `📊 JAMI: ${fmt(totals.area)} m²`;
+  if (state.price > 0) s += `\n💰 SUMMA: ${money(totals.area*state.price)} so'm (1 m² = ${money(state.price)})`;
+  return s;
 }
 
-/* ---------- branded PDF ---------- */
-function exportPDF(results,grandTotal){
-  if(!window.jspdf){ toast('PDF kutubxonasi yuklanmadi.'); return; }
-  const {d,valid,totalPieces}=summaryLines(results,grandTotal);
+function txtText(){
+  const u = state.unit === 'mm' ? 'mm' : 'sm';
+  let s = 'KVADRAT - m2 hisob\n' + new Date().toLocaleString('ru-RU') + '\n';
+  s += 'Olcham birligi: ' + u + '\n' + '='.repeat(46) + '\n\n';
+  results.forEach((r,i) => {
+    if (r.type === 'error'){ s += `${i+1}. XATO: ${r.raw} - ${r.err}\n`; return; }
+    const d = r.type === 'box' ? `${r.A}x${r.B}x${r.C}` : `${r.A}x${r.B}`;
+    s += `${i+1}. ${d}${r.name ? ' ('+r.name+')' : ''} x${r.qty} = ${fmt(r.sum)} m2\n`;
+  });
+  s += '\n' + '='.repeat(46) + '\n';
+  s += `Detal: ${totals.valid} | Dona: ${totals.pieces}\n`;
+  s += `JAMI: ${fmt(totals.area)} m2\n`;
+  if (state.price > 0) s += `SUMMA: ${money(totals.area*state.price)} som\n`;
+  return s;
+}
+
+function download(name, text){
+  const b = new Blob([text], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ── PDF: yorug', hujjatga o'xshash ── */
+function exportPDF(){
+  if (!window.jspdf){ toast('PDF kutubxonasi hali yuklanmadi — biroz kuting.'); return; }
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({unit:'pt',format:'a4'});
-  const W = pdf.internal.pageSize.getWidth();
-  const H = pdf.internal.pageSize.getHeight();
-  const M = 44;
-  const RED=[215,25,33];
+  const p = new jsPDF({ unit:'pt', format:'a4' });
+  const W = p.internal.pageSize.getWidth(), H = p.internal.pageSize.getHeight(), M = 46;
+  const INK = [18,22,29], MUT = [110,118,130], LINE = [225,222,215];
+  const hasPrice = state.price > 0;
+  const u = state.unit === 'mm' ? 'mm' : 'sm';
 
-  function drawLogo(x,y,s){
-    pdf.setDrawColor(RED[0],RED[1],RED[2]); pdf.setLineWidth(s*0.13);
-    pdf.roundedRect(x+s*0.26,y+s*0.26,s*0.48,s*0.48,2,2,'S');
-    pdf.setFillColor(RED[0],RED[1],RED[2]);
-    pdf.circle(x+s*0.5,y+s*0.5,s*0.07,'F');
+  // sarlavha — logo sifatida oddiy siyoh kvadrat
+  p.setFillColor(...INK); p.roundedRect(M, 44, 30, 30, 7, 7, 'F');
+  p.setDrawColor(255,255,255); p.setLineWidth(1.6); p.rect(M+8, 52, 10, 10, 'S');
+  p.setDrawColor(245,158,11); p.setLineWidth(1.6); p.rect(M+13, 57, 10, 10, 'S');
+
+  p.setTextColor(...INK); p.setFont('helvetica','bold'); p.setFontSize(19);
+  p.text('KVADRAT', M+42, 60);
+  p.setFont('helvetica','normal'); p.setFontSize(9); p.setTextColor(...MUT);
+  p.text('m2 hisob-kitob  /  payvand va montaj', M+42, 72);
+  p.setFontSize(8.5);
+  p.text(new Date().toLocaleString('ru-RU'), W-M, 60, { align:'right' });
+  p.text('olcham: ' + u + '  |  ' + totals.valid + ' detal, ' + totals.pieces + ' dona', W-M, 72, { align:'right' });
+
+  p.setDrawColor(...INK); p.setLineWidth(1.4); p.line(M, 88, W-M, 88);
+
+  // jami karta
+  let y = 112;
+  p.setFillColor(247,246,243); p.setDrawColor(...LINE); p.setLineWidth(1);
+  p.roundedRect(M, y, W-M*2, hasPrice ? 78 : 62, 6, 6, 'FD');
+  p.setFont('helvetica','normal'); p.setFontSize(8.5); p.setTextColor(...MUT);
+  p.text('JAMI MAYDON', M+18, y+21);
+  p.setFont('helvetica','bold'); p.setFontSize(27); p.setTextColor(...INK);
+  p.text(fmt(totals.area) + ' m2', M+18, y+48);
+  if (hasPrice){
+    p.setFont('helvetica','normal'); p.setFontSize(8.5); p.setTextColor(...MUT);
+    p.text('1 m2 narxi: ' + money(state.price) + " som", W-M-18, y+21, { align:'right' });
+    p.setFont('helvetica','bold'); p.setFontSize(15); p.setTextColor(15,138,95);
+    p.text(money(totals.area*state.price) + " som", W-M-18, y+45, { align:'right' });
+    p.setFont('helvetica','normal'); p.setFontSize(8); p.setTextColor(...MUT);
+    p.text('umumiy summa', W-M-18, y+60, { align:'right' });
   }
+  y += (hasPrice ? 78 : 62) + 28;
 
-  // header band
-  pdf.setFillColor(8,8,8); pdf.rect(0,0,W,92,'F');
-  pdf.setFillColor(RED[0],RED[1],RED[2]); pdf.rect(0,92,W,2.5,'F');
-  drawLogo(M,26,40);
-  pdf.setTextColor(255,255,255); pdf.setFont('courier','bold'); pdf.setFontSize(20);
-  pdf.text('KVADRAT', M+54, 46);
-  pdf.setFont('courier','normal'); pdf.setFontSize(9); pdf.setTextColor(150,150,150);
-  pdf.text('M\u00b2 HISOBLASH \u00b7 MONTAJ', M+54, 62);
-  pdf.setFontSize(8); pdf.setTextColor(120,120,120);
-  const dateStr=new Date().toLocaleString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  pdf.text(dateStr, W-M, 46, {align:'right'});
-  pdf.text(settings.unit.toUpperCase()+' \u2192 m\u00b2 \u00b7 '+d+' kasr', W-M, 62, {align:'right'});
+  // ustunlar
+  const cx = hasPrice
+    ? [M+4, M+30, M+140, M+258, M+330, M+412, W-M-2]
+    : [M+4, M+30, M+150, M+300, M+382, W-M-2];
+  const heads = hasPrice
+    ? ['#','OLCHAM','NOMI','DONA','1 DONA m2','JAMI m2','SUMMA (som)']
+    : ['#','OLCHAM','NOMI','DONA','1 DONA m2','JAMI m2'];
 
-  // grand total card
-  let y=128;
-  pdf.setFillColor(20,8,9); pdf.roundedRect(M,y,W-M*2,70,4,4,'F');
-  pdf.setDrawColor(RED[0],RED[1],RED[2]); pdf.setLineWidth(1); pdf.roundedRect(M,y,W-M*2,70,4,4,'S');
-  pdf.setFont('courier','normal'); pdf.setFontSize(9); pdf.setTextColor(180,180,180);
-  pdf.text('JAMI MAYDON', M+20, y+26);
-  pdf.setFont('courier','bold'); pdf.setFontSize(30); pdf.setTextColor(RED[0],RED[1],RED[2]);
-  pdf.text(fmt(grandTotal,d)+'  m\u00b2', M+20, y+54);
-  // mini stats right
-  pdf.setFont('courier','normal'); pdf.setFontSize(8.5); pdf.setTextColor(160,160,160);
-  pdf.text('Yaroqli detal:  '+valid.length, W-M-20, y+24, {align:'right'});
-  pdf.text('Jami dona:  '+totalPieces, W-M-20, y+40, {align:'right'});
-  pdf.text('Qatorlar:  '+results.length, W-M-20, y+56, {align:'right'});
+  function head(){
+    p.setFillColor(247,246,243); p.rect(M, y-13, W-M*2, 22, 'F');
+    p.setFont('helvetica','bold'); p.setFontSize(7.5); p.setTextColor(...MUT);
+    heads.forEach((h,i) => p.text(h, cx[i], y, i >= 3 ? { align:'right' } : undefined));
+    y += 9; p.setDrawColor(...LINE); p.setLineWidth(.8); p.line(M, y, W-M, y); y += 15;
+  }
+  head();
 
-  // table header
-  y+=98;
-  const cols=[M, M+34, M+170, M+250, M+330, W-M];
-  pdf.setFillColor(13,13,13); pdf.rect(M,y-16,W-M*2,24,'F');
-  pdf.setFont('courier','bold'); pdf.setFontSize(8); pdf.setTextColor(150,150,150);
-  pdf.text('#', cols[0]+6, y);
-  pdf.text('KIRISH', cols[1], y);
-  pdf.text('TUR', cols[2], y);
-  pdf.text('DONA', cols[3], y);
-  pdf.text('BIRLIK', cols[4], y);
-  pdf.text('JAMI m\u00b2', cols[5], y, {align:'right'});
-  y+=10;
-  pdf.setDrawColor(40,40,40); pdf.setLineWidth(.5); pdf.line(M,y,W-M,y);
-  y+=16;
-
-  pdf.setFont('courier','normal'); pdf.setFontSize(9);
-  results.forEach((r,i)=>{
-    if(y>H-70){ pdf.addPage(); y=60; }
-    const isErr=r.type==='error';
-    // row accent
-    const acc = r.type==='kvadrat'?RED:(r.type==='flat'?[120,120,120]:[245,179,51]);
-    pdf.setFillColor(acc[0],acc[1],acc[2]); pdf.rect(M,y-9,2,13,'F');
-    pdf.setTextColor(150,150,150); pdf.text(String(i+1), cols[0]+6, y);
-    if(isErr){
-      pdf.setTextColor(245,179,51);
-      pdf.text(pdf.splitTextToSize(r.original.trim(),120)[0]||'', cols[1], y);
-      pdf.setFontSize(7.5); pdf.text('XATO: '+r.error, cols[2], y); pdf.setFontSize(9);
+  p.setFont('helvetica','normal'); p.setFontSize(9);
+  results.forEach((r,i) => {
+    if (y > H-72){ p.addPage(); y = 62; head(); p.setFont('helvetica','normal'); p.setFontSize(9); }
+    if (r.type === 'error'){
+      p.setTextColor(180,83,9);
+      p.text(String(i+1), cx[0], y);
+      p.text(String(r.raw).slice(0,26), cx[1], y);
+      p.setFontSize(7.5); p.text('XATO: ' + r.err, cx[2], y); p.setFontSize(9);
     } else {
-      const dims=r.type==='kvadrat'?(r.A+'\u00d7'+r.B+'\u00d7'+r.C):(r.A+'\u00d7'+r.B);
-      pdf.setTextColor(220,220,220); pdf.text(dims, cols[1], y);
-      pdf.setTextColor(r.type==='kvadrat'?RED[0]:140, r.type==='kvadrat'?RED[1]:140, r.type==='kvadrat'?RED[2]:140);
-      pdf.setFontSize(7.5); pdf.text(r.type==='kvadrat'?'KVADRAT':'FLAT', cols[2], y); pdf.setFontSize(9);
-      pdf.setTextColor(160,160,160); pdf.text(String(r.qty||1), cols[3]+6, y);
-      pdf.text(fmt(r.value,d), cols[4], y);
-      pdf.setTextColor(255,255,255); pdf.text(fmt(r.total,d), cols[5], y, {align:'right'});
+      const d = r.type === 'box' ? `${r.A} x ${r.B} x ${r.C}` : `${r.A} x ${r.B}`;
+      p.setTextColor(...MUT); p.text(String(i+1), cx[0], y);
+      p.setTextColor(...INK); p.setFont('helvetica','bold'); p.text(d, cx[1], y);
+      p.setFont('helvetica','normal'); p.setTextColor(...MUT);
+      if (r.name) p.text(String(r.name).slice(0,22), cx[2], y);
+      p.text(String(r.qty), cx[3], y, { align:'right' });
+      p.text(fmt(r.one), cx[4], y, { align:'right' });
+      p.setTextColor(...INK); p.setFont('helvetica','bold');
+      p.text(fmt(r.sum), cx[5], y, { align:'right' });
+      if (hasPrice){ p.setTextColor(15,138,95); p.text(money(r.sum*state.price), cx[6], y, { align:'right' }); }
+      p.setFont('helvetica','normal');
     }
-    y+=20;
-    pdf.setDrawColor(24,24,24); pdf.line(M,y-9,W-M,y-9);
+    y += 19;
+    p.setDrawColor(240,238,232); p.setLineWidth(.6); p.line(M, y-8, W-M, y-8);
   });
 
-  // footer on each page
-  const pages=pdf.internal.getNumberOfPages();
-  for(let p=1;p<=pages;p++){
-    pdf.setPage(p);
-    pdf.setDrawColor(40,40,40); pdf.line(M,H-40,W-M,H-40);
-    pdf.setFont('courier','normal'); pdf.setFontSize(7.5); pdf.setTextColor(110,110,110);
-    pdf.text('KVADRAT \u00b7 maqsudjon.com', M, H-26);
-    pdf.text(p+' / '+pages, W-M, H-26, {align:'right'});
+  // yakuniy qator
+  y += 4;
+  p.setDrawColor(...INK); p.setLineWidth(1.2); p.line(M, y-8, W-M, y-8);
+  p.setFont('helvetica','bold'); p.setFontSize(10); p.setTextColor(...INK);
+  p.text('JAMI', cx[1], y+8);
+  p.text(fmt(totals.area) + ' m2', cx[5], y+8, { align:'right' });
+  if (hasPrice){ p.setTextColor(15,138,95); p.text(money(totals.area*state.price), cx[6], y+8, { align:'right' }); }
+
+  // izoh + footer
+  const pages = p.internal.getNumberOfPages();
+  for (let i=1;i<=pages;i++){
+    p.setPage(i);
+    p.setDrawColor(...LINE); p.setLineWidth(.8); p.line(M, H-46, W-M, H-46);
+    p.setFont('helvetica','normal'); p.setFontSize(7.5); p.setTextColor(...MUT);
+    p.text('Formula:  eni x boyi + 2 x vistup x (eni + boyi)', M, H-32);
+    p.text('kvdrt.maqsudjon.com', W/2, H-32, { align:'center' });
+    p.text(i + ' / ' + pages, W-M, H-32, { align:'right' });
   }
 
-  pdf.save('kvadrat-'+Date.now()+'.pdf');
-  toast('✓ PDF YUKLANDI');
+  p.save('kvadrat-' + new Date().toISOString().slice(0,10) + '.pdf');
+  toast('✓ PDF yuklab olindi');
 }
 
-/* ---------- example / clear ---------- */
-const EXAMPLE='137 150 15\n287 179\ngor 124 145 40 2sht\n145,5 170,5 30\n# Pastki ramka\n200 80 25 x3\n# Bu qator hisoblanmaydi';
-function loadExample(){ $('input').value=EXAMPLE; updateCounts(); calculate(); }
-function clearAll(){ $('input').value=''; updateCounts(); lastResults=null; $('resultsZone').innerHTML='<div class="empty-state" id="emptyState"><div class="ico">▦</div><div class="t">Hali natija yo\'q</div><div class="s">O\'lchamlarni kiriting va "Hisoblash" tugmasini bosing</div></div>'; $('input').focus(); }
+/* ═══════════════════════════════════════════════════════
+   8. UI
+   ═══════════════════════════════════════════════════════ */
+let toastT;
+function toast(msg){
+  const el = $('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2800);
+}
 
-/* ---------- init ---------- */
+function counts(){
+  const v = $('bulk').value;
+  $('lineCount').textContent = v.split(/\r?\n/).filter(l => l.trim()).length;
+  $('charCount').textContent = v.length;
+}
+
+function setUnit(u){
+  state.unit = u;
+  document.querySelectorAll('[data-unit]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.unit === u)));
+  document.querySelectorAll('.u-lab').forEach(e => e.textContent = u === 'mm' ? 'mm' : 'sm');
+  diagramFromInputs();
+  refresh();
+}
+
+function setTab(which){
+  const one = which === 'one';
+  $('tabOne').setAttribute('aria-selected', String(one));
+  $('tabList').setAttribute('aria-selected', String(!one));
+  $('paneSingle').hidden = !one;
+  $('paneList').hidden   = one;
+  if (!one) counts();
+}
+
+function addRow(){
+  const A = num($('inEni').value), B = num($('inBoyi').value), C = num($('inVistup').value);
+  if (!A || !B){ toast("Eni va bo'yini kiriting."); $('inEni').focus(); return; }
+  const q  = Math.max(1, parseInt($('inDona').value, 10) || 1);
+  const nm = $('inNom').value.trim().replace(/[\d.,]/g,'').trim();
+
+  let line = (nm ? nm + ' ' : '') + A + ' ' + B + (C ? ' ' + C : '');
+  if (q > 1) line += ' ' + q + ' dona';
+
+  const ta = $('bulk');
+  ta.value = ta.value.replace(/\s+$/,'') ? ta.value.replace(/\s+$/,'') + '\n' + line : line;
+
+  $('inEni').value = ''; $('inBoyi').value = ''; $('inVistup').value = ''; $('inNom').value = ''; $('inDona').value = '';
+  counts(); refresh();
+  state.selected = results.length - 1;
+  render();
+  const r = results[state.selected];
+  if (r && r.type !== 'error') drawDiagram(r.A, r.B, r.C);
+  toast('✓ Qo‘shildi — jami ' + fmt(totals.area) + ' m²');
+  $('inEni').focus();
+}
+
+function removeLine(idx){
+  const r = results[idx]; if (!r) return;
+  const lines = $('bulk').value.split(/\r?\n/);
+  lines.splice(r.i, 1);
+  $('bulk').value = lines.join('\n').replace(/\n{3,}/g,'\n\n');
+  state.selected = -1;
+  counts(); refresh();
+  toast("O'chirildi");
+}
+
+const EXAMPLE =
+`# Oshxona
+120 130 30
+oshxona kichik 90 110 25 2 dona
+# Balkon
+287 179
+150,5 170,5 30
+zal 200 80 25 x3`;
+
 function init(){
-  // clock
-  function clock(){ const d=new Date(),p=n=>(n<10?'0':'')+n; const el=$('clock'); if(el) el.textContent='TASHKENT '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); }
-  clock(); setInterval(clock,1000);
+  load();
 
-  $('input').addEventListener('input',updateCounts);
-  $('calcBtn').addEventListener('click',calculate);
-  $('exampleBtn').addEventListener('click',loadExample);
-  $('clearBtn').addEventListener('click',clearAll);
+  // birlik + mavzu
+  setUnit(state.unit);
+  document.querySelectorAll('[data-unit]').forEach(b => b.addEventListener('click', () => setUnit(b.dataset.unit)));
+  $('themeBtn').addEventListener('click', () => {
+    document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    save(); diagramFromInputs();
+  });
 
-  // Ctrl/Cmd+Enter to calculate
-  $('input').addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); calculate(); } });
+  // tablar
+  $('tabOne').addEventListener('click',  () => setTab('one'));
+  $('tabList').addEventListener('click', () => setTab('list'));
 
-  // settings
-  $('unitSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-    settings.unit=b.dataset.unit;
-    $('unitSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
-    if(lastResults) calculate();
-  }));
-  $('decSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-    settings.decimals=parseInt(b.dataset.dec,10);
-    $('decSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
-    if(lastResults) calculate();
-  }));
+  // bittalab kiritish
+  ['inEni','inBoyi','inVistup'].forEach(id => $(id).addEventListener('input', diagramFromInputs));
+  $('addBtn').addEventListener('click', addRow);
+  $('resetOne').addEventListener('click', () => {
+    ['inEni','inBoyi','inVistup','inNom','inDona'].forEach(id => $(id).value = '');
+    drawDiagram(120,130,30); $('inEni').focus();
+  });
+  ['inEni','inBoyi','inVistup','inNom','inDona'].forEach(id =>
+    $(id).addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); addRow(); } }));
 
-  // help
-  $('helpBtn').addEventListener('click',()=>$('helpModal').classList.add('show'));
-  $('helpClose').addEventListener('click',()=>$('helpModal').classList.remove('show'));
-  $('helpModal').addEventListener('click',e=>{ if(e.target===$('helpModal')) $('helpModal').classList.remove('show'); });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('helpModal').classList.remove('show'); });
+  // ro'yxat
+  let deb;
+  $('bulk').addEventListener('input', () => {
+    counts(); clearTimeout(deb);
+    deb = setTimeout(() => { state.selected = -1; refresh(); }, 220);
+  });
+  $('exampleBtn').addEventListener('click', () => { $('bulk').value = EXAMPLE; counts(); refresh(); toast('Misol yuklandi'); });
+  $('clearBtn').addEventListener('click', () => {
+    if ($('bulk').value.trim() && !confirm("Barcha o'lchamlar o'chiriladi. Davom etamizmi?")) return;
+    $('bulk').value = ''; state.selected = -1; counts(); refresh();
+  });
 
-  updateCounts();
+  // narx
+  $('inPrice').addEventListener('input', e => {
+    state.price = Math.max(0, parseFloat(String(e.target.value).replace(/[^\d.]/g,'')) || 0);
+    render(); save();
+  });
 
-  // scroll progress + particles
-  const prog=$('prog');
-  addEventListener('scroll',()=>{ const h=document.documentElement.scrollHeight-innerHeight; prog.style.width=(h>0?(scrollY/h)*100:0)+'%'; },{passive:true});
-  (function(){
-    const cv=$('fx'); if(!cv) return; const ctx=cv.getContext('2d'); let W,H,pts=[];
-    function size(){ W=cv.width=innerWidth; H=cv.height=innerHeight; } size(); addEventListener('resize',size);
-    const N=Math.min(38,Math.floor(innerWidth/36));
-    for(let i=0;i<N;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22});
-    function loop(){ ctx.clearRect(0,0,W,H);
-      for(let i=0;i<pts.length;i++){ const p=pts[i]; p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
-        ctx.beginPath(); ctx.arc(p.x,p.y,1,0,7); ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fill();
-        for(let j=i+1;j<pts.length;j++){ const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,dd=Math.hypot(dx,dy);
-          if(dd<116){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=(dd<56?'rgba(215,25,33,':'rgba(255,255,255,')+(0.09*(1-dd/116))+')'; ctx.lineWidth=.6; ctx.stroke(); } } }
-      requestAnimationFrame(loop); }
-    if(!matchMedia('(prefers-reduced-motion:reduce)').matches) loop();
-  })();
+  // natija bilan ishlash
+  $('resZone').addEventListener('click', e => {
+    const d = e.target.closest('[data-del]');
+    if (d){ e.stopPropagation(); removeLine(parseInt(d.dataset.del,10)); return; }
+    const row = e.target.closest('[data-i]');
+    if (!row) return;
+    const i = parseInt(row.dataset.i,10);
+    const r = results[i];
+    state.selected = state.selected === i ? -1 : i;
+    render();
+    if (r && r.type !== 'error' && state.selected === i){
+      drawDiagram(r.A, r.B, r.C);
+      if (innerWidth <= 1000) document.querySelector('.side').scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+  });
+
+  // eksport
+  $('pdfBtn').addEventListener('click', exportPDF);
+  $('txtBtn').addEventListener('click', () => { download('kvadrat-' + Date.now() + '.txt', txtText()); toast('✓ TXT yuklandi'); });
+  $('printBtn').addEventListener('click', () => print());
+  $('tgBtn').addEventListener('click', () => {
+    const t = tgText();
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(() => toast('✓ Nusxa olindi — Telegramga joylang'))
+        .catch(() => fallbackCopy(t));
+    } else fallbackCopy(t);
+  });
+  function fallbackCopy(t){
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('✓ Nusxa olindi'); }catch(e){ toast('Nusxa olib bo‘lmadi'); }
+    document.body.removeChild(ta);
+  }
+
+  // mobil panel
+  $('mbBtn').addEventListener('click', () => $('results').scrollIntoView({ behavior:'smooth', block:'start' }));
+
+  // yordam
+  const hm = $('helpModal');
+  $('helpBtn').addEventListener('click', () => hm.classList.add('on'));
+  $('helpClose').addEventListener('click', () => hm.classList.remove('on'));
+  hm.addEventListener('click', e => { if (e.target === hm) hm.classList.remove('on'); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') hm.classList.remove('on');
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); if (!$('paneSingle').hidden) addRow(); else refresh(); }
+  });
+
+  // boshlang'ich holat
+  drawDiagram(120, 130, 30);
+  counts();
+  refresh();
+  if ($('bulk').value.trim()) setTab('list');
 }
 
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
 </script>
-
+</body>
 </html>
