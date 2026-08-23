@@ -1,0 +1,6 @@
+# kvdrt.maqsudjon.com — KVADRAT panjara m² hisoblagich
+
+User-agent: *
+Allow: /
+
+Sitemap: https://kvdrt.maqsudjon.com/sitemap.xml
